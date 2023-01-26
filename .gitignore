@@ -25,3 +25,6 @@ replay_pid*
 
 # Do not ignore files for DFA diagram creator
 !JFLAP7.1.jar
+
+# Directory information
+.DS_Store
