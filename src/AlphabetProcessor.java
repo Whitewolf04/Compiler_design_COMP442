@@ -46,20 +46,24 @@ public class AlphabetProcessor implements Processor{
      * if the most recent tokens processed are valid or not
      */
     public boolean stateCheck(){
-        System.out.println("String processed: " + this.storage);
-        if(isReservedWord(storage)){
-            System.out.println("Reserved word found!");
+        boolean output = false;
+
+        if(err || !stateFinal){
+            OutputWriter.errWriting("Lexical error: Invalid string: " + this.storage);
+            System.out.println("Invalid string: " + this.storage);
+        } else if(isReservedWord(this.storage)){
+            OutputWriter.outWriting("[" + this.storage + ", " + this.storage + ", ");
+            System.out.println("Reserved word: " + this.storage);
+            output = true;
+        } else{
+            OutputWriter.outWriting("[id, " + this.storage + ", ");
+            System.out.println("String processed: " + this.storage);
+            output = true;
         }
 
         this.storage = "";
         state = 0;
-        if(!err && stateFinal){
-            stateFinal = false;
-            return true;
-        } else{
-            System.out.println("Invalid string!");
-            return false;
-        }
+        return output;
     }
 
     private boolean isReservedWord(String storage){

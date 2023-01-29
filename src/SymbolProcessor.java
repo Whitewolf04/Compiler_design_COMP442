@@ -6,8 +6,8 @@ public class SymbolProcessor implements Processor{
     private Sym symbol;
     private int state;
     private boolean err;
-    private boolean inlineCmt;
-    private boolean cmt;
+    public boolean inlineCmt;
+    public boolean cmt;
     private final int[][] transitionTable = {{1,5,8,10,11,12,13,19,20,21,22,23,24,25,26,28,29,2,2,0}, {3,2,4,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
     {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, 
     {6,2,7,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, 
@@ -98,9 +98,12 @@ public class SymbolProcessor implements Processor{
                 state = transitionTable[state][16];
             } else if(symbol == Sym.NEXTLINE){
                 state = transitionTable[state][18];
-            }
-            else{
+            } else{
                 state = 2;
+            }
+        } else if(type == Type.SPACE){
+            if(identifier(token) == Sym.NEXTLINE){
+                state = transitionTable[state][18];
             }
         } else {
             state = transitionTable[state][17];
@@ -110,6 +113,9 @@ public class SymbolProcessor implements Processor{
             cmt = true;
         } else if(state == 17){
             inlineCmt = true;
+        } else{
+            cmt = false;
+            inlineCmt = false;
         }
 
         stateFinal = (transitionTable[state][19] == 1) ? true : false;
@@ -176,16 +182,75 @@ public class SymbolProcessor implements Processor{
         return Sym.INVALID;
     }
 
+    private String symbolToString(){
+        switch(state){
+            case 1:
+                return "assign";
+            case 3:
+                return "equal";
+            case 4:
+                return "returntype";
+            case 5:
+                return "lt";
+            case 6:
+                return "leq";
+            case 7:
+                return "noteq";
+            case 8:
+                return "gt";
+            case 9:
+                return "geq";
+            case 10:
+                return "plus";
+            case 11:
+                return "minus";
+            case 12:
+                return "mult";
+            case 13:
+                return "div";
+            case 16:
+                return "blockcmt";
+            case 18:
+                return "inlinecmt";
+            case 19:
+                return "openpar";
+            case 20:
+                return "closepar";
+            case 21:
+                return "opencubr";
+            case 22:
+                return "closecubr";
+            case 23:
+                return "opensqbr";
+            case 24:
+                return "closesqbr";
+            case 25:
+                return "semicol";
+            case 26:
+                return "colon";
+            case 27:
+                return "scopeop";
+            case 28:
+                return "comma";
+            case 29:
+                return "dot";
+            default:
+                return "invalid";
+        }
+    }
+
     public boolean stateCheck(){
-        System.out.println("Symbol processed: " + storage);
+        boolean output = false;
+        if(!stateFinal){
+            OutputWriter.errWriting("Lexical error: Invalid symbol: " + this.storage);
+            System.out.println("Invalid symbol: " + this.storage);
+        } else{
+            OutputWriter.outWriting("[" + symbolToString() + ", " + this.storage + ", ");
+            System.out.println("Symbol processed: " + this.storage);
+            output = true;
+        }
         storage = "";
         state = 0;
-        if(stateFinal){
-            stateFinal = false;
-            return true;
-        } else {
-            System.out.println("Invalid symbol!");
-            return false;
-        }
+        return output;
     }
 }

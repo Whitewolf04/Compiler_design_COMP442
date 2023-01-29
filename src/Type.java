@@ -4,5 +4,6 @@ public enum Type {
     NONZERO,
     ZERO,
     SYMBOL,
+    SPACE,
     INVALID,
 }

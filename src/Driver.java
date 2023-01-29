@@ -1,9 +1,29 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 
 public class Driver {
     public static void main(String[] args){
-        String file = "0.1230";
+        String input = "";
+        BufferedReader reader;
+        try{
+            reader = new BufferedReader(new FileReader("lexnegativegrading.src"));
+
+            String currentLine;
+            while((currentLine = reader.readLine()) != null){
+                input += currentLine;
+                input += "\n";
+            }
+        } catch (FileNotFoundException e){
+            System.out.println("File not found!");
+        } catch (IOException e){
+            System.out.println("Error reading input file!");
+        }
+
+        OutputWriter.openWriteStream();
 
 
         Processor currentProcessor = null;
@@ -11,8 +31,9 @@ public class Driver {
         NumberProcessor numberProcessor = new NumberProcessor();
         SymbolProcessor symbolProcessor =  new SymbolProcessor();
         State currentState = State.START;
+        int lineCount = 0;
 
-        String[] inputArray = file.split("");
+        String[] inputArray = input.split("");
         Pattern alpha = Pattern.compile("[a-zA-Z]");
         Pattern underscore = Pattern.compile("[\\_]");
         Pattern nonZero = Pattern.compile("[1-9]");
@@ -62,12 +83,23 @@ public class Driver {
                     } else if(zero.matcher(token).lookingAt()){
                         currentProcessor.processToken(token, Type.ZERO);
                     } else if(symbol.matcher(token).lookingAt()){
-                        currentProcessor.stateCheck();
+                        if(currentProcessor.stateCheck()){
+                            OutputWriter.outWriting(lineCount + "] ");
+                        } else {
+                            OutputWriter.errWriting(": line " + lineCount + ".\n");
+                        }
                         currentState = State.SYMBOL;
                         currentProcessor = symbolProcessor;
                         currentProcessor.processToken(token, Type.SYMBOL);
                     } else if(space.matcher(token).lookingAt()){
-                        currentProcessor.stateCheck();
+                        if(currentProcessor.stateCheck()){
+                            OutputWriter.outWriting(lineCount + "] ");
+                        } else {
+                            OutputWriter.errWriting(": line " + lineCount + ".\n");
+                        }
+                        if(token.compareTo("\n") == 0){
+                            lineCount++;
+                        }
                         currentState = State.START;
                         continue;
                     } else {
@@ -95,13 +127,24 @@ public class Driver {
                         } else if (numberProcessor.numType == NumType.FLOATE && Pattern.compile("[\\+\\-]").matcher(token).lookingAt()){
                             currentProcessor.processToken(token, Type.SYMBOL);
                         } else {
-                            currentProcessor.stateCheck();
+                            if(currentProcessor.stateCheck()){
+                                OutputWriter.outWriting(lineCount + "] ");
+                            } else {
+                                OutputWriter.errWriting(": line " + lineCount + ".\n");
+                            }
                             currentState = State.SYMBOL;
                             currentProcessor = symbolProcessor;
                             currentProcessor.processToken(token, Type.SYMBOL);
                         }
                     } else if(space.matcher(token).lookingAt()){
-                        currentProcessor.stateCheck();
+                        if(currentProcessor.stateCheck()){
+                            OutputWriter.outWriting(lineCount + "] ");
+                        } else {
+                            OutputWriter.errWriting(": line " + lineCount + ".\n");
+                        }
+                        if(token.compareTo("\n") == 0){
+                            lineCount++;
+                        }
                         currentState = State.START;
                         continue;
                     } else {
@@ -113,31 +156,74 @@ public class Driver {
                     break;
                 case SYMBOL:
                     if(alpha.matcher(token).lookingAt()){
-                        currentProcessor.stateCheck();
-                        currentState = State.ALPHABET;
-                        currentProcessor = alphaProcessor;
-                        currentProcessor.processToken(token, Type.ALPHA);
+                        if(symbolProcessor.inlineCmt || symbolProcessor.cmt){
+                            currentProcessor.processToken(token, Type.ALPHA);
+                        } else{
+                            if(currentProcessor.stateCheck()){
+                                OutputWriter.outWriting(lineCount + "] ");
+                            } else {
+                                OutputWriter.errWriting(": line " + lineCount + ".\n");
+                            }
+                            currentState = State.ALPHABET;
+                            currentProcessor = alphaProcessor;
+                            currentProcessor.processToken(token, Type.ALPHA);
+                        }
                     } else if(underscore.matcher(token).lookingAt()){
-                        currentProcessor.stateCheck();
-                        currentState = State.ALPHABET;
-                        currentProcessor = alphaProcessor;
-                        currentProcessor.processToken(token, Type.UNDERSCORE);
+                        if(symbolProcessor.inlineCmt || symbolProcessor.cmt){
+                            currentProcessor.processToken(token, Type.UNDERSCORE);
+                        } else {
+                            if(currentProcessor.stateCheck()){
+                                OutputWriter.outWriting(lineCount + "] ");
+                            } else {
+                                OutputWriter.errWriting(": line " + lineCount + ".\n");
+                            }
+                            currentState = State.ALPHABET;
+                            currentProcessor = alphaProcessor;
+                            currentProcessor.processToken(token, Type.UNDERSCORE);
+                        }
                     } else if(nonZero.matcher(token).lookingAt()){
-                        currentProcessor.stateCheck();
-                        currentState = State.NUMBER;
-                        currentProcessor = numberProcessor;
-                        currentProcessor.processToken(token, Type.NONZERO);
+                        if(symbolProcessor.inlineCmt || symbolProcessor.cmt){
+                            currentProcessor.processToken(token, Type.NONZERO);
+                        } else {
+                            if(currentProcessor.stateCheck()){
+                                OutputWriter.outWriting(lineCount + "] ");
+                            } else {
+                                OutputWriter.errWriting(": line " + lineCount + ".\n");
+                            }
+                            currentState = State.NUMBER;
+                            currentProcessor = numberProcessor;
+                            currentProcessor.processToken(token, Type.NONZERO);
+                        }
                     } else if(zero.matcher(token).lookingAt()){
-                        currentProcessor.stateCheck();
-                        currentState = State.NUMBER;
-                        currentProcessor = numberProcessor;
-                        currentProcessor.processToken(token, Type.ZERO);
+                        if(symbolProcessor.inlineCmt || symbolProcessor.cmt){
+                            currentProcessor.processToken(token, Type.ZERO);
+                        } else {
+                            if(currentProcessor.stateCheck()){
+                                OutputWriter.outWriting(lineCount + "] ");
+                            } else {
+                                OutputWriter.errWriting(": line " + lineCount + ".\n");
+                            }
+                            currentState = State.NUMBER;
+                            currentProcessor = numberProcessor;
+                            currentProcessor.processToken(token, Type.ZERO);
+                        }
                     } else if(symbol.matcher(token).lookingAt()){
                         currentProcessor.processToken(token, Type.SYMBOL);
                     } else if(space.matcher(token).lookingAt()){
-                        currentProcessor.stateCheck();
-                        currentState = State.START;
-                        continue;
+                        if(symbolProcessor.inlineCmt || symbolProcessor.cmt){
+                            currentProcessor.processToken(token, Type.SPACE);
+                        } else {
+                            if(currentProcessor.stateCheck()){
+                                OutputWriter.outWriting(lineCount + "] ");
+                            } else {
+                                OutputWriter.errWriting(": line " + lineCount + ".\n");
+                            }
+                            if(token.compareTo("\n") == 0){
+                                lineCount++;
+                            }
+                            currentState = State.START;
+                            continue;
+                        }
                     } else {
                         /*
                         * Invalid symbols
@@ -160,6 +246,8 @@ public class Driver {
             System.out.println("Token invalid!");
         }
         currentState = State.START;
+        OutputWriter.closeWriteStream();
+
     }
     
     public static boolean changeState(State current, State next){
@@ -171,6 +259,5 @@ public class Driver {
             return true;
         }
     }
-
 
 }

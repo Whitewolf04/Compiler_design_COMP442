@@ -1,0 +1,17 @@
+Lexical error: Invalid number: 00: line 0.
+Lexical error: Invalid number: 01: line 0.
+Lexical error: Invalid number: 010: line 0.
+Lexical error: Invalid number: 0120: line 0.
+Lexical error: Invalid number: 01230: line 0.
+Lexical error: Invalid number: 0123450: line 0.
+Lexical error: Invalid number: 01: line 0.
+Lexical error: Invalid number: 012: line 0.
+Lexical error: Invalid number: 12.340: line 0.
+Lexical error: Invalid number: 012: line 0.
+Lexical error: Invalid number: 012: line 0.
+Lexical error: Invalid number: 34e10: line 0.
+Lexical error: Invalid number: 12.34e010: line 0.
+Lexical error: Invalid string: _abc: line 0.
+Lexical error: Invalid number: 1abc: line 0.
+Lexical error: Invalid string: _1abc: line 0.
+Lexical error: Invalid string: 

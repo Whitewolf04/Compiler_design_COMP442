@@ -3,7 +3,6 @@ import java.util.regex.Pattern;
 public class NumberProcessor implements Processor{
     private String storage;
     private boolean stateFinal;
-    private boolean err;
     public NumType numType;
     private int state;
     private final int[][] transitionTable = {{1, 2, 2, 3, 6, 6, 6, 2, 2, 9}, {3, 2, 2, 3, 5, 5, 5, 2, 9, 9}, 
@@ -16,15 +15,10 @@ public class NumberProcessor implements Processor{
         storage = "";
         state = 0;
         stateFinal = false;
-        err = false;
         numType = NumType.INVALID;
     }
 
     public void processToken(String token, Type type){
-        if(err == true){
-            return;
-        }
-
         if(type == Type.ZERO){
             state = transitionTable[0][state];
         } else if(type == Type.NONZERO){
@@ -54,16 +48,25 @@ public class NumberProcessor implements Processor{
     }
 
     public boolean stateCheck(){
-        System.out.println("Number processed: " + this.storage);
+        boolean output = false;
+
+        if(!stateFinal){
+            OutputWriter.errWriting("Lexical error: Invalid number: " + storage);
+            System.out.println("Invalid number: " + this.storage);
+        } else {
+            OutputWriter.outWriting("[");
+            if(numType == NumType.FLOAT){
+                OutputWriter.outWriting("floatnum, ");
+            } else {
+                OutputWriter.outWriting("intnum, ");
+            }
+            OutputWriter.outWriting(this.storage + ", ");
+            System.out.println("Number processed: " + this.storage);
+            output = true;
+        }
         storage = "";
         state = 0;
-        if(stateFinal){
-            stateFinal = false;
-            return true;
-        } else{
-            System.out.println("Number invalid!");
-            return false;
-        }
+        return output;
     }
 
     private void setNumType(){

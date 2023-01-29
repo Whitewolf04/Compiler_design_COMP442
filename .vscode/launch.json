@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Driver",
+            "request": "launch",
+            "mainClass": "Driver",
+            "projectName": "Compiler_design_COMP442_d892c7a9"
+        },
+        {
+            "type": "java",
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}"
