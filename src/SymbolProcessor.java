@@ -96,8 +96,6 @@ public class SymbolProcessor implements Processor{
                 state = transitionTable[state][15];
             } else if(symbol == Sym.PERIOD){
                 state = transitionTable[state][16];
-            } else if(symbol == Sym.NEXTLINE){
-                state = transitionTable[state][18];
             } else{
                 state = 2;
             }
@@ -119,7 +117,12 @@ public class SymbolProcessor implements Processor{
         }
 
         stateFinal = (transitionTable[state][19] == 1) ? true : false;
-        storage += token;
+
+        if(identifier(token) == Sym.NEXTLINE){
+            storage += "\\n";
+        } else {
+            storage += token;
+        }
 
     }
 

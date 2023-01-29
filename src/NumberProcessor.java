@@ -5,7 +5,7 @@ public class NumberProcessor implements Processor{
     private boolean stateFinal;
     public NumType numType;
     private int state;
-    private final int[][] transitionTable = {{1, 2, 2, 3, 6, 6, 6, 2, 2, 9}, {3, 2, 2, 3, 5, 5, 5, 2, 9, 9}, 
+    private final int[][] transitionTable = {{1, 2, 2, 3, 6, 6, 6, 8, 2, 9}, {3, 2, 2, 3, 5, 5, 5, 9, 9, 9}, 
     {2, 4, 2, 4, 2, 2, 2, 2, 2, 2}, {2, 2, 2, 2, 2, 7, 2, 2, 2, 2}, {2, 2, 2, 2, 2, 2, 2, 8, 2, 2}, {0, 1, 0, 1, 0, 1, 0, 0, 0, 1}};
 
     public NumberProcessor(){
