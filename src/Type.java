@@ -1,6 +1,6 @@
 public enum Type {
-    LOWALPHA,
-    UPPERALPHA,
+    ALPHA,
+    UNDERSCORE,
     NONZERO,
     ZERO,
     SYMBOL,

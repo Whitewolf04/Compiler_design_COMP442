@@ -2,8 +2,10 @@
 public class AlphabetProcessor implements Processor{
     public String storage;
     private boolean stateFinal;
+    private int state;
     private boolean err;
     final String[] RESERVED = {"or", "and", "not", "integer", "float", "void", "class", "self", "isa", "while", "if", "then", "else", "read", "write", "return", "localvar", "constructor", "attribute", "function", "public", "private"};
+    private final int[][] transitionTable = {{1, 1, 2}, {2, 1, 2}, {2, 1, 2}, {0, 1, 0}};
 
     public AlphabetProcessor(){
         /*
@@ -11,6 +13,7 @@ public class AlphabetProcessor implements Processor{
          */
         super();
         storage = "";
+        state = 0;
         stateFinal = false;
         err = false;
     }
@@ -23,35 +26,19 @@ public class AlphabetProcessor implements Processor{
             return;
         }
 
-        if(this.storage == ""){
-            if(type == Type.LOWALPHA || type == Type.UPPERALPHA){
-                stateFinal = true;
-                storage += token;
-                return;
-            } else{
-                err = true;
-                stateFinal = false;
-                return;
-            }
+        if(type == Type.ALPHA){
+            state = transitionTable[0][state];
+        } else if(type == Type.UNDERSCORE){
+            state = transitionTable[2][state];
+        } else if(type == Type.NONZERO || type == Type.ZERO){
+            state = transitionTable[1][state];
         } else {
-            if(token == "_"){
-                this.storage += token;
-                stateFinal = true;
-                return;
-            } else if (type == Type.NONZERO || type == Type.ZERO){
-                this.storage += token;
-                stateFinal = true;
-                return;
-            } else if (type == Type.UPPERALPHA || type == Type.LOWALPHA){
-                this.storage += token;
-                stateFinal = true;
-                return;
-            } else {
-                err = true;
-                stateFinal = false;
-                return;
-            }
+            state = 2;
         }
+
+        stateFinal = (transitionTable[3][state] == 1) ? true : false;
+        storage += token;
+        return;
     }
 
     /*
@@ -60,20 +47,24 @@ public class AlphabetProcessor implements Processor{
      */
     public boolean stateCheck(){
         System.out.println("String processed: " + this.storage);
+        if(isReservedWord(storage)){
+            System.out.println("Reserved word found!");
+        }
+
         this.storage = "";
-        if(err || !stateFinal){
-            return false;
-        } else if(isReservedWord(storage)){
-            return false;
-        } else{
+        state = 0;
+        if(!err && stateFinal){
             stateFinal = false;
             return true;
+        } else{
+            System.out.println("Invalid string!");
+            return false;
         }
     }
 
     private boolean isReservedWord(String storage){
         for(int i = 0; i < RESERVED.length; i++){
-            if(storage == RESERVED[i])
+            if(storage.compareTo(RESERVED[i]) == 0)
                 return true;
         }
         return false;

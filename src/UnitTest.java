@@ -16,7 +16,7 @@ public class UnitTest {
             if(str == " "){
                 tempProcessor.stateCheck();
             } else{
-                tempProcessor.processToken(str, Type.LOWALPHA);
+                tempProcessor.processToken(str, Type.ALPHA);
             }
             
         }
