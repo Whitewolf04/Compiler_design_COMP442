@@ -10,7 +10,7 @@ public class Driver {
         String input = "";
         BufferedReader reader;
         try{
-            reader = new BufferedReader(new FileReader("example-bubblesort.src"));
+            reader = new BufferedReader(new FileReader("example-polynomial.src"));
 
             String currentLine;
             while((currentLine = reader.readLine()) != null){
@@ -41,10 +41,6 @@ public class Driver {
         Pattern space = Pattern.compile("[\\s\\n]");
 
         for(String token : inputArray){
-            if(token.compareTo("\n") == 0){
-                OutputWriter.lineCount++;
-                OutputWriter.outWriting("\n");
-            }
             switch(currentState){
                 case START:
                     if(alpha.matcher(token).lookingAt()){
@@ -64,11 +60,8 @@ public class Driver {
                         currentProcessor = numberProcessor;
                         currentProcessor.processToken(token, Type.ZERO);
                     } else if(space.matcher(token).lookingAt()){
-                        continue;
+                        break;
                     } else {
-                        /*
-                         * Invalid symbols
-                         */
                         currentState = State.SYMBOL;
                         currentProcessor = symbolProcessor;
                         currentProcessor.processToken(token, Type.SYMBOL);
@@ -91,7 +84,7 @@ public class Driver {
                     } else if(space.matcher(token).lookingAt()){
                         currentProcessor.stateCheck();
                         currentState = State.START;
-                        continue;
+                        break;
                     } else {
                         /*
                         * Invalid symbols
@@ -125,7 +118,7 @@ public class Driver {
                     } else if(space.matcher(token).lookingAt()){
                         currentProcessor.stateCheck();
                         currentState = State.START;
-                        continue;
+                        break;
                     } else {
                         /*
                         * Invalid symbols
@@ -176,12 +169,16 @@ public class Driver {
                         } else {
                             currentProcessor.stateCheck();
                             currentState = State.START;
-                            continue;
+                            break;
                         }
                     } else {
                         currentProcessor.processToken(token, Type.SYMBOL);
                     }
                     break;
+            }
+            if(token.compareTo("\n") == 0){
+                OutputWriter.lineCount++;
+                OutputWriter.outWriting("\n");
             }
         }
 

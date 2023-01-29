@@ -6,11 +6,13 @@ public final class OutputWriter {
     private static BufferedWriter errWriter;
     private static BufferedWriter outWriter;
     public static int lineCount;
+    private static int nextLineCount;
 
     private OutputWriter(){
         errWriter = null;
         outWriter = null;
         lineCount = -1;
+        nextLineCount = -1;
     }
 
     public static void openWriteStream(){
@@ -21,6 +23,7 @@ public final class OutputWriter {
             System.out.println("Error opening file to write!");
         }
         lineCount = 1;
+        nextLineCount = 0;
     }
 
     public static void errWriting(String output){
@@ -35,9 +38,13 @@ public final class OutputWriter {
     public static void outWriting(String output){
         try{
             if(output.compareTo("\n") == 0){
-                outWriter.write("\n");
+                if(nextLineCount == 0){
+                    outWriter.write("\n");
+                    nextLineCount++;
+                }
             } else{
                 outWriter.write(output + lineCount + "] ");
+                nextLineCount = 0;
             }
             outWriter.flush();
         } catch(IOException e){

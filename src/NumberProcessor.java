@@ -54,13 +54,11 @@ public class NumberProcessor implements Processor{
             OutputWriter.errWriting("Lexical error: Invalid number: " + storage);
             System.out.println("Invalid number: " + this.storage);
         } else {
-            OutputWriter.outWriting("[");
             if(numType == NumType.FLOAT){
-                OutputWriter.outWriting("floatnum, ");
+                OutputWriter.outWriting("[floatnum, " + this.storage + ", ");
             } else {
-                OutputWriter.outWriting("intnum, ");
+                OutputWriter.outWriting("[intnum, " + this.storage + ", ");
             }
-            OutputWriter.outWriting(this.storage + ", ");
             System.out.println("Number processed: " + this.storage);
             output = true;
         }
