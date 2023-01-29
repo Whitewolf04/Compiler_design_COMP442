@@ -5,7 +5,6 @@ public class SymbolProcessor implements Processor{
     private boolean stateFinal;
     private Sym symbol;
     private int state;
-    private boolean err;
     public boolean inlineCmt;
     public boolean cmt;
     private final int[][] transitionTable = {{1,5,8,10,11,12,13,19,20,21,22,23,24,25,26,28,29,2,2,0}, {3,2,4,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1},
@@ -14,8 +13,8 @@ public class SymbolProcessor implements Processor{
     {9,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, 
     {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,14,17,2,2,2,2,2,2,2,2,2,2,2,2,1}, 
     {14,14,14,14,14,15,14,14,14,14,14,14,14,14,14,14,14,14,14,0}, {14,14,14,14,14,15,16,14,14,14,14,14,14,14,14,14,14,14,14,0}, 
-    {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,18,0}, 
-    {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, 
+    {1,5,8,10,11,12,13,19,20,21,22,23,24,25,26,28,29,2,2,1}, {17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,18,0}, 
+    {1,5,8,10,11,12,13,19,20,21,22,23,24,25,26,28,29,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, 
     {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, 
     {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,27,2,2,2,2,1}, 
     {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}, {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1}};
@@ -48,7 +47,6 @@ public class SymbolProcessor implements Processor{
          */
         storage = "";
         stateFinal = false;
-        err = false;
         inlineCmt = false;
         cmt = false;
         symbol = Sym.INVALID;
@@ -56,12 +54,10 @@ public class SymbolProcessor implements Processor{
     }
 
     public void processToken(String token, Type type){
-        if(err){
-            return;
-        }
-
         if(type == Type.SYMBOL){
             symbol = identifier(token);
+            if(!cmt && !inlineCmt)
+                symbolChange(symbol);
             if(symbol == Sym.EQUAL){
                 state = transitionTable[state][0];
             } else if(symbol == Sym.LESS){
@@ -96,7 +92,9 @@ public class SymbolProcessor implements Processor{
                 state = transitionTable[state][15];
             } else if(symbol == Sym.PERIOD){
                 state = transitionTable[state][16];
-            } else{
+            } else if (inlineCmt || cmt){
+                state = transitionTable[state][17];
+            } else {
                 state = 2;
             }
         } else if(type == Type.SPACE){
@@ -255,5 +253,49 @@ public class SymbolProcessor implements Processor{
         storage = "";
         state = 0;
         return output;
+    }
+
+    private void symbolChange(Sym nextSymbol){
+        switch(state){
+            case 0:
+                return;
+            case 2:
+                if(nextSymbol == Sym.EQUAL || nextSymbol == Sym.MORE){
+                    return;
+                } else{
+                    stateCheck();
+                }
+                return;
+            case 5:
+                if(nextSymbol == Sym.MORE || nextSymbol == Sym.EQUAL){
+                    return;
+                } else{
+                    stateCheck();
+                }
+                return;
+            case 8:
+                if(nextSymbol == Sym.EQUAL){
+                    return;
+                } else {
+                    stateCheck();
+                }
+                return;
+            case 13:
+                if(nextSymbol == Sym.MULTIPLY || nextSymbol == Sym.DIVIDE){
+                    return;
+                } else {
+                    stateCheck();
+                }
+                return;
+            case 26:
+                if(nextSymbol == Sym.COL){
+                    return;
+                } else {
+                    stateCheck();
+                }
+                return;
+            default:
+                stateCheck();
+        }
     }
 }
