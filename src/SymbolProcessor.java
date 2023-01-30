@@ -99,6 +99,9 @@ public class SymbolProcessor implements Processor{
             }
         } else if(type == Type.SPACE){
             if(identifier(token) == Sym.NEXTLINE){
+                if(cmt || inlineCmt){
+                    OutputWriter.cmtLineCount++;
+                }
                 state = transitionTable[state][18];
             }
         } else {
@@ -109,7 +112,7 @@ public class SymbolProcessor implements Processor{
             cmt = true;
         } else if(state == 17){
             inlineCmt = true;
-        } else{
+        } else {
             cmt = false;
             inlineCmt = false;
         }
@@ -246,7 +249,11 @@ public class SymbolProcessor implements Processor{
             OutputWriter.errWriting("Lexical error: Invalid symbol: " + this.storage);
             System.out.println("Invalid symbol: " + this.storage);
         } else{
-            OutputWriter.outWriting("[" + symbolToString() + ", " + this.storage + ", ");
+            if(state == 16 || state == 18){
+                OutputWriter.cmtWriting("[" + symbolToString() + ", " + this.storage + ", ");
+            } else {
+                OutputWriter.outWriting("[" + symbolToString() + ", " + this.storage + ", ");
+            }
             System.out.println("Symbol processed: " + this.storage);
             output = true;
         }

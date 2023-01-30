@@ -10,7 +10,7 @@ public class Driver {
         String input = "";
         BufferedReader reader;
         try{
-            reader = new BufferedReader(new FileReader("example-polynomial.src"));
+            reader = new BufferedReader(new FileReader("lexpositivegrading.src"));
 
             String currentLine;
             while((currentLine = reader.readLine()) != null){
@@ -197,15 +197,6 @@ public class Driver {
         OutputWriter.closeWriteStream();
 
     }
-    
-    public static boolean changeState(State current, State next){
-        if(current == State.START){
-            return true;
-        } else if(current == next) {
-            return false;
-        } else{
-            return true;
-        }
-    }
+
 
 }

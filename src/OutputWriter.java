@@ -7,12 +7,14 @@ public final class OutputWriter {
     private static BufferedWriter outWriter;
     public static int lineCount;
     private static int nextLineCount;
+    public static int cmtLineCount;
 
     private OutputWriter(){
         errWriter = null;
         outWriter = null;
         lineCount = -1;
         nextLineCount = -1;
+        cmtLineCount = -1;
     }
 
     public static void openWriteStream(){
@@ -24,6 +26,7 @@ public final class OutputWriter {
         }
         lineCount = 1;
         nextLineCount = 0;
+        cmtLineCount = 0;
     }
 
     public static void errWriting(String output){
@@ -52,6 +55,16 @@ public final class OutputWriter {
         }
     }
 
+    public static void cmtWriting(String output){
+        try{
+            outWriter.write(output + (lineCount - cmtLineCount) + "]\n");
+            cmtLineCount = 0;
+            outWriter.flush();
+        } catch(IOException e){
+            System.out.println("Error writing comment to file!");
+        }
+    }
+
     public static void closeWriteStream(){
         try{
             errWriter.close();
@@ -60,4 +73,5 @@ public final class OutputWriter {
             System.out.println("Error closing writer stream!");
         }
     }
+
 }

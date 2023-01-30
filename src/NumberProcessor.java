@@ -5,8 +5,8 @@ public class NumberProcessor implements Processor{
     private boolean stateFinal;
     public NumType numType;
     private int state;
-    private final int[][] transitionTable = {{1, 2, 2, 3, 6, 6, 6, 8, 2, 9}, {3, 2, 2, 3, 5, 5, 5, 9, 9, 9}, 
-    {2, 4, 2, 4, 2, 2, 2, 2, 2, 2}, {2, 2, 2, 2, 2, 7, 2, 2, 2, 2}, {2, 2, 2, 2, 2, 2, 2, 8, 2, 2}, {0, 1, 0, 1, 0, 1, 0, 0, 0, 1}};
+    private final int[][] transitionTable = {{1, 2, 2, 3, 10, 6, 6, 2, 2, 9, 6}, {3, 2, 2, 3, 5, 5, 5, 9, 9, 9, 5}, 
+    {2, 4, 2, 4, 2, 2, 2, 2, 2, 2, 2}, {2, 2, 2, 2, 2, 7, 2, 2, 2, 2, 7}, {2, 2, 2, 2, 2, 2, 2, 8, 2, 2, 2}, {0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1}};
 
     public NumberProcessor(){
         /*
@@ -24,7 +24,6 @@ public class NumberProcessor implements Processor{
         } else if(type == Type.NONZERO){
             state = transitionTable[1][state];
         } else if(type == Type.ALPHA){
-            // Need to check
             if(token.compareTo("e") == 0 && numType == NumType.FLOAT){
                 state = transitionTable[3][state];
             } else {
@@ -82,6 +81,9 @@ public class NumberProcessor implements Processor{
                 numType = NumType.FLOATE;
                 break;
             case 9:
+                numType = NumType.FLOAT;
+                break;
+            case 10:
                 numType = NumType.FLOAT;
                 break;
             default:
