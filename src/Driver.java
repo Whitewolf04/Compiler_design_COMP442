@@ -89,7 +89,7 @@ public class Driver {
                         /*
                         * Invalid symbols
                         */
-                        System.out.println("Invalid symbols!");
+                        currentProcessor.processToken(token, Type.SYMBOL);
                     }
                     break;
                 case NUMBER:
@@ -104,7 +104,11 @@ public class Driver {
                         currentProcessor.processToken(token, Type.NONZERO);
                     } else if(zero.matcher(token).lookingAt()){
                         currentProcessor.processToken(token, Type.ZERO);
-                    } else if(symbol.matcher(token).lookingAt()){
+                    } else if(space.matcher(token).lookingAt()){
+                        currentProcessor.stateCheck();
+                        currentState = State.START;
+                        break;
+                    } else if (symbol.matcher(token).lookingAt()){
                         if(token.compareTo(".") == 0){
                             currentProcessor.processToken(token, Type.SYMBOL);
                         } else if (numberProcessor.numType == NumType.FLOATE && Pattern.compile("[\\+\\-]").matcher(token).lookingAt()){
@@ -115,15 +119,8 @@ public class Driver {
                             currentProcessor = symbolProcessor;
                             currentProcessor.processToken(token, Type.SYMBOL);
                         }
-                    } else if(space.matcher(token).lookingAt()){
-                        currentProcessor.stateCheck();
-                        currentState = State.START;
-                        break;
                     } else {
-                        /*
-                        * Invalid symbols
-                        */
-                        System.out.println("Invalid symbols!");
+                        currentProcessor.processToken(token, Type.SYMBOL);
                     }
                     break;
                 case SYMBOL:
@@ -182,18 +179,18 @@ public class Driver {
             }
         }
 
-        if(currentProcessor.stateCheck()){
-            /*
-             * Implement state change procedure
-             */
-            System.out.println("Token valid!");
-        } else{
-            /* 
-             * Implement state change procedure
-             */
-            System.out.println("Token invalid!");
-        }
-        currentState = State.START;
+        // if(currentProcessor.stateCheck()){
+        //     /*
+        //      * Implement state change procedure
+        //      */
+        //     System.out.println("Token valid!");
+        // } else{
+        //     /* 
+        //      * Implement state change procedure
+        //      */
+        //     System.out.println("Token invalid!");
+        // }
+        // currentState = State.START;
         OutputWriter.closeWriteStream();
 
     }
