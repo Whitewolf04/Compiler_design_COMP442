@@ -99,7 +99,7 @@ public class Driver {
                         /*
                          * Invalid symbol
                          */
-                        System.out.println("Invalid symbol!");
+                        currentProcessor.processToken(token, Type.SYMBOL);
                     } else if(nonZero.matcher(token).lookingAt()){
                         currentProcessor.processToken(token, Type.NONZERO);
                     } else if(zero.matcher(token).lookingAt()){
