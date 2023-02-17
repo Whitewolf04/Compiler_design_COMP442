@@ -1,4 +1,9 @@
+package lexical_analyzer;
 import java.util.regex.Pattern;
+
+import syntax_analyzer.ProgramQueue;
+import syntax_analyzer.Terminal;
+import syntax_analyzer.TerminalType;
 
 public class SymbolProcessor implements Processor{
     private String storage;
@@ -247,14 +252,20 @@ public class SymbolProcessor implements Processor{
         boolean output = false;
         if(!stateFinal){
             OutputWriter.errWriting("Lexical error: Invalid symbol: " + this.storage);
-            System.out.println("Invalid symbol: " + this.storage);
+            // System.out.println("Invalid symbol: " + this.storage);
         } else{
+            // Print to output file and add to program queue
             if(state == 16 || state == 18){
                 OutputWriter.cmtWriting("[" + symbolToString() + ", " + this.storage + ", ");
+                Terminal t = new Terminal(this.storage, TerminalType.COMMENT);
+                ProgramQueue.add(t);
             } else {
                 OutputWriter.outWriting("[" + symbolToString() + ", " + this.storage + ", ");
+                Terminal t = new Terminal(this.storage, TerminalType.SYMBOL);
+                ProgramQueue.add(t);
             }
-            System.out.println("Symbol processed: " + this.storage);
+            
+            // System.out.println("Symbol processed: " + this.storage);
             output = true;
         }
         storage = "";

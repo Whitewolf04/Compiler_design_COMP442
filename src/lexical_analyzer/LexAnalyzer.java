@@ -1,3 +1,4 @@
+package lexical_analyzer;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -5,12 +6,12 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 
-public class Driver {
-    public static void main(String[] args){
+public class LexAnalyzer {
+    public static void analyze(String filename){
         String input = "";
         BufferedReader reader;
         try{
-            reader = new BufferedReader(new FileReader("lexpositivegrading.src"));
+            reader = new BufferedReader(new FileReader(filename));
 
             String currentLine;
             while((currentLine = reader.readLine()) != null){
@@ -178,19 +179,6 @@ public class Driver {
                 OutputWriter.outWriting("\n");
             }
         }
-
-        // if(currentProcessor.stateCheck()){
-        //     /*
-        //      * Implement state change procedure
-        //      */
-        //     System.out.println("Token valid!");
-        // } else{
-        //     /* 
-        //      * Implement state change procedure
-        //      */
-        //     System.out.println("Token invalid!");
-        // }
-        // currentState = State.START;
         OutputWriter.closeWriteStream();
 
     }

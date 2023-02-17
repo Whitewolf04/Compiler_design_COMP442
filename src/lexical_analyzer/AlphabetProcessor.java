@@ -1,3 +1,8 @@
+package lexical_analyzer;
+
+import syntax_analyzer.ProgramQueue;
+import syntax_analyzer.Terminal;
+import syntax_analyzer.TerminalType;
 
 public class AlphabetProcessor implements Processor{
     public String storage;
@@ -50,15 +55,25 @@ public class AlphabetProcessor implements Processor{
 
         if(err || !stateFinal){
             OutputWriter.errWriting("Lexical error: Invalid string: " + this.storage);
-            System.out.println("Invalid string: " + this.storage);
+            // System.out.println("Invalid string: " + this.storage);
         } else if(isReservedWord(this.storage)){
+            // Print out to output file
             OutputWriter.outWriting("[" + this.storage + ", " + this.storage + ", ");
-            System.out.println("Reserved word: " + this.storage);
+            // System.out.println("Reserved word: " + this.storage);
             output = true;
+
+            // Add to program queue
+            Terminal t = new Terminal(this.storage, TerminalType.RESERVED);
+            ProgramQueue.add(t);
         } else{
+            // Print out to output file
             OutputWriter.outWriting("[id, " + this.storage + ", ");
-            System.out.println("String processed: " + this.storage);
+            // System.out.println("String processed: " + this.storage);
             output = true;
+
+            // Add to program queue
+            Terminal t = new Terminal(this.storage, TerminalType.ID);
+            ProgramQueue.add(t);
         }
 
         this.storage = "";

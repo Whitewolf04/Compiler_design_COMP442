@@ -1,3 +1,4 @@
+package lexical_analyzer;
 public enum Type {
     ALPHA,
     UNDERSCORE,

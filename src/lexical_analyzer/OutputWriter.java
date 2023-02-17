@@ -1,3 +1,4 @@
+package lexical_analyzer;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;

@@ -1,4 +1,9 @@
+package lexical_analyzer;
 import java.util.regex.Pattern;
+
+import syntax_analyzer.ProgramQueue;
+import syntax_analyzer.Terminal;
+import syntax_analyzer.TerminalType;
 
 public class NumberProcessor implements Processor{
     private String storage;
@@ -51,14 +56,20 @@ public class NumberProcessor implements Processor{
 
         if(!stateFinal){
             OutputWriter.errWriting("Lexical error: Invalid number: " + storage);
-            System.out.println("Invalid number: " + this.storage);
+            // System.out.println("Invalid number: " + this.storage);
         } else {
+            // Print to output file and add to program queue
             if(numType == NumType.FLOAT){
                 OutputWriter.outWriting("[floatnum, " + this.storage + ", ");
+                Terminal t = new Terminal(this.storage, TerminalType.FLOAT);
+                ProgramQueue.add(t);
             } else {
                 OutputWriter.outWriting("[intnum, " + this.storage + ", ");
+                Terminal t = new Terminal(this.storage, TerminalType.INT);
+                ProgramQueue.add(t);
             }
-            System.out.println("Number processed: " + this.storage);
+            
+            // System.out.println("Number processed: " + this.storage);
             output = true;
         }
         storage = "";
