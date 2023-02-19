@@ -3,7 +3,6 @@ import java.util.regex.Pattern;
 
 import syntax_analyzer.ProgramQueue;
 import syntax_analyzer.Terminal;
-import syntax_analyzer.TerminalType;
 
 public class SymbolProcessor implements Processor{
     private String storage;
@@ -194,54 +193,77 @@ public class SymbolProcessor implements Processor{
     private String symbolToString(){
         switch(state){
             case 1:
+                ProgramQueue.add(Terminal.assign);
                 return "assign";
             case 3:
+                ProgramQueue.add(Terminal.eq);
                 return "equal";
             case 4:
+                ProgramQueue.add(Terminal.arrow);
                 return "returntype";
             case 5:
+                ProgramQueue.add(Terminal.lt);
                 return "lt";
             case 6:
+                ProgramQueue.add(Terminal.leq);
                 return "leq";
             case 7:
+                ProgramQueue.add(Terminal.noteq);
                 return "noteq";
             case 8:
+                ProgramQueue.add(Terminal.gt);
                 return "gt";
             case 9:
+                ProgramQueue.add(Terminal.geq);
                 return "geq";
             case 10:
+                ProgramQueue.add(Terminal.plus);
                 return "plus";
             case 11:
+                ProgramQueue.add(Terminal.minus);
                 return "minus";
             case 12:
+                ProgramQueue.add(Terminal.mult);
                 return "mult";
             case 13:
+                ProgramQueue.add(Terminal.div);
                 return "div";
             case 16:
                 return "blockcmt";
             case 18:
                 return "inlinecmt";
             case 19:
+                ProgramQueue.add(Terminal.lpar);
                 return "openpar";
             case 20:
+                ProgramQueue.add(Terminal.rpar);
                 return "closepar";
             case 21:
+                ProgramQueue.add(Terminal.lcurbr);
                 return "opencubr";
             case 22:
+                ProgramQueue.add(Terminal.rcurbr);
                 return "closecubr";
             case 23:
+                ProgramQueue.add(Terminal.lsqbr);
                 return "opensqbr";
             case 24:
+                ProgramQueue.add(Terminal.rsqbr);
                 return "closesqbr";
             case 25:
+                ProgramQueue.add(Terminal.semi);
                 return "semicol";
             case 26:
+                ProgramQueue.add(Terminal.col);
                 return "colon";
             case 27:
+                ProgramQueue.add(Terminal.sr);
                 return "scopeop";
             case 28:
+                ProgramQueue.add(Terminal.comma);
                 return "comma";
             case 29:
+                ProgramQueue.add(Terminal.dot);
                 return "dot";
             default:
                 return "invalid";
@@ -257,12 +279,8 @@ public class SymbolProcessor implements Processor{
             // Print to output file and add to program queue
             if(state == 16 || state == 18){
                 OutputWriter.cmtWriting("[" + symbolToString() + ", " + this.storage + ", ");
-                Terminal t = new Terminal(this.storage, TerminalType.COMMENT);
-                ProgramQueue.add(t);
             } else {
                 OutputWriter.outWriting("[" + symbolToString() + ", " + this.storage + ", ");
-                Terminal t = new Terminal(this.storage, TerminalType.SYMBOL);
-                ProgramQueue.add(t);
             }
             
             // System.out.println("Symbol processed: " + this.storage);

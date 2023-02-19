@@ -2,14 +2,15 @@ package lexical_analyzer;
 
 import syntax_analyzer.ProgramQueue;
 import syntax_analyzer.Terminal;
-import syntax_analyzer.TerminalType;
 
 public class AlphabetProcessor implements Processor{
     public String storage;
     private boolean stateFinal;
     private int state;
     private boolean err;
-    final String[] RESERVED = {"or", "and", "not", "integer", "float", "void", "class", "self", "isa", "while", "if", "then", "else", "read", "write", "return", "localvar", "constructor", "attribute", "function", "public", "private"};
+    //final String[] RESERVED = {"or", "and", "not", "integer", "float", "void", "class", "self", "isa", "while", "if", "then", "else", "read", "write", "return", "localvar", "constructor", "attribute", "function", "public", "private"};
+    // TODO: No 'self' reserved word in this new array
+    final Terminal[] reserved = {Terminal.orW, Terminal.andW, Terminal.notW, Terminal.integerW, Terminal.floatW, Terminal.voidW, Terminal.classW, Terminal.isaW, Terminal.whileW, Terminal.ifW, Terminal.thenW, Terminal.elseW, Terminal.readW, Terminal.writeW, Terminal.returnW, Terminal.localvarW, Terminal.constructorW, Terminal.attributeW, Terminal.functionW, Terminal.publicW, Terminal.privateW};
     private final int[][] transitionTable = {{1, 1, 2}, {2, 1, 2}, {2, 1, 2}, {0, 1, 0}};
 
     public AlphabetProcessor(){
@@ -57,14 +58,10 @@ public class AlphabetProcessor implements Processor{
             OutputWriter.errWriting("Lexical error: Invalid string: " + this.storage);
             // System.out.println("Invalid string: " + this.storage);
         } else if(isReservedWord(this.storage)){
-            // Print out to output file
+            // Add character to program queue and print out to output file
             OutputWriter.outWriting("[" + this.storage + ", " + this.storage + ", ");
             // System.out.println("Reserved word: " + this.storage);
             output = true;
-
-            // Add to program queue
-            Terminal t = new Terminal(this.storage, TerminalType.RESERVED);
-            ProgramQueue.add(t);
         } else{
             // Print out to output file
             OutputWriter.outWriting("[id, " + this.storage + ", ");
@@ -72,8 +69,7 @@ public class AlphabetProcessor implements Processor{
             output = true;
 
             // Add to program queue
-            Terminal t = new Terminal(this.storage, TerminalType.ID);
-            ProgramQueue.add(t);
+            ProgramQueue.add(Terminal.id);
         }
 
         this.storage = "";
@@ -82,9 +78,11 @@ public class AlphabetProcessor implements Processor{
     }
 
     private boolean isReservedWord(String storage){
-        for(int i = 0; i < RESERVED.length; i++){
-            if(storage.compareTo(RESERVED[i]) == 0)
+        for(int i = 0; i < reserved.length; i++){
+            if(reserved[i].compareToString(storage)){
+                ProgramQueue.add(reserved[i]);
                 return true;
+            }
         }
         return false;
     }

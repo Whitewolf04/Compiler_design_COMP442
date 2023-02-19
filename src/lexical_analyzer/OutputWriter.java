@@ -3,6 +3,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import syntax_analyzer.ProgramQueue;
+
 public final class OutputWriter {
     private static BufferedWriter errWriter;
     private static BufferedWriter outWriter;
@@ -45,6 +47,7 @@ public final class OutputWriter {
                 if(nextLineCount == 0){
                     outWriter.write("\n");
                     nextLineCount++;
+                    ProgramQueue.recordLine();
                 }
             } else{
                 outWriter.write(output + lineCount + "] ");

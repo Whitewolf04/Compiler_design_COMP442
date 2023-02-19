@@ -1,10 +1,13 @@
 package syntax_analyzer;
 
 import java.util.Queue;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class ProgramQueue {
-    static Queue<Terminal> program;
+    private static Queue<Terminal> program;
+    private static ArrayList<Integer> lineRecord;
+    private static int charCount;
 
     private ProgramQueue(){
         program = null;
@@ -12,6 +15,9 @@ public class ProgramQueue {
 
     public static void initProgramQueue(){
         program = new LinkedList<Terminal>();
+        lineRecord = new ArrayList<Integer>();
+        charCount = 0;
+        program.offer(Terminal.START);
     }
 
     public static boolean add(Terminal token){
@@ -20,6 +26,7 @@ public class ProgramQueue {
 
     public static Terminal nextToken(){
         program.poll();
+        charCount++;
         return program.peek();
     }
 
@@ -31,5 +38,21 @@ public class ProgramQueue {
         }
 
         return output;
+    }
+
+    public static void recordLine(){
+        lineRecord.add(program.size());
+    }
+
+    public static int getLineCount(){
+        int lineCount = 0;
+        for(int i : lineRecord){
+            if(i > charCount){
+                break;
+            } else{
+                lineCount++;
+            }
+        }
+        return lineCount;
     }
 }
