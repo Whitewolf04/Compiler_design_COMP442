@@ -14,7 +14,6 @@ public class NonTerminal extends GrammarToken{
         follow = followSet;
         this.name = name;
         tableEntry = new HashMap<String, Stack<GrammarToken>>();
-        System.out.println("NonTerminal added");
     }
 
     public boolean inFirst(Terminal token){

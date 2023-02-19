@@ -17,7 +17,7 @@ public class SyntaxAnalyzer {
         Stack<GrammarToken> temp = null;
         Stack<GrammarToken> lookup = null;
 
-        while(!token.equals(Terminal.START)){
+        while(token != null){
             // Check if top of the stack is a terminal character
             stackTop = GrammarStack.peek();
             if(stackTop.getClass() == token.getClass()){
@@ -62,7 +62,7 @@ public class SyntaxAnalyzer {
     }
 
     public static void skipErrors(Terminal token, GrammarToken stackTop){
-        System.out.println("Syntax error at " + ProgramQueue.getLineCount() + " with " + stackTop.toString() + " at the top of the stack");
+        System.out.println("Syntax error at line " + ProgramQueue.getLineCount() + ", character " + token.toString() + " with " + stackTop.toString() + " at the top of the stack");
         NonTerminal temp = null;
         while(stackTop.getClass() == token.getClass()){
             GrammarStack.pop();

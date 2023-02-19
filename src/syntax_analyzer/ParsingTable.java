@@ -228,7 +228,7 @@ public final class ParsingTable {
         localVarDeclOrStmt.tableEntry.put("while", new Stack<GrammarToken>(){{push(statement);}});
         localVarDeclOrStmt.tableEntry.put("read", new Stack<GrammarToken>(){{push(statement);}});
         localVarDeclOrStmt.tableEntry.put("if", new Stack<GrammarToken>(){{push(statement);}});
-        localVarDeclOrStmt.tableEntry.put("localvar", new Stack<GrammarToken>(){{push(statement);}});
+        localVarDeclOrStmt.tableEntry.put("localvar", new Stack<GrammarToken>(){{push(localVarDecl);}});
         localVarDeclOrStmt.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(statement);}});
 
         memberDecl.tableEntry.put("attribute", new Stack<GrammarToken>(){{push(memberVarDecl);}});
@@ -348,8 +348,8 @@ public final class ParsingTable {
         reptVariable3.tableEntry.put("or", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
 
         returnType.tableEntry.put("id", new Stack<GrammarToken>(){{push(type);}});
-        returnType.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(type);}});
-        returnType.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(type);}});
+        returnType.tableEntry.put("float", new Stack<GrammarToken>(){{push(type);}});
+        returnType.tableEntry.put("integer", new Stack<GrammarToken>(){{push(type);}});
         returnType.tableEntry.put("void", new Stack<GrammarToken>(){{push(Terminal.voidW);}});
 
         rightRecArithExpr.tableEntry.put("semi", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
@@ -403,7 +403,7 @@ public final class ParsingTable {
         statement.tableEntry.put("return", new Stack<GrammarToken>(){{push(Terminal.returnW);  push(Terminal.lpar); push(expr); push(Terminal.rpar); push(Terminal.semi);}});
         statement.tableEntry.put("write", new Stack<GrammarToken>(){{push(Terminal.writeW);  push(Terminal.lpar); push(expr); push(Terminal.rpar); push(Terminal.semi);}});
         statement.tableEntry.put("read", new Stack<GrammarToken>(){{push(Terminal.readW);  push(Terminal.lpar); push(Terminal.id); push(statement0);}});
-        statement.tableEntry.put("return", new Stack<GrammarToken>(){{push(Terminal.whileW); push(Terminal.lpar);  push(relExpr); push(Terminal.rpar); push(statBlock); push(Terminal.semi);}});
+        statement.tableEntry.put("while", new Stack<GrammarToken>(){{push(Terminal.whileW); push(Terminal.lpar);  push(relExpr); push(Terminal.rpar); push(statBlock); push(Terminal.semi);}});
         statement.tableEntry.put("if", new Stack<GrammarToken>(){{push(Terminal.ifW);  push(Terminal.lpar); push(relExpr); push(Terminal.rpar); push(Terminal.thenW); push(statBlock); push(Terminal.elseW); push(statBlock); push(Terminal.semi);}});
         statement.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(assignStat); push(Terminal.semi);}});
 

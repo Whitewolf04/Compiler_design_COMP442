@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import syntax_analyzer.ProgramQueue;
+
 
 public class LexAnalyzer {
     public static void analyze(String filename){
@@ -176,6 +178,7 @@ public class LexAnalyzer {
             }
             if(token.compareTo("\n") == 0){
                 OutputWriter.lineCount++;
+                ProgramQueue.recordLine();
                 OutputWriter.outWriting("\n");
             }
         }

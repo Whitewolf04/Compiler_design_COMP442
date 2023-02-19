@@ -45,7 +45,7 @@ public class ProgramQueue {
     }
 
     public static int getLineCount(){
-        int lineCount = 0;
+        int lineCount = 1;
         for(int i : lineRecord){
             if(i > charCount){
                 break;
