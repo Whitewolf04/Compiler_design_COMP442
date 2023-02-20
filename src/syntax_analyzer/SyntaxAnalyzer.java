@@ -2,10 +2,14 @@ package syntax_analyzer;
 
 import java.util.Stack;
 
+import lexical_analyzer.OutputWriter;
+
 public class SyntaxAnalyzer {
     public static void analyze(){
         ParsingTable.loadTable();
         System.out.println("Table loaded!");
+
+        OutputWriter.openSyntaxWriteStream();
 
         GrammarStack.initStack();
         GrammarStack.push(Terminal.START);
@@ -51,7 +55,8 @@ public class SyntaxAnalyzer {
                 }
             }
 
-            GrammarStack.printStack();
+            System.out.println(GrammarStack.printStack());
+            OutputWriter.syntaxOutWriting();
         }
 
         if(!stackTop.compareToString("$") || error){
@@ -59,10 +64,14 @@ public class SyntaxAnalyzer {
         } else{
             System.out.println("Program is syntactically correct!");
         }
+
+        OutputWriter.closeSyntaxWriteStream();
     }
 
     public static void skipErrors(Terminal token, GrammarToken stackTop){
-        System.out.println("Syntax error at line " + ProgramQueue.getLineCount() + ", character " + token.toString() + " with " + stackTop.toString() + " at the top of the stack");
+        String error = "Syntax error at line " + ProgramQueue.getLineCount() + ", character " + token.toString() + " with " + stackTop.toString() + " at the top of the stack";
+        System.out.println(error);
+        OutputWriter.syntaxErrWriting(error);
         NonTerminal temp = null;
         while(stackTop.getClass() == token.getClass()){
             GrammarStack.pop();
@@ -79,6 +88,12 @@ public class SyntaxAnalyzer {
         } else {
             while(!temp.inFirst(token) || (temp.inFirst(Terminal.EPSILON) && !temp.inFollow(token))){
                 token = ProgramQueue.nextToken();
+                if(token == null){
+                    System.out.println("End of program!");
+                    OutputWriter.syntaxErrWriting("End of program!");
+                    OutputWriter.closeSyntaxWriteStream();
+                    System.exit(1);
+                }
             }
         }
     }

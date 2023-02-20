@@ -273,14 +273,14 @@ public class SymbolProcessor implements Processor{
     public boolean stateCheck(){
         boolean output = false;
         if(!stateFinal){
-            OutputWriter.errWriting("Lexical error: Invalid symbol: " + this.storage);
+            OutputWriter.lexErrWriting("Lexical error: Invalid symbol: " + this.storage);
             // System.out.println("Invalid symbol: " + this.storage);
         } else{
             // Print to output file and add to program queue
             if(state == 16 || state == 18){
                 OutputWriter.cmtWriting("[" + symbolToString() + ", " + this.storage + ", ");
             } else {
-                OutputWriter.outWriting("[" + symbolToString() + ", " + this.storage + ", ");
+                OutputWriter.lexOutWriting("[" + symbolToString() + ", " + this.storage + ", ");
             }
             
             // System.out.println("Symbol processed: " + this.storage);

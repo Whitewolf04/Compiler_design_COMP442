@@ -26,8 +26,7 @@ public class LexAnalyzer {
             System.out.println("Error reading input file!");
         }
 
-        OutputWriter.openWriteStream();
-
+        OutputWriter.openLexWriteStream();
 
         Processor currentProcessor = null;
         AlphabetProcessor alphaProcessor = new AlphabetProcessor();
@@ -179,10 +178,11 @@ public class LexAnalyzer {
             if(token.compareTo("\n") == 0){
                 OutputWriter.lineCount++;
                 ProgramQueue.recordLine();
-                OutputWriter.outWriting("\n");
+                OutputWriter.lexOutWriting("\n");
             }
         }
-        OutputWriter.closeWriteStream();
+
+        OutputWriter.closeLexWriteStream();
 
     }
 

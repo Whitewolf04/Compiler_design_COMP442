@@ -8,14 +8,15 @@ public final class ParsingTable {
 
     public static void loadTable(){
         NonTerminal START = new NonTerminal("START", new Terminal[]{Terminal.functionW, Terminal.EPSILON, Terminal.classW}, new Terminal[]{Terminal.START});
-        NonTerminal aParams = new NonTerminal("aParams", new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.minus, Terminal.floatLit, Terminal.notW}, new Terminal[]{Terminal.rpar});
+        NonTerminal aParams = new NonTerminal("aParams", new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.EPSILON, Terminal.minus, Terminal.floatLit, Terminal.notW}, new Terminal[]{Terminal.rpar});
         NonTerminal aParamsTail = new NonTerminal("aParamsTail", new Terminal[]{Terminal.comma}, new Terminal[]{Terminal.rpar, Terminal.comma});
         NonTerminal addOp = new NonTerminal("addOp", new Terminal[]{Terminal.orW, Terminal.plus, Terminal.minus}, new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.minus, Terminal.floatLit, Terminal.notW});
         NonTerminal arithExpr = new NonTerminal("arithExpr", new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.minus, Terminal.floatLit, Terminal.notW}, new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.rpar, Terminal.semi, Terminal.comma, Terminal.rsqbr, Terminal.eq, Terminal.geq});
         NonTerminal arraySize = new NonTerminal("arraySize", new Terminal[]{Terminal.lsqbr}, new Terminal[]{Terminal.rpar, Terminal.lsqbr, Terminal.semi, Terminal.comma});
         NonTerminal arraySize1 = new NonTerminal("arraySize1", new Terminal[]{Terminal.intLit, Terminal.rsqbr}, new Terminal[]{Terminal.rpar, Terminal.lsqbr, Terminal.semi, Terminal.comma});
         NonTerminal assignOp = new NonTerminal("assignOp", new Terminal[]{Terminal.assign}, new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.minus, Terminal.floatLit, Terminal.notW});
-        NonTerminal assignStat = new NonTerminal("assignStat", new Terminal[]{Terminal.lpar, Terminal.lsqbr}, new Terminal[]{Terminal.semi});
+        NonTerminal assignStat = new NonTerminal("assignStat", new Terminal[]{Terminal.lpar, Terminal.lsqbr, Terminal.id}, new Terminal[]{Terminal.semi});
+        NonTerminal assignStatIdnest = new NonTerminal("assignStatIdnest", new Terminal[]{Terminal.EPSILON, Terminal.id}, new Terminal[]{Terminal.lsqbr});
         NonTerminal classDecl = new NonTerminal("classDecl", new Terminal[]{Terminal.classW}, new Terminal[]{Terminal.functionW, Terminal.START, Terminal.classW});
         NonTerminal classDeclOrFuncDef = new NonTerminal("classDeclOrFuncDef", new Terminal[]{Terminal.functionW, Terminal.classW}, new Terminal[]{Terminal.functionW, Terminal.START, Terminal.classW});
         NonTerminal expr = new NonTerminal("expr", new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.minus, Terminal.floatLit, Terminal.notW}, new Terminal[]{Terminal.rpar, Terminal.semi, Terminal.comma});
@@ -33,14 +34,12 @@ public final class ParsingTable {
         NonTerminal funcHead2 = new NonTerminal("funcHead2", new Terminal[]{Terminal.constructorW, Terminal.id}, new Terminal[]{Terminal.lcurbr});
         NonTerminal functionCall = new NonTerminal("functionCall", new Terminal[]{Terminal.lpar}, new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.orW, Terminal.semi, Terminal.rsqbr, Terminal.rpar, Terminal.mult, Terminal.andW, Terminal.plus, Terminal.comma, Terminal.minus, Terminal.div, Terminal.eq, Terminal.geq});
         NonTerminal functionCall1 = new NonTerminal("functionCall1", new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.EPSILON, Terminal.minus, Terminal.floatLit, Terminal.notW}, new Terminal[]{Terminal.rpar});
-        NonTerminal idnest = new NonTerminal("idnest", new Terminal[]{Terminal.id}, new Terminal[]{Terminal.id});
-        NonTerminal idnest1 = new NonTerminal("idnest1", new Terminal[]{Terminal.lpar, Terminal.lsqbr, Terminal.dot}, new Terminal[]{Terminal.id});
-        NonTerminal idnest2 = new NonTerminal("idnest2", new Terminal[]{Terminal.lpar, Terminal.id, Terminal.rpar, Terminal.plus, Terminal.intLit, Terminal.minus, Terminal.floatLit, Terminal.notW}, new Terminal[]{});
+        NonTerminal idnest = new NonTerminal("idnest", new Terminal[]{Terminal.id}, new Terminal[]{Terminal.id, Terminal.lsqbr});
+        NonTerminal idnest1 = new NonTerminal("idnest1", new Terminal[]{Terminal.lpar, Terminal.lsqbr, Terminal.dot}, new Terminal[]{Terminal.id, Terminal.lsqbr});
         NonTerminal indice = new NonTerminal("indice", new Terminal[]{Terminal.lsqbr}, new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.orW, Terminal.lsqbr, Terminal.semi, Terminal.rsqbr, Terminal.assign, Terminal.rpar, Terminal.mult, Terminal.andW, Terminal.plus, Terminal.comma, Terminal.minus, Terminal.dot, Terminal.div, Terminal.eq, Terminal.geq});
-        NonTerminal localVarDecl = new NonTerminal("localVarDecl", new Terminal[]{Terminal.localvarW}, new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.lpar, Terminal.returnW, Terminal.id, Terminal.rcurbr, Terminal.lsqbr, Terminal.ifW, Terminal.readW, Terminal.whileW});
-        NonTerminal localVarDecl1 = new NonTerminal("localVarDecl1", new Terminal[]{Terminal.lpar, Terminal.lsqbr, Terminal.semi}, new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.lpar, Terminal.returnW, Terminal.id, Terminal.rcurbr, Terminal.lsqbr, Terminal.ifW, Terminal.readW, Terminal.whileW});
-        NonTerminal localVarDecl2 = new NonTerminal("localVarDecl2", new Terminal[]{Terminal.lpar, Terminal.id, Terminal.rpar, Terminal.plus, Terminal.intLit, Terminal.minus, Terminal.floatLit, Terminal.notW}, new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.lpar, Terminal.returnW, Terminal.id, Terminal.rcurbr, Terminal.lsqbr, Terminal.ifW, Terminal.readW, Terminal.whileW});
-        NonTerminal localVarDeclOrStmt = new NonTerminal("localVarDeclOrStmt", new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.lpar, Terminal.returnW, Terminal.id, Terminal.lsqbr, Terminal.ifW, Terminal.readW, Terminal.whileW}, new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.lpar, Terminal.returnW, Terminal.id, Terminal.rcurbr, Terminal.lsqbr, Terminal.ifW, Terminal.readW, Terminal.whileW});
+        NonTerminal localVarDecl = new NonTerminal("localVarDecl", new Terminal[]{Terminal.localvarW}, new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.returnW, Terminal.id, Terminal.rcurbr, Terminal.ifW, Terminal.readW, Terminal.whileW});
+        NonTerminal localVarDecl1 = new NonTerminal("localVarDecl1", new Terminal[]{Terminal.lpar, Terminal.lsqbr, Terminal.semi}, new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.returnW, Terminal.id, Terminal.rcurbr, Terminal.ifW, Terminal.readW, Terminal.whileW});
+        NonTerminal localVarDeclOrStmt = new NonTerminal("localVarDeclOrStmt", new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.returnW, Terminal.id, Terminal.ifW, Terminal.readW, Terminal.whileW}, new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.returnW, Terminal.id, Terminal.rcurbr, Terminal.ifW, Terminal.readW, Terminal.whileW});
         NonTerminal memberDecl = new NonTerminal("memberDecl", new Terminal[]{Terminal.functionW, Terminal.constructorW, Terminal.attributeW}, new Terminal[]{Terminal.functionW, Terminal.constructorW, Terminal.publicW, Terminal.rcurbr, Terminal.privateW, Terminal.attributeW});
         NonTerminal memberFuncDecl = new NonTerminal("memberFuncDecl", new Terminal[]{Terminal.functionW, Terminal.constructorW}, new Terminal[]{Terminal.functionW, Terminal.constructorW, Terminal.publicW, Terminal.rcurbr, Terminal.privateW, Terminal.attributeW});
         NonTerminal memberVarDecl = new NonTerminal("memberVarDecl", new Terminal[]{Terminal.attributeW}, new Terminal[]{Terminal.functionW, Terminal.constructorW, Terminal.publicW, Terminal.rcurbr, Terminal.privateW, Terminal.attributeW});
@@ -55,31 +54,31 @@ public final class ParsingTable {
         NonTerminal reptFParams3 = new NonTerminal("reptFParams3", new Terminal[]{Terminal.lsqbr, Terminal.EPSILON}, new Terminal[]{Terminal.rpar, Terminal.comma});
         NonTerminal reptFParams4 = new NonTerminal("reptFParams4", new Terminal[]{Terminal.comma, Terminal.EPSILON}, new Terminal[]{Terminal.rpar});
         NonTerminal reptFParamsTail4 = new NonTerminal("reptFParamsTail4", new Terminal[]{Terminal.lsqbr, Terminal.EPSILON}, new Terminal[]{Terminal.rpar, Terminal.comma});
-        NonTerminal reptFuncBody1 = new NonTerminal("reptFuncBody1", new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.lpar, Terminal.returnW, Terminal.id, Terminal.lsqbr, Terminal.ifW, Terminal.EPSILON, Terminal.readW, Terminal.whileW}, new Terminal[]{Terminal.rcurbr});
+        NonTerminal reptFuncBody1 = new NonTerminal("reptFuncBody1", new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.returnW, Terminal.id, Terminal.ifW, Terminal.EPSILON, Terminal.readW, Terminal.whileW}, new Terminal[]{Terminal.rcurbr});
         NonTerminal reptIdnest = new NonTerminal("reptIdnest", new Terminal[]{Terminal.id}, new Terminal[]{Terminal.id});
         NonTerminal reptIdnest0 = new NonTerminal("reptIdnest0", new Terminal[]{Terminal.lpar, Terminal.lsqbr, Terminal.EPSILON, Terminal.dot}, new Terminal[]{Terminal.id});
-        NonTerminal reptIdnest1 = new NonTerminal("reptIdnest1", new Terminal[]{Terminal.lpar, Terminal.EPSILON}, new Terminal[]{Terminal.dot});
+        NonTerminal reptIdnest1 = new NonTerminal("reptIdnest1", new Terminal[]{Terminal.lsqbr, Terminal.EPSILON}, new Terminal[]{Terminal.dot});
         NonTerminal reptLocalVarDecl4 = new NonTerminal("reptLocalVarDecl4", new Terminal[]{Terminal.lsqbr, Terminal.EPSILON}, new Terminal[]{Terminal.semi});
         NonTerminal reptMemberVarDecl4 = new NonTerminal("reptMemberVarDecl4", new Terminal[]{Terminal.lsqbr, Terminal.EPSILON}, new Terminal[]{Terminal.semi});
-        NonTerminal reptStatBlock1 = new NonTerminal("reptStatBlock1", new Terminal[]{Terminal.writeW, Terminal.lpar, Terminal.returnW, Terminal.id, Terminal.lsqbr, Terminal.ifW, Terminal.EPSILON, Terminal.readW, Terminal.whileW}, new Terminal[]{Terminal.rcurbr});
+        NonTerminal reptStatBlock1 = new NonTerminal("reptStatBlock1", new Terminal[]{Terminal.writeW, Terminal.returnW, Terminal.id, Terminal.ifW, Terminal.EPSILON, Terminal.readW, Terminal.whileW}, new Terminal[]{Terminal.rcurbr});
         NonTerminal reptVariable2 = new NonTerminal("reptVariable2", new Terminal[]{Terminal.lsqbr}, new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.orW, Terminal.semi, Terminal.rsqbr, Terminal.assign, Terminal.rpar, Terminal.mult, Terminal.andW, Terminal.plus, Terminal.comma, Terminal.minus, Terminal.div, Terminal.eq, Terminal.geq});
         NonTerminal reptVariable3 = new NonTerminal("reptVariable3", new Terminal[]{Terminal.lsqbr, Terminal.EPSILON}, new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.orW, Terminal.semi, Terminal.rsqbr, Terminal.assign, Terminal.rpar, Terminal.mult, Terminal.andW, Terminal.plus, Terminal.comma, Terminal.minus, Terminal.div, Terminal.eq, Terminal.geq});
         NonTerminal returnType = new NonTerminal("returnType", new Terminal[]{Terminal.id, Terminal.integerW, Terminal.floatW, Terminal.voidW}, new Terminal[]{Terminal.lcurbr, Terminal.semi});
         NonTerminal rightRecArithExpr = new NonTerminal("rightRecArithExpr", new Terminal[]{Terminal.orW, Terminal.plus, Terminal.EPSILON, Terminal.minus}, new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.rpar, Terminal.semi, Terminal.comma, Terminal.rsqbr, Terminal.eq, Terminal.geq});
         NonTerminal rightRecTerm = new NonTerminal("rightRecTerm", new Terminal[]{Terminal.mult, Terminal.andW, Terminal.EPSILON, Terminal.div}, new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.orW, Terminal.semi, Terminal.rsqbr, Terminal.rpar, Terminal.plus, Terminal.comma, Terminal.minus, Terminal.eq, Terminal.geq});
         NonTerminal sign = new NonTerminal("sign", new Terminal[]{Terminal.plus, Terminal.minus}, new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.minus, Terminal.floatLit, Terminal.notW});
-        NonTerminal statBlock = new NonTerminal("statBlock", new Terminal[]{Terminal.lcurbr, Terminal.writeW, Terminal.lpar, Terminal.returnW, Terminal.id, Terminal.lsqbr, Terminal.ifW, Terminal.EPSILON, Terminal.readW, Terminal.whileW}, new Terminal[]{Terminal.elseW, Terminal.semi});
-        NonTerminal statement = new NonTerminal("statement", new Terminal[]{Terminal.writeW, Terminal.lpar, Terminal.returnW, Terminal.lsqbr, Terminal.ifW, Terminal.readW, Terminal.whileW}, new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.lpar, Terminal.returnW, Terminal.id, Terminal.rcurbr, Terminal.elseW, Terminal.lsqbr, Terminal.ifW, Terminal.semi, Terminal.readW, Terminal.whileW});
-        NonTerminal statement0 = new NonTerminal("statement0", new Terminal[]{Terminal.id, Terminal.lsqbr}, new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.lpar, Terminal.returnW, Terminal.id, Terminal.rcurbr, Terminal.elseW, Terminal.lsqbr, Terminal.ifW, Terminal.semi, Terminal.readW, Terminal.whileW});
+        NonTerminal statBlock = new NonTerminal("statBlock", new Terminal[]{Terminal.lcurbr, Terminal.writeW, Terminal.returnW, Terminal.id, Terminal.ifW, Terminal.EPSILON, Terminal.readW, Terminal.whileW}, new Terminal[]{Terminal.elseW, Terminal.semi});
+        NonTerminal statement = new NonTerminal("statement", new Terminal[]{Terminal.writeW, Terminal.returnW, Terminal.id, Terminal.ifW, Terminal.readW, Terminal.whileW}, new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.returnW, Terminal.id, Terminal.rcurbr, Terminal.elseW, Terminal.ifW, Terminal.semi, Terminal.readW, Terminal.whileW});
+        NonTerminal statement0 = new NonTerminal("statement0", new Terminal[]{Terminal.id}, new Terminal[]{Terminal.lsqbr});
         NonTerminal term = new NonTerminal("term", new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.minus, Terminal.floatLit, Terminal.notW}, new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.orW, Terminal.semi, Terminal.rsqbr, Terminal.rpar, Terminal.plus, Terminal.comma, Terminal.minus, Terminal.eq, Terminal.geq});
-        NonTerminal type = new NonTerminal("type", new Terminal[]{Terminal.id, Terminal.integerW, Terminal.floatW}, new Terminal[]{Terminal.lcurbr, Terminal.lpar, Terminal.rpar, Terminal.semi, Terminal.lsqbr, Terminal.rsqbr});
-        NonTerminal variable = new NonTerminal("variable", new Terminal[]{Terminal.lsqbr}, new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.orW, Terminal.semi, Terminal.rsqbr, Terminal.assign, Terminal.rpar, Terminal.mult, Terminal.andW, Terminal.plus, Terminal.comma, Terminal.minus, Terminal.div, Terminal.eq, Terminal.geq});
+        NonTerminal type = new NonTerminal("type", new Terminal[]{Terminal.id, Terminal.integerW, Terminal.floatW}, new Terminal[]{Terminal.lcurbr, Terminal.lpar, Terminal.rpar, Terminal.semi, Terminal.lsqbr, Terminal.comma});
         NonTerminal visibility = new NonTerminal("visibility", new Terminal[]{Terminal.publicW, Terminal.EPSILON, Terminal.privateW}, new Terminal[]{Terminal.functionW, Terminal.constructorW, Terminal.attributeW});
 
         START.tableEntry.put("function", new Stack<GrammarToken>(){{push(reptSTART0);}});
         START.tableEntry.put("class", new Stack<GrammarToken>(){{push(reptSTART0);}});
 
         aParams.tableEntry.put("id", new Stack<GrammarToken>(){{push(expr); push(reptAParams1);}});
+        aParams.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
         aParams.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(expr); push(reptAParams1);}});
         aParams.tableEntry.put("minus", new Stack<GrammarToken>(){{push(expr); push(reptAParams1);}});
         aParams.tableEntry.put("plus", new Stack<GrammarToken>(){{push(expr); push(reptAParams1);}});
@@ -108,8 +107,12 @@ public final class ParsingTable {
 
         assignOp.tableEntry.put("equal", new Stack<GrammarToken>(){{push(Terminal.assign);}});
 
+        assignStat.tableEntry.put("id", new Stack<GrammarToken>(){{push(assignStatIdnest); push(reptVariable2); push(assignOp); push(expr);}});
         assignStat.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(functionCall);}});
-        assignStat.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(variable); push(assignOp); push(expr);}});
+        assignStat.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(assignStatIdnest); push(reptVariable2); push(assignOp); push(expr);}});
+
+        assignStatIdnest.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(idnest); push(assignStatIdnest);}});
+        assignStatIdnest.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
 
         classDecl.tableEntry.put("class", new Stack<GrammarToken>(){{push(Terminal.classW); push(Terminal.id); push(optClassDecl2); push(Terminal.lcurbr); push(reptClassDecl8); push(Terminal.rcurbr); push(Terminal.semi);}});
 
@@ -143,7 +146,7 @@ public final class ParsingTable {
         factor.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(Terminal.intLit);}});
 
         factor1.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(functionCall);}});
-        factor1.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(variable);}});
+        factor1.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptVariable2);}});
 
         factor2.tableEntry.put("id", new Stack<GrammarToken>(){{push(arithExpr); push(factor3);}});
         factor2.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(arithExpr); push(factor3);}});
@@ -181,7 +184,7 @@ public final class ParsingTable {
         functionCall.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(functionCall1); push(Terminal.rpar);}});
 
         functionCall1.tableEntry.put("id", new Stack<GrammarToken>(){{push(aParams);}});
-        functionCall1.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
+        functionCall1.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(aParams);}});
         functionCall1.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(aParams);}});
         functionCall1.tableEntry.put("minus", new Stack<GrammarToken>(){{push(aParams);}});
         functionCall1.tableEntry.put("plus", new Stack<GrammarToken>(){{push(aParams);}});
@@ -191,45 +194,25 @@ public final class ParsingTable {
 
         idnest.tableEntry.put("id", new Stack<GrammarToken>(){{push(Terminal.id); push(idnest1);}});
 
-        idnest1.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar);}});
+        idnest1.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(aParams); push(Terminal.rpar); push(Terminal.dot);}});
         idnest1.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptIdnest1); push(Terminal.dot);}});
         idnest1.tableEntry.put("dot", new Stack<GrammarToken>(){{push(reptIdnest1); push(Terminal.dot);}});
-
-        idnest2.tableEntry.put("id", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.dot);}});
-        idnest2.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(Terminal.rpar); push(Terminal.dot);}});
-        idnest2.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.dot);}});
-        idnest2.tableEntry.put("minus", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.dot);}});
-        idnest2.tableEntry.put("plus", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.dot);}});
-        idnest2.tableEntry.put("not", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.dot);}});
-        idnest2.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.dot);}});
-        idnest2.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.dot);}});
 
         indice.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(Terminal.lsqbr); push(arithExpr); push(Terminal.rsqbr);}});
 
         localVarDecl.tableEntry.put("localvar", new Stack<GrammarToken>(){{push(Terminal.localvarW); push(Terminal.id); push(Terminal.col); push(type); push(localVarDecl1);}});
 
         localVarDecl1.tableEntry.put("semi", new Stack<GrammarToken>(){{push(reptLocalVarDecl4); push(Terminal.semi);}});
-        localVarDecl1.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(localVarDecl2);}});
+        localVarDecl1.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(aParams); push(Terminal.rpar); push(Terminal.semi);}});
         localVarDecl1.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptLocalVarDecl4); push(Terminal.semi);}});
 
-        localVarDecl2.tableEntry.put("id", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.semi);}});
-        localVarDecl2.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(Terminal.rpar); push(Terminal.semi);}});
-        localVarDecl2.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.semi);}});
-        localVarDecl2.tableEntry.put("minus", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.semi);}});
-        localVarDecl2.tableEntry.put("plus", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.semi);}});
-        localVarDecl2.tableEntry.put("not", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.semi);}});
-        localVarDecl2.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.semi);}});
-        localVarDecl2.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(aParams); push(Terminal.rpar); push(Terminal.semi);}});
-
         localVarDeclOrStmt.tableEntry.put("id", new Stack<GrammarToken>(){{push(statement);}});
-        localVarDeclOrStmt.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(statement);}});
         localVarDeclOrStmt.tableEntry.put("return", new Stack<GrammarToken>(){{push(statement);}});
         localVarDeclOrStmt.tableEntry.put("write", new Stack<GrammarToken>(){{push(statement);}});
         localVarDeclOrStmt.tableEntry.put("while", new Stack<GrammarToken>(){{push(statement);}});
         localVarDeclOrStmt.tableEntry.put("read", new Stack<GrammarToken>(){{push(statement);}});
         localVarDeclOrStmt.tableEntry.put("if", new Stack<GrammarToken>(){{push(statement);}});
         localVarDeclOrStmt.tableEntry.put("localvar", new Stack<GrammarToken>(){{push(localVarDecl);}});
-        localVarDeclOrStmt.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(statement);}});
 
         memberDecl.tableEntry.put("attribute", new Stack<GrammarToken>(){{push(memberVarDecl);}});
         memberDecl.tableEntry.put("constructor", new Stack<GrammarToken>(){{push(memberFuncDecl);}});
@@ -270,7 +253,7 @@ public final class ParsingTable {
 
         reptClassDecl8.tableEntry.put("private", new Stack<GrammarToken>(){{push(visibility); push(memberDecl); push(reptClassDecl8);}});
         reptClassDecl8.tableEntry.put("public", new Stack<GrammarToken>(){{push(visibility); push(memberDecl); push(reptClassDecl8);}});
-        reptClassDecl8.tableEntry.put("lcurbr", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
+        reptClassDecl8.tableEntry.put("rcurbr", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
         reptClassDecl8.tableEntry.put("attribute", new Stack<GrammarToken>(){{push(visibility); push(memberDecl); push(reptClassDecl8);}});
         reptClassDecl8.tableEntry.put("constructor", new Stack<GrammarToken>(){{push(visibility); push(memberDecl); push(reptClassDecl8);}});
         reptClassDecl8.tableEntry.put("function", new Stack<GrammarToken>(){{push(visibility); push(memberDecl); push(reptClassDecl8);}});
@@ -287,7 +270,6 @@ public final class ParsingTable {
         reptFParamsTail4.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(arraySize); push(reptFParamsTail4);}});
 
         reptFuncBody1.tableEntry.put("id", new Stack<GrammarToken>(){{push(localVarDeclOrStmt); push(reptFuncBody1);}});
-        reptFuncBody1.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(localVarDeclOrStmt); push(reptFuncBody1);}});
         reptFuncBody1.tableEntry.put("return", new Stack<GrammarToken>(){{push(localVarDeclOrStmt); push(reptFuncBody1);}});
         reptFuncBody1.tableEntry.put("read", new Stack<GrammarToken>(){{push(localVarDeclOrStmt); push(reptFuncBody1);}});
         reptFuncBody1.tableEntry.put("write", new Stack<GrammarToken>(){{push(localVarDeclOrStmt); push(reptFuncBody1);}});
@@ -295,7 +277,6 @@ public final class ParsingTable {
         reptFuncBody1.tableEntry.put("if", new Stack<GrammarToken>(){{push(localVarDeclOrStmt); push(reptFuncBody1);}});
         reptFuncBody1.tableEntry.put("rcurbr", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
         reptFuncBody1.tableEntry.put("localvar", new Stack<GrammarToken>(){{push(localVarDeclOrStmt); push(reptFuncBody1);}});
-        reptFuncBody1.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(localVarDeclOrStmt); push(reptFuncBody1);}});
 
         reptIdnest.tableEntry.put("id", new Stack<GrammarToken>(){{push(idnest); push(Terminal.id); push(reptIdnest0);}});
 
@@ -317,14 +298,12 @@ public final class ParsingTable {
         reptSTART0.tableEntry.put("class", new Stack<GrammarToken>(){{push(classDeclOrFuncDef); push(reptSTART0);}});
 
         reptStatBlock1.tableEntry.put("id", new Stack<GrammarToken>(){{push(statement); push(reptStatBlock1);}});
-        reptStatBlock1.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(statement); push(reptStatBlock1);}});
         reptStatBlock1.tableEntry.put("return", new Stack<GrammarToken>(){{push(statement); push(reptStatBlock1);}});
         reptStatBlock1.tableEntry.put("write", new Stack<GrammarToken>(){{push(statement); push(reptStatBlock1);}});
         reptStatBlock1.tableEntry.put("read", new Stack<GrammarToken>(){{push(statement); push(reptStatBlock1);}});
         reptStatBlock1.tableEntry.put("while", new Stack<GrammarToken>(){{push(statement); push(reptStatBlock1);}});
         reptStatBlock1.tableEntry.put("if", new Stack<GrammarToken>(){{push(statement); push(reptStatBlock1);}});
         reptStatBlock1.tableEntry.put("rcurbr", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
-        reptStatBlock1.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(statement); push(reptStatBlock1);}});
 
         reptVariable2.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(indice); push(reptVariable3);}});
 
@@ -388,27 +367,22 @@ public final class ParsingTable {
 
         statBlock.tableEntry.put("id", new Stack<GrammarToken>(){{push(statement);}});
         statBlock.tableEntry.put("semi", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
-        statBlock.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(statement);}});
         statBlock.tableEntry.put("return", new Stack<GrammarToken>(){{push(statement);}});
         statBlock.tableEntry.put("write", new Stack<GrammarToken>(){{push(statement);}});
         statBlock.tableEntry.put("read", new Stack<GrammarToken>(){{push(statement);}});
         statBlock.tableEntry.put("while", new Stack<GrammarToken>(){{push(statement);}});
-        statBlock.tableEntry.put("else", new Stack<GrammarToken>(){{push(statement);}});
+        statBlock.tableEntry.put("else", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
         statBlock.tableEntry.put("if", new Stack<GrammarToken>(){{push(statement);}});
         statBlock.tableEntry.put("lcurbr", new Stack<GrammarToken>(){{push(Terminal.lcurbr); push(reptStatBlock1); push(Terminal.rcurbr);}});
-        statBlock.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(statement);}});
 
         statement.tableEntry.put("id", new Stack<GrammarToken>(){{push(reptIdnest);  push(Terminal.id); push(assignStat); push(Terminal.semi);}});
-        statement.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(assignStat); push(Terminal.semi);}});
         statement.tableEntry.put("return", new Stack<GrammarToken>(){{push(Terminal.returnW);  push(Terminal.lpar); push(expr); push(Terminal.rpar); push(Terminal.semi);}});
         statement.tableEntry.put("write", new Stack<GrammarToken>(){{push(Terminal.writeW);  push(Terminal.lpar); push(expr); push(Terminal.rpar); push(Terminal.semi);}});
-        statement.tableEntry.put("read", new Stack<GrammarToken>(){{push(Terminal.readW);  push(Terminal.lpar); push(Terminal.id); push(statement0);}});
+        statement.tableEntry.put("read", new Stack<GrammarToken>(){{push(Terminal.readW);  push(Terminal.lpar); push(statement0); push(reptVariable2); push(Terminal.rpar); push(Terminal.semi);}});
         statement.tableEntry.put("while", new Stack<GrammarToken>(){{push(Terminal.whileW); push(Terminal.lpar);  push(relExpr); push(Terminal.rpar); push(statBlock); push(Terminal.semi);}});
         statement.tableEntry.put("if", new Stack<GrammarToken>(){{push(Terminal.ifW);  push(Terminal.lpar); push(relExpr); push(Terminal.rpar); push(Terminal.thenW); push(statBlock); push(Terminal.elseW); push(statBlock); push(Terminal.semi);}});
-        statement.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(assignStat); push(Terminal.semi);}});
 
-        statement0.tableEntry.put("id", new Stack<GrammarToken>(){{push(reptIdnest); push(Terminal.id); push(variable); push(Terminal.rpar); push(Terminal.semi);}});
-        statement0.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(variable); push(Terminal.rpar); push(Terminal.semi);}});
+        statement0.tableEntry.put("id", new Stack<GrammarToken>(){{push(idnest); push(statement0);}});
         
         term.tableEntry.put("id", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm);}});
         term.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm);}});
@@ -422,11 +396,11 @@ public final class ParsingTable {
         type.tableEntry.put("float", new Stack<GrammarToken>(){{push(Terminal.floatW);}});
         type.tableEntry.put("id", new Stack<GrammarToken>(){{push(Terminal.id);}});
 
-        variable.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptVariable2);}});
-
         visibility.tableEntry.put("public", new Stack<GrammarToken>(){{push(Terminal.publicW);}});
         visibility.tableEntry.put("private", new Stack<GrammarToken>(){{push(Terminal.privateW);}});
-        visibility.tableEntry.put("epsilon", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
+        visibility.tableEntry.put("attribute", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
+        visibility.tableEntry.put("constructor", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
+        visibility.tableEntry.put("function", new Stack<GrammarToken>(){{push(Terminal.EPSILON);}});
 
         
         // Load the table
@@ -440,6 +414,7 @@ public final class ParsingTable {
         table.put(arraySize1.name, arraySize1);
         table.put(assignOp.name, assignOp);
         table.put(assignStat.name, assignStat);
+        table.put(assignStatIdnest.name, assignStatIdnest);
         table.put(classDecl.name, classDecl);
         table.put(classDeclOrFuncDef.name, classDeclOrFuncDef);
         table.put(expr1.name, expr1);
@@ -458,11 +433,9 @@ public final class ParsingTable {
         table.put(functionCall.name, functionCall);
         table.put(functionCall1.name, functionCall1);
         table.put(idnest1.name, idnest1);
-        table.put(idnest2.name, idnest2);
         table.put(idnest.name, idnest);
         table.put(indice.name, indice);
         table.put(localVarDecl1.name, localVarDecl1);
-        table.put(localVarDecl2.name, localVarDecl2);
         table.put(localVarDecl.name, localVarDecl);
         table.put(localVarDeclOrStmt.name, localVarDeclOrStmt);
         table.put(memberDecl.name, memberDecl);
@@ -497,7 +470,6 @@ public final class ParsingTable {
         table.put(statement.name, statement);
         table.put(term.name, term);
         table.put(type.name, type);
-        table.put(variable.name, variable);
         table.put(visibility.name, visibility);
 
     }

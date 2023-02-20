@@ -54,15 +54,15 @@ public class NumberProcessor implements Processor{
         boolean output = false;
 
         if(!stateFinal){
-            OutputWriter.errWriting("Lexical error: Invalid number: " + storage);
+            OutputWriter.lexErrWriting("Lexical error: Invalid number: " + storage);
             // System.out.println("Invalid number: " + this.storage);
         } else {
             // Print to output file and add to program queue
             if(numType == NumType.FLOAT){
-                OutputWriter.outWriting("[floatnum, " + this.storage + ", ");
+                OutputWriter.lexOutWriting("[floatnum, " + this.storage + ", ");
                 ProgramQueue.add(Terminal.floatLit);
             } else {
-                OutputWriter.outWriting("[intnum, " + this.storage + ", ");
+                OutputWriter.lexOutWriting("[intnum, " + this.storage + ", ");
                 ProgramQueue.add(Terminal.intLit);
             }
             

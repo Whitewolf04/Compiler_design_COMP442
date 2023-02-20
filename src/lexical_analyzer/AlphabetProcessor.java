@@ -55,16 +55,16 @@ public class AlphabetProcessor implements Processor{
         boolean output = false;
 
         if(err || !stateFinal){
-            OutputWriter.errWriting("Lexical error: Invalid string: " + this.storage);
+            OutputWriter.lexErrWriting("Lexical error: Invalid string: " + this.storage);
             // System.out.println("Invalid string: " + this.storage);
         } else if(isReservedWord(this.storage)){
             // Add character to program queue and print out to output file
-            OutputWriter.outWriting("[" + this.storage + ", " + this.storage + ", ");
+            OutputWriter.lexOutWriting("[" + this.storage + ", " + this.storage + ", ");
             // System.out.println("Reserved word: " + this.storage);
             output = true;
         } else{
             // Print out to output file
-            OutputWriter.outWriting("[id, " + this.storage + ", ");
+            OutputWriter.lexOutWriting("[id, " + this.storage + ", ");
             // System.out.println("String processed: " + this.storage);
             output = true;
 

@@ -30,13 +30,15 @@ public final class GrammarStack {
         return stack.peek();
     }
 
-    public static void printStack(){
+    public static String printStack(){
         Stack<String> temp = (Stack<String>) outputStack.clone();
+        String output = "";
 
         while(!temp.empty()){
-            System.out.print(temp.pop() + " ");
+            output += temp.pop() + " ";
         }
-        System.out.println();
+        
+        return output;
     }
 
 }
