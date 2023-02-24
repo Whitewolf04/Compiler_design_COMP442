@@ -35,7 +35,7 @@ public class NonTerminal extends GrammarToken{
     }
 
     public boolean compareToString(String another){
-        return another.equals(name);
+        return (another.compareToIgnoreCase(name) == 0);
     }
 
     public String toString(){

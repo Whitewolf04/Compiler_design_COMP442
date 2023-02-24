@@ -1,0 +1,195 @@
+<START> ::= <reptSTART0> 
+
+<aParams> ::= <expr> <reptAParams1> 
+<aParams> ::= EPSILON 
+
+<aParamsTail> ::= 'comma' <expr> 
+
+<addOp> ::= 'plus' 
+<addOp> ::= 'minus' 
+<addOp> ::= 'or' 
+
+<arithExpr> ::= <term> <rightRecArithExpr> 
+
+<arraySize1> ::= 'intLit' 'rsqbr' 
+<arraySize1> ::= 'rsqbr' 
+
+<arraySize> ::= 'lsqbr' <arraySize1> 
+
+<assignOp> ::= 'assign' 
+
+<assignStat> ::= 'id' <assignStatIdnest> <assignOp> <expr> 
+<assignStat> ::= <functionCall> 
+
+<assignStatIdnest> ::= <idnest> <assignStatIdnest> 
+<assignStatIdnest> ::= EPSILON 
+
+<classDecl> ::= 'class' 'id' <optClassDecl2> 'lcurbr' <reptClassDecl8> 'rcurbr' 'semi' 
+
+<classDeclOrFuncDef> ::= <classDecl> 
+<classDeclOrFuncDef> ::= <funcDef> 
+
+<expr1> ::= <relOp> <arithExpr> 
+<expr1> ::= EPSILON 
+
+<expr> ::= <arithExpr> <expr1> 
+
+<fParams> ::= 'id' 'col' <type> <reptFParams3> <reptFParams4> 
+<fParams> ::= EPSILON 
+
+<fParamsTail> ::= 'comma' 'id' 'col' <type> <reptFParamsTail4> 
+
+<factor1> ::= <reptVariable2> 
+<factor1> ::= <functionCall> 
+
+<factor2> ::= <arithExpr> <factor3> 
+<factor2> ::= EPSILON 
+
+<factor3> ::= EPSILON 
+<factor3> ::= <relOp> <arithExpr> <reptAParams1> 
+<factor3> ::= <aParamsTail> <reptAParams1> 
+
+<factor> ::= <reptIdnest> 'id' <factor1> 
+<factor> ::= 'intLit' 
+<factor> ::= 'floatLit' 
+<factor> ::= 'lpar' <arithExpr> 'rpar' 
+<factor> ::= 'not' <factor> 
+<factor> ::= <sign> <factor> 
+
+<funcBody> ::= 'lcurbr' <reptFuncBody1> 'rcurbr' 
+
+<funcDef> ::= <funcHead> <funcBody> 
+
+<funcHead1> ::= 'sr' <funcHead2> 
+<funcHead1> ::= 'lpar' <fParams> 'rpar' 'arrow' <returnType> 
+
+<funcHead2> ::= 'id' 'lpar' <fParams> 'rpar' 'arrow' <returnType> 
+<funcHead2> ::= 'constructor' 'lpar' <fParams> 'rpar' 
+
+<funcHead> ::= 'function' 'id' <funcHead1> 
+
+<functionCall1> ::= <aParams> 
+
+<functionCall> ::= 'lpar' <functionCall1> 'rpar' 
+
+<idnest1> ::= <reptIdnest1> 'dot' 
+<idnest1> ::= 'lpar' <aParams> 'rpar' 'dot' 
+
+<idnest> ::= 'id' <idnest1> 
+
+<indice> ::= 'lsqbr' <arithExpr> 'rsqbr' 
+
+<localVarDecl1> ::= <reptLocalVarDecl4> 'semi' 
+<localVarDecl1> ::= 'lpar' <aParams> 'rpar' 'semi' 
+
+<localVarDecl> ::= 'localvar' 'id' 'col' <type> <localVarDecl1> 
+
+<localVarDeclOrStmt> ::= <localVarDecl> 
+<localVarDeclOrStmt> ::= <statement> 
+
+<memberDecl> ::= <memberFuncDecl> 
+<memberDecl> ::= <memberVarDecl> 
+
+<memberFuncDecl> ::= 'function' 'id' 'col' 'lpar' <fParams> 'rpar' 'arrow' <returnType> 'semi' 
+<memberFuncDecl> ::= 'constructor' 'col' 'lpar' <fParams> 'rpar' 'semi' 
+
+<memberVarDecl> ::= 'attribute' 'id' 'col' <type> <reptMemberVarDecl4> 'semi' 
+
+<multOp> ::= 'mult' 
+<multOp> ::= 'div' 
+<multOp> ::= 'and' 
+
+<optClassDecl2> ::= 'isa' 'id' <reptClassDecl5> 
+<optClassDecl2> ::= EPSILON 
+
+<relExpr> ::= <arithExpr> <relOp> <arithExpr> 
+
+<relOp> ::= 'eq' 
+<relOp> ::= 'noteq' 
+<relOp> ::= 'lt' 
+<relOp> ::= 'gt' 
+<relOp> ::= 'leq' 
+<relOp> ::= 'geq' 
+
+<reptAParams1> ::= <aParamsTail> <reptAParams1> 
+<reptAParams1> ::= EPSILON 
+
+<reptClassDecl5> ::= 'comma' 'id' <reptClassDecl5> 
+<reptClassDecl5> ::= EPSILON 
+
+<reptClassDecl8> ::= <visibility> <memberDecl> <reptClassDecl8> 
+<reptClassDecl8> ::= EPSILON 
+
+<reptFParams3> ::= <arraySize> <reptFParams3> 
+<reptFParams3> ::= EPSILON 
+
+<reptFParams4> ::= <fParamsTail> <reptFParams4> 
+<reptFParams4> ::= EPSILON 
+
+<reptFParamsTail4> ::= <arraySize> <reptFParamsTail4> 
+<reptFParamsTail4> ::= EPSILON 
+
+<reptFuncBody1> ::= <localVarDeclOrStmt> <reptFuncBody1> 
+<reptFuncBody1> ::= EPSILON 
+
+<reptIdnest0> ::= <idnest1> 'id' <reptIdnest0> 
+<reptIdnest0> ::= EPSILON 
+
+<reptIdnest1> ::= <indice> <reptIdnest1> 
+<reptIdnest1> ::= EPSILON 
+
+<reptIdnest> ::= <idnest> 'id' <reptIdnest0> 
+
+<reptLocalVarDecl4> ::= <arraySize> <reptLocalVarDecl4> 
+<reptLocalVarDecl4> ::= EPSILON 
+
+<reptMemberVarDecl4> ::= <arraySize> <reptMemberVarDecl4> 
+<reptMemberVarDecl4> ::= EPSILON 
+
+<reptSTART0> ::= <classDeclOrFuncDef> <reptSTART0> 
+<reptSTART0> ::= EPSILON 
+
+<reptStatBlock1> ::= <statement> <reptStatBlock1> 
+<reptStatBlock1> ::= EPSILON 
+
+<reptVariable2> ::= <indice> <reptVariable3> 
+
+<reptVariable3> ::= <indice> <reptVariable3> 
+<reptVariable3> ::= EPSILON 
+
+<returnType> ::= <type> 
+<returnType> ::= 'void' 
+
+<rightRecArithExpr> ::= EPSILON 
+<rightRecArithExpr> ::= <addOp> <term> <rightRecArithExpr> 
+
+<rightRecTerm> ::= EPSILON 
+<rightRecTerm> ::= <multOp> <factor> <rightRecTerm> 
+
+<sign> ::= 'plus' 
+<sign> ::= 'minus' 
+
+<statBlock> ::= 'lcurbr' <reptStatBlock1> 'rcurbr' 
+<statBlock> ::= <statement> 
+<statBlock> ::= EPSILON 
+
+<statement0> ::= <idnest> <statement0> 
+
+<statement> ::= <reptIdnest> 'id' <assignStat> 'semi' 
+<statement> ::= 'if' 'lpar' <relExpr> 'rpar' 'then' <statBlock> 'else' <statBlock> 'semi' 
+<statement> ::= 'while' 'lpar' <relExpr> 'rpar' <statBlock> 'semi' 
+<statement> ::= 'read' 'lpar' <statement0> <reptVariable2> 'rpar' 'semi' 
+<statement> ::= 'write' 'lpar' <expr> 'rpar' 'semi' 
+<statement> ::= 'return' 'lpar' <expr> 'rpar' 'semi' 
+
+<term> ::= <factor> <rightRecTerm> 
+
+<type> ::= 'integer' 
+<type> ::= 'float' 
+<type> ::= 'id' 
+
+<visibility> ::= 'public' 
+<visibility> ::= 'private' 
+<visibility> ::= EPSILON 
+
+

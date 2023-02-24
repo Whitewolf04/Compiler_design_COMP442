@@ -1,0 +1,193 @@
+<START> ::= <prog> 'eof' 
+
+<aParams> ::= <expr> <reptAParams1> 
+<aParams> ::= EPSILON 
+
+<aParamsTail> ::= 'comma' <expr> 
+
+<addOp> ::= 'plus' 
+<addOp> ::= 'minus' 
+<addOp> ::= 'or' 
+
+<arithExpr> ::= <term> <rightRecArithExpr> 
+
+<arrayOrObject> ::= <reptArraySize> 
+<arrayOrObject> ::= 'lpar' <aParams> 'rpar' 
+
+<arraySize2> ::= 'intLit' 'rsqbr' 
+<arraySize2> ::= 'rsqbr' 
+
+<arraySize> ::= 'lsqbr' <arraySize2> 
+
+<assignOp> ::= 'equal' 
+
+<classDecl> ::= 'class' 'id' <optInherits> 'lcurbr' <reptMemberDecl> 'rcurbr' 'semi' 
+
+<classDeclOrFuncDef> ::= <classDecl> 
+<classDeclOrFuncDef> ::= <funcDef> 
+
+<expr2> ::= <relOp> <arithExpr> 
+<expr2> ::= EPSILON 
+
+<expr> ::= <arithExpr> <expr2> 
+
+<fParams> ::= 'id' 'col' <type> <reptFParams3> <reptFParams4> 
+<fParams> ::= EPSILON 
+
+<fParamsTail> ::= 'comma' 'id' 'col' <type> <reptFParamsTail4> 
+
+<factor2> ::= 'lpar' <aParams> 'rpar' 
+<factor2> ::= <reptIdnest1> 
+
+<factor> ::= 'id' <factor2> <reptVariableOrFunctionCall> 
+<factor> ::= 'intLit' 
+<factor> ::= 'floatLit' 
+<factor> ::= 'lpar' <arithExpr> 'rpar' 
+<factor> ::= 'not' <factor> 
+<factor> ::= <sign> <factor> 
+
+<funcBody> ::= 'lcurbr' <reptLocalVarOrStat> 'rcurbr' 
+
+<funcDef> ::= <funcHead> <funcBody> 
+
+<funcHead> ::= 'function' 'id' <funcHeadTail> 
+
+<funcHeadMemberTail> ::= 'id' 'lpar' <fParams> 'rpar' 'arrow' <returnType> 
+<funcHeadMemberTail> ::= 'constructor' 'lpar' <fParams> 'rpar' 
+
+<funcHeadTail> ::= 'sr' <funcHeadMemberTail> 
+<funcHeadTail> ::= 'lpar' <fParams> 'rpar' 'arrow' <returnType> 
+
+<idnest2> ::= 'lpar' <aParams> 'rpar' 
+<idnest2> ::= <reptIdnest1> 
+
+<idnest> ::= 'dot' 'id' <idnest2> 
+
+<indice> ::= 'lsqbr' <arithExpr> 'rsqbr' 
+
+<localVarDecl> ::= 'localvar' 'id' 'col' <type> <arrayOrObject> 'semi' 
+
+<localVarOrStat> ::= <localVarDecl> 
+<localVarOrStat> ::= <statement> 
+
+<memberDecl> ::= <memberFuncDecl> 
+<memberDecl> ::= <memberVarDecl> 
+
+<memberFuncDecl> ::= <memberFuncHead> 'semi' 
+
+<memberFuncHead> ::= 'function' 'id' 'col' 'lpar' <fParams> 'rpar' 'arrow' <returnType> 
+<memberFuncHead> ::= 'constructor' 'col' 'lpar' <fParams> 'rpar' 
+
+<memberVarDecl> ::= 'attribute' 'id' 'col' <type> <reptArraySize> 'semi' 
+
+<multOp> ::= 'mult' 
+<multOp> ::= 'div' 
+<multOp> ::= 'and' 
+
+<optInherits> ::= 'isa' 'id' <reptInheritsList> 
+<optInherits> ::= EPSILON 
+
+<prog> ::= <reptProg0> 
+
+<relExpr> ::= <arithExpr> <relOp> <arithExpr> 
+
+<relOp> ::= 'eq' 
+<relOp> ::= 'noteq' 
+<relOp> ::= 'lt' 
+<relOp> ::= 'gt' 
+<relOp> ::= 'leq' 
+<relOp> ::= 'geq' 
+
+<reptAParams1> ::= <aParamsTail> <reptAParams1> 
+<reptAParams1> ::= EPSILON 
+
+<reptArraySize> ::= <arraySize> <reptArraySize> 
+<reptArraySize> ::= EPSILON 
+
+<reptFParams3> ::= <arraySize> <reptFParams3> 
+<reptFParams3> ::= EPSILON 
+
+<reptFParams4> ::= <fParamsTail> <reptFParams4> 
+<reptFParams4> ::= EPSILON 
+
+<reptFParamsTail4> ::= <arraySize> <reptFParamsTail4> 
+<reptFParamsTail4> ::= EPSILON 
+
+<reptIdnest1> ::= <indice> <reptIdnest1> 
+<reptIdnest1> ::= EPSILON 
+
+<reptInheritsList> ::= 'comma' 'id' <reptInheritsList> 
+<reptInheritsList> ::= EPSILON 
+
+<reptLocalVarOrStat> ::= <localVarOrStat> <reptLocalVarOrStat> 
+<reptLocalVarOrStat> ::= EPSILON 
+
+<reptMemberDecl> ::= <visibility> <memberDecl> <reptMemberDecl> 
+<reptMemberDecl> ::= EPSILON 
+
+<reptProg0> ::= <classDeclOrFuncDef> <reptProg0> 
+<reptProg0> ::= EPSILON 
+
+<reptStatBlock1> ::= <statement> <reptStatBlock1> 
+<reptStatBlock1> ::= EPSILON 
+
+<reptVariable> ::= <varIdnest> <reptVariable> 
+<reptVariable> ::= EPSILON 
+
+<reptVariableOrFunctionCall> ::= <idnest> <reptVariableOrFunctionCall> 
+<reptVariableOrFunctionCall> ::= EPSILON 
+
+<returnType> ::= <type> 
+<returnType> ::= 'void' 
+
+<rightRecArithExpr> ::= <addOp> <term> <rightRecArithExpr> 
+<rightRecArithExpr> ::= EPSILON 
+
+<rightRecTerm> ::= <multOp> <factor> <rightRecTerm> 
+<rightRecTerm> ::= EPSILON 
+
+<sign> ::= 'plus' 
+<sign> ::= 'minus' 
+
+<statBlock> ::= 'lcurbr' <reptStatBlock1> 'rcurbr' 
+<statBlock> ::= <statement> 
+<statBlock> ::= EPSILON 
+
+<statement> ::= 'id' <statementIdnest> 'semi' 
+<statement> ::= 'if' 'lpar' <relExpr> 'rpar' 'then' <statBlock> 'else' <statBlock> 'semi' 
+<statement> ::= 'while' 'lpar' <relExpr> 'rpar' <statBlock> 'semi' 
+<statement> ::= 'read' 'lpar' <variable> 'rpar' 'semi' 
+<statement> ::= 'write' 'lpar' <expr> 'rpar' 'semi' 
+<statement> ::= 'return' 'lpar' <expr> 'rpar' 'semi' 
+
+<statementIdnest2> ::= EPSILON 
+<statementIdnest2> ::= 'dot' 'id' <statementIdnest> 
+
+<statementIdnest3> ::= <assignOp> <expr> 
+<statementIdnest3> ::= 'dot' 'id' <statementIdnest> 
+
+<statementIdnest> ::= 'dot' 'id' <statementIdnest> 
+<statementIdnest> ::= 'lpar' <aParams> 'rpar' <statementIdnest2> 
+<statementIdnest> ::= <indice> <reptIdnest1> <statementIdnest3> 
+<statementIdnest> ::= <assignOp> <expr> 
+
+<term> ::= <factor> <rightRecTerm> 
+
+<type> ::= 'integer' 
+<type> ::= 'float' 
+<type> ::= 'id' 
+
+<varIdnest2> ::= 'lpar' <aParams> 'rpar' <varIdnest> 
+<varIdnest2> ::= <reptIdnest1> 
+
+<varIdnest> ::= 'dot' 'id' <varIdnest2> 
+
+<variable2> ::= <reptIdnest1> <reptVariable> 
+<variable2> ::= 'lpar' <aParams> 'rpar' <varIdnest> 
+
+<variable> ::= 'id' <variable2> 
+
+<visibility> ::= 'public' 
+<visibility> ::= 'private' 
+
+

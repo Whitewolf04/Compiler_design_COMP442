@@ -16,7 +16,7 @@ public final class ParsingTable {
         NonTerminal arraySize1 = new NonTerminal("arraySize1", new Terminal[]{Terminal.intLit, Terminal.rsqbr}, new Terminal[]{Terminal.rpar, Terminal.lsqbr, Terminal.semi, Terminal.comma});
         NonTerminal assignOp = new NonTerminal("assignOp", new Terminal[]{Terminal.assign}, new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.minus, Terminal.floatLit, Terminal.notW});
         NonTerminal assignStat = new NonTerminal("assignStat", new Terminal[]{Terminal.lpar, Terminal.lsqbr, Terminal.id}, new Terminal[]{Terminal.semi});
-        NonTerminal assignStatIdnest = new NonTerminal("assignStatIdnest", new Terminal[]{Terminal.EPSILON, Terminal.id}, new Terminal[]{Terminal.lsqbr});
+        NonTerminal assignStatIdnest = new NonTerminal("assignStatIdnest", new Terminal[]{Terminal.EPSILON, Terminal.id}, new Terminal[]{Terminal.assign});
         NonTerminal classDecl = new NonTerminal("classDecl", new Terminal[]{Terminal.classW}, new Terminal[]{Terminal.functionW, Terminal.START, Terminal.classW});
         NonTerminal classDeclOrFuncDef = new NonTerminal("classDeclOrFuncDef", new Terminal[]{Terminal.functionW, Terminal.classW}, new Terminal[]{Terminal.functionW, Terminal.START, Terminal.classW});
         NonTerminal expr = new NonTerminal("expr", new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.minus, Terminal.floatLit, Terminal.notW}, new Terminal[]{Terminal.rpar, Terminal.semi, Terminal.comma});
@@ -26,7 +26,7 @@ public final class ParsingTable {
         NonTerminal factor = new NonTerminal("factor", new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.minus, Terminal.floatLit, Terminal.notW}, new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.orW, Terminal.semi, Terminal.rsqbr, Terminal.rpar, Terminal.mult, Terminal.andW, Terminal.plus, Terminal.comma, Terminal.minus, Terminal.div, Terminal.eq, Terminal.geq});
         NonTerminal factor1 = new NonTerminal("factor1", new Terminal[]{Terminal.lpar, Terminal.lsqbr}, new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.orW, Terminal.semi, Terminal.rsqbr, Terminal.rpar, Terminal.mult, Terminal.andW, Terminal.plus, Terminal.comma, Terminal.minus, Terminal.div, Terminal.eq, Terminal.geq});
         NonTerminal factor2 = new NonTerminal("factor2", new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.EPSILON, Terminal.minus, Terminal.floatLit, Terminal.notW}, new Terminal[]{});
-        NonTerminal factor3 = new NonTerminal("factor3", new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.EPSILON, Terminal.eq, Terminal.geq}, new Terminal[]{});
+        NonTerminal factor3 = new NonTerminal("factor3", new Terminal[]{Terminal.comma, Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.EPSILON, Terminal.eq, Terminal.geq}, new Terminal[]{});
         NonTerminal funcBody = new NonTerminal("funcBody", new Terminal[]{Terminal.lcurbr}, new Terminal[]{Terminal.functionW, Terminal.START, Terminal.classW});
         NonTerminal funcDef = new NonTerminal("funcDef", new Terminal[]{Terminal.functionW}, new Terminal[]{Terminal.functionW, Terminal.START, Terminal.classW});
         NonTerminal funcHead = new NonTerminal("funcHead", new Terminal[]{Terminal.functionW}, new Terminal[]{Terminal.lcurbr});
@@ -34,8 +34,8 @@ public final class ParsingTable {
         NonTerminal funcHead2 = new NonTerminal("funcHead2", new Terminal[]{Terminal.constructorW, Terminal.id}, new Terminal[]{Terminal.lcurbr});
         NonTerminal functionCall = new NonTerminal("functionCall", new Terminal[]{Terminal.lpar}, new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.orW, Terminal.semi, Terminal.rsqbr, Terminal.rpar, Terminal.mult, Terminal.andW, Terminal.plus, Terminal.comma, Terminal.minus, Terminal.div, Terminal.eq, Terminal.geq});
         NonTerminal functionCall1 = new NonTerminal("functionCall1", new Terminal[]{Terminal.lpar, Terminal.id, Terminal.plus, Terminal.intLit, Terminal.EPSILON, Terminal.minus, Terminal.floatLit, Terminal.notW}, new Terminal[]{Terminal.rpar});
-        NonTerminal idnest = new NonTerminal("idnest", new Terminal[]{Terminal.id}, new Terminal[]{Terminal.id, Terminal.lsqbr});
-        NonTerminal idnest1 = new NonTerminal("idnest1", new Terminal[]{Terminal.lpar, Terminal.lsqbr, Terminal.dot}, new Terminal[]{Terminal.id, Terminal.lsqbr});
+        NonTerminal idnest = new NonTerminal("idnest", new Terminal[]{Terminal.id}, new Terminal[]{Terminal.id, Terminal.lsqbr, Terminal.assign});
+        NonTerminal idnest1 = new NonTerminal("idnest1", new Terminal[]{Terminal.lpar, Terminal.lsqbr, Terminal.dot}, new Terminal[]{Terminal.id, Terminal.assign});
         NonTerminal indice = new NonTerminal("indice", new Terminal[]{Terminal.lsqbr}, new Terminal[]{Terminal.leq, Terminal.gt, Terminal.noteq, Terminal.lt, Terminal.orW, Terminal.lsqbr, Terminal.semi, Terminal.rsqbr, Terminal.assign, Terminal.rpar, Terminal.mult, Terminal.andW, Terminal.plus, Terminal.comma, Terminal.minus, Terminal.dot, Terminal.div, Terminal.eq, Terminal.geq});
         NonTerminal localVarDecl = new NonTerminal("localVarDecl", new Terminal[]{Terminal.localvarW}, new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.returnW, Terminal.id, Terminal.rcurbr, Terminal.ifW, Terminal.readW, Terminal.whileW});
         NonTerminal localVarDecl1 = new NonTerminal("localVarDecl1", new Terminal[]{Terminal.lpar, Terminal.lsqbr, Terminal.semi}, new Terminal[]{Terminal.writeW, Terminal.localvarW, Terminal.returnW, Terminal.id, Terminal.rcurbr, Terminal.ifW, Terminal.readW, Terminal.whileW});
@@ -88,8 +88,8 @@ public final class ParsingTable {
 
         aParamsTail.tableEntry.put("comma", new Stack<GrammarToken>(){{push(Terminal.comma); push(expr);}});
 
-        addOp.tableEntry.put("-", new Stack<GrammarToken>(){{push(Terminal.minus);}});
-        addOp.tableEntry.put("+", new Stack<GrammarToken>(){{push(Terminal.plus);}});
+        addOp.tableEntry.put("plus", new Stack<GrammarToken>(){{push(Terminal.plus);}});
+        addOp.tableEntry.put("minus", new Stack<GrammarToken>(){{push(Terminal.minus);}});
         addOp.tableEntry.put("or", new Stack<GrammarToken>(){{push(Terminal.orW);}});
 
         arithExpr.tableEntry.put("id", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr);}});
@@ -476,5 +476,9 @@ public final class ParsingTable {
 
     public static NonTerminal get(String key){
         return table.get(key);
+    }
+
+    public static int size(){
+        return table.size();
     }
 }

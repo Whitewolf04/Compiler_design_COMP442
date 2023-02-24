@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "syntax_analyzer/jsoup-1.15.4.jar"
+    ]
+}

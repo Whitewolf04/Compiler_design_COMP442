@@ -25,7 +25,7 @@ public class Terminal extends GrammarToken {
     }
 
     public boolean compareToString(String another){
-        return another.equals(this.stringValue);
+        return (another.compareToIgnoreCase(this.stringValue)==0);
     }
 
     public String toString(){
@@ -80,5 +80,5 @@ public class Terminal extends GrammarToken {
     static public final Terminal notW = new Terminal("not", TerminalType.RESERVED);
     static public final Terminal classW = new Terminal("class", TerminalType.RESERVED);
     static public final Terminal orW = new Terminal("or", TerminalType.RESERVED);
-    static public final Terminal EPSILON = new Terminal("epsilon", TerminalType.EPSILON);
+    static public final Terminal EPSILON = new Terminal("EPSILON", TerminalType.EPSILON);
 }
