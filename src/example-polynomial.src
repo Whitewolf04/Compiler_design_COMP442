@@ -1,5 +1,5 @@
 // ====== struct declarations ====== //
-class POLYNOMIAL {
+/*class POLYNOMIAL {
   public function evaluate: (x: float) => float;
 };
 
@@ -53,14 +53,16 @@ function LINEAR::evaluate(x: float) => float
   result = 0.0;
   result = a * x + b;
   return (result);
-}
+}*/
  
 // ====== main ====== //
 function main() => void
 {
   localvar f1: LINEAR(2, 3.5);
   localvar f2: QUADRATIC(-2.0, 1.0, 0.0);
-  localvar counter: integer = 1;	
+  localvar counter: integer;
+
+  counter = 1;	
 
   while(counter <= 10)
   {

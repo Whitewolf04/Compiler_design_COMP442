@@ -27,7 +27,7 @@ public class Tester {
 
 
         try{
-            followScan = new Scanner(new File("./syntax_analyzer/grammar_modified.grm.first"));
+            followScan = new Scanner(new File("./syntax_analyzer/LL1grammar.grm.first"));
         }  catch(FileNotFoundException e){
             System.out.println("File not found!");
         }
@@ -103,7 +103,7 @@ public class Tester {
 
 
         try{
-            followScan = new Scanner(new File("./syntax_analyzer/grammar_modified.grm.follow"));
+            followScan = new Scanner(new File("./syntax_analyzer/LL1grammar.grm.follow"));
         }  catch(FileNotFoundException e){
             System.out.println("File not found!");
         }
