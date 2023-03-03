@@ -1,0 +1,193 @@
+<START> ::= <prog> 'eof' 
+
+<aParams> ::= <expr> <reptAParams1> makeFamily(exprList, expr, ...)
+<aParams> ::= EPSILON 
+
+<aParamsTail> ::= 'comma' <expr> 
+
+<addOp> ::= 'plus' makeNode(plus)
+<addOp> ::= 'minus' makeNode(minus)
+<addOp> ::= 'or' makeNode(or)
+
+<arithExpr> ::= <term> <rightRecArithExpr> makeFamily(termList, term, addOp, term, ...)
+
+<arrayOrObject> ::= <reptArraySize> makeFamily(arraySizeList, intLit, ...) makeFamily(arrayOrObject, arraySizeList)
+<arrayOrObject> ::= 'lpar' <aParams> 'rpar' makeFamily(arrayOrObject, exprList)
+
+<arraySize2> ::= 'intLit' makeNode(intLit) 'rsqbr' 
+<arraySize2> ::= 'rsqbr' 
+
+<arraySize> ::= 'lsqbr' <arraySize2> 
+
+<assignOp> ::= 'equal' makeNode(assign)
+
+<classDecl> ::= 'class' 'id' makeNode(id) <optInherits> 'lcurbr' <reptMemberDecl> makeFamily(memberList) 'rcurbr' 'semi' makeFamily(classDecl, id, inheritList, memberList)
+
+<classDeclOrFuncDef> ::= <classDecl>
+<classDeclOrFuncDef> ::= <funcDef> 
+
+<expr2> ::= <relOp> <arithExpr>
+<expr2> ::= EPSILON 
+
+<expr> ::= <arithExpr> makeFamily(termList, term, addOp, term, ...) <expr2> makeFamily(expr, arithExpr, relOp, arithExpr)
+
+<fParams> ::= 'id' makeNode(id) 'col' <type> <reptFParams3> makeFamily(arraySizeList, intLit, ...) makeFamily(fParams, id, type, arraySizeList) <reptFParams4> 
+<fParams> ::= EPSILON 
+
+<fParamsTail> ::= 'comma' 'id' makeNode(id) 'col' <type> <reptFParamsTail4> makeFamily(arraySizeList, intLit, ...) 
+
+<factor2> ::= 'lpar' <aParams> 'rpar' 
+<factor2> ::= <reptIdnest1> makeFamily(indiceList, indice, ...)
+
+<factor> ::= 'id' makeNode(id) <factor2> <reptVariableOrFunctionCall> makeFamily(idnestList, idnest, ...) makeFamily(factor, id, aParams/indiceList, idnestList)
+<factor> ::= 'intLit' makeNode(intLit) makeFamily(factor, intLit)
+<factor> ::= 'floatLit' makeNode(floatLit) makeFamily(factor, floatLit)
+<factor> ::= 'lpar' <arithExpr> makeFamily(termList, term, addOp, term, ...) 'rpar' makeFamily(factor, termList)
+<factor> ::= 'not' makeNode(not) <factor> makeFamily(factor, not, factor)
+<factor> ::= <sign> <factor> makeFamily(factor, sign, factor)
+
+<funcBody> ::= 'lcurbr' <reptLocalVarOrStat> 'rcurbr' makeFamily(funcBody, localVar/statement, ...)
+
+<funcDef> ::= <funcHead> <funcBody> makeFamily(funcDef, funcHead, funcBody)
+
+<funcHead> ::= 'function' 'id' makeNode(id) <funcHeadTail> 
+
+<funcHeadMemberTail> ::= 'id' makeNode(id) 'lpar' <fParams> makeFamily(fParamsList, fParams, ...) 'rpar' 'arrow' <returnType> makeFamily(funcHead, id, id, fParamsList, returnType)
+<funcHeadMemberTail> ::= 'constructor' 'lpar' <fParams> makeFamily(fParamsList, fParams, ...) 'rpar' makeFamily(funcHead, id, fParamsList)
+
+<funcHeadTail> ::= 'sr' <funcHeadMemberTail> 
+<funcHeadTail> ::= 'lpar' <fParams> makeFamily(fParamsList, fParams, ...) 'rpar' 'arrow' <returnType> makeFamily(funcHead, id, fParamsList, returnType)
+
+<idnest2> ::= 'lpar' <aParams> 'rpar' 
+<idnest2> ::= <reptIdnest1> makeFamily(indiceList, indice, ...)
+
+<idnest> ::= 'dot' 'id' <idnest2> makeFamily(idnest, dot, id, exprList/indiceList)
+
+<indice> ::= 'lsqbr' <arithExpr> 'rsqbr' makeFamily(indice, termList)
+
+<localVarDecl> ::= 'localvar' 'id' makeNode(id) 'col' <type> <arrayOrObject> 'semi' makeFamily(localVarDecl, id, type, arrayOrObject)
+
+<localVarOrStat> ::= <localVarDecl> 
+<localVarOrStat> ::= <statement> 
+
+<memberDecl> ::= <memberFuncDecl> 
+<memberDecl> ::= <memberVarDecl> makeFamily(memberVarDecl, id, type, arraySizeList)
+
+<memberFuncDecl> ::= <memberFuncHead> 'semi' 
+
+<memberFuncHead> ::= 'function' 'id' makeNode(id) 'col' 'lpar' <fParams> makeFamily(fParamsList, fParams, ...) 'rpar' 'arrow' <returnType> makeFamily(memberFuncDecl, id, fParamsList, returnType)
+<memberFuncHead> ::= 'constructor' 'col' 'lpar' <fParams> makeFamily(fParamsList, fParams, ...) 'rpar' makeFamily(constructorDecl, fParamsList)
+
+<memberVarDecl> ::= 'attribute' 'id' makeNode(id) 'col' <type> <reptArraySize> makeFamily(arraySizeList, intLit, ...) 'semi' 
+
+<multOp> ::= 'mult' makeNode(mult)
+<multOp> ::= 'div' makeNode(div)
+<multOp> ::= 'and' makeNode(and)
+
+<optInherits> ::= 'isa' makeNode(isa) 'id' makeNode(id) <reptInheritsList> makeFamily(inheritList, isa, id, ...)
+<optInherits> ::= EPSILON 
+
+<prog> ::= <reptProg0> 
+
+<relExpr> ::= <arithExpr> <relOp> <arithExpr> makeFamily(relExpr, termList, relOp, termList)
+
+<relOp> ::= 'eq' makeNode(eq)
+<relOp> ::= 'noteq' makeNode(noteq)
+<relOp> ::= 'lt' makeNode(lt)
+<relOp> ::= 'gt' makeNode(gt)
+<relOp> ::= 'leq' makeNode(leq)
+<relOp> ::= 'geq' makeNode(geq)
+
+<reptAParams1> ::= <aParamsTail> <reptAParams1> 
+<reptAParams1> ::= EPSILON 
+
+<reptArraySize> ::= <arraySize> <reptArraySize> 
+<reptArraySize> ::= EPSILON 
+
+<reptFParams3> ::= <arraySize> <reptFParams3> 
+<reptFParams3> ::= EPSILON 
+
+<reptFParams4> ::= <fParamsTail> makeFamily(fParams) <reptFParams4> 
+<reptFParams4> ::= EPSILON 
+
+<reptFParamsTail4> ::= <arraySize> <reptFParamsTail4> 
+<reptFParamsTail4> ::= EPSILON 
+
+<reptIdnest1> ::= <indice> <reptIdnest1> 
+<reptIdnest1> ::= EPSILON 
+
+<reptInheritsList> ::= 'comma' 'id' makeNode(id) <reptInheritsList> 
+<reptInheritsList> ::= EPSILON 
+
+<reptLocalVarOrStat> ::= <localVarOrStat> <reptLocalVarOrStat> 
+<reptLocalVarOrStat> ::= EPSILON 
+
+<reptMemberDecl> ::= <visibility> <memberDecl> <reptMemberDecl> 
+<reptMemberDecl> ::= EPSILON 
+
+<reptProg0> ::= <classDeclOrFuncDef> <reptProg0> 
+<reptProg0> ::= EPSILON 
+
+<reptStatBlock1> ::= <statement> <reptStatBlock1> 
+<reptStatBlock1> ::= EPSILON 
+
+<reptVariable> ::= <varIdnest> <reptVariable> 
+<reptVariable> ::= EPSILON 
+
+<reptVariableOrFunctionCall> ::= <idnest> <reptVariableOrFunctionCall> 
+<reptVariableOrFunctionCall> ::= EPSILON 
+
+<returnType> ::= <type> 
+<returnType> ::= 'void' makeNode(void)
+
+<rightRecArithExpr> ::= <addOp> <term> <rightRecArithExpr> 
+<rightRecArithExpr> ::= EPSILON 
+
+<rightRecTerm> ::= <multOp> <factor> <rightRecTerm> 
+<rightRecTerm> ::= EPSILON 
+
+<sign> ::= 'plus' makeNode(plus)
+<sign> ::= 'minus' makeNode(minus)
+
+<statBlock> ::= 'lcurbr' <reptStatBlock1> makeFamily(statementList, statement, ...) 'rcurbr' makeFamily(statBlock, statementList) 
+<statBlock> ::= <statement> makeFamily(statBlock, statement)
+<statBlock> ::= EPSILON makeFamily(statBlock, EPSILON)
+
+<statement> ::= 'id' makeNode(id) <statementIdnest> makeFamily(assignOrFuncCall, ...) 'semi' makeFamily(statement, id, assignOrFuncCall) 
+<statement> ::= 'if' makeNode(if) 'lpar' <relExpr> 'rpar' 'then' <statBlock> 'else' <statBlock> 'semi' makeFamily(ifStat, if, relExpr, then, statBlock)
+<statement> ::= 'while' makeNode(while) 'lpar' <relExpr> 'rpar' <statBlock> 'semi' makeFamily(whileStat, while, relExpr, statBlock)
+<statement> ::= 'read' makeNode(read) 'lpar' <variable> 'rpar' 'semi' makeFamily(readStat, read, variable)
+<statement> ::= 'write' makeNode(write) 'lpar' <expr> 'rpar' 'semi' makeFamily(writeStat, write, expr)
+<statement> ::= 'return' makeNode(return) 'lpar' <expr> 'rpar' 'semi' makeFamily(returnStat, return, expr)
+
+<statementIdnest2> ::= EPSILON 
+<statementIdnest2> ::= 'dot' makeNode(dot) 'id' makeNode(id) <statementIdnest> 
+
+<statementIdnest3> ::= <assignOp> <expr> 
+<statementIdnest3> ::= 'dot' makeNode(dot) 'id' makeNode(id) <statementIdnest> 
+
+<statementIdnest> ::= 'dot' makeNode(dot) 'id' makeNode(id) <statementIdnest> 
+<statementIdnest> ::= 'lpar' <aParams> 'rpar' <statementIdnest2> 
+<statementIdnest> ::= <indice> <reptIdnest1> makeFamily(indiceList, indice, ...) <statementIdnest3> 
+<statementIdnest> ::= <assignOp> <expr> 
+
+<term> ::= <factor> <rightRecTerm> makeFamily(term, factor, multOp, factor, ...)
+
+<type> ::= 'integer' makeNode(integer)
+<type> ::= 'float' makeNode(float)
+<type> ::= 'id' makeNode(id)
+
+<varIdnest2> ::= 'lpar' <aParams> 'rpar' <varIdnest> 
+<varIdnest2> ::= <reptIdnest1> makeFamily(indiceList, indice, ...)
+
+<varIdnest> ::= 'dot' makeNode(dot) 'id' makeNode(id) <varIdnest2> 
+
+<variable2> ::= <reptIdnest1> makeFamily(indiceList, indice, ...) <reptVariable> makeFamily(varIdnest, ...) makeFamily(variable, id, indiceList, varIdnest)
+<variable2> ::= 'lpar' <aParams> 'rpar' <varIdnest> makeFamily(varIdnest, ...) makeFamily(variable, id, aParams, varIdnest)
+
+<variable> ::= 'id' makeNode(id) <variable2> 
+
+<visibility> ::= 'public' makeNode(public)
+<visibility> ::= 'private' makeNode(private)
+
+
