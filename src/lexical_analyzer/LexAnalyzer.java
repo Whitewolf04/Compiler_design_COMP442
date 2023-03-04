@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 import syntax_analyzer.ProgramQueue;
+import syntax_analyzer.Terminal;
 
 
 public class LexAnalyzer {
@@ -181,7 +182,7 @@ public class LexAnalyzer {
                 OutputWriter.lexOutWriting("\n");
             }
         }
-
+        ProgramQueue.add(Terminal.START);
         OutputWriter.closeLexWriteStream();
 
     }
