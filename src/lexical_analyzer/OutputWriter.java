@@ -12,6 +12,7 @@ public final class OutputWriter {
     private static BufferedWriter lexOutWriter;
     private static BufferedWriter syntaxErrWriter;
     private static BufferedWriter syntaxOutWriter;
+    private static BufferedWriter treeWriter;
     public static int lineCount;
     private static int nextLineCount;
     public static int cmtLineCount;
@@ -42,6 +43,14 @@ public final class OutputWriter {
             syntaxOutWriter = new BufferedWriter(new FileWriter("test.outderivation"));
         } catch(IOException e){
             System.out.println("Error opening syntax file to write");
+        }
+    }
+
+    public static void openTreeWriteStream(){
+        try{
+            treeWriter = new BufferedWriter(new FileWriter("tree.outast"));
+        } catch(IOException e){
+            System.out.println("Error opening graphviz file to write");
         }
     }
 
@@ -89,6 +98,15 @@ public final class OutputWriter {
         }
     }
 
+    public static void treeWriting(String output){
+        try{
+            treeWriter.write(output);
+            treeWriter.flush();
+        } catch(IOException e){
+            System.out.println("Error writing out trees to file!");
+        }
+    }
+
     public static void cmtWriting(String output){
         try{
             lexOutWriter.write(output + (lineCount - cmtLineCount) + "]\n");
@@ -114,6 +132,14 @@ public final class OutputWriter {
             syntaxOutWriter.close();
         } catch(IOException e){
             System.out.println("Error closing syntax writer stream!");
+        }
+    }
+
+    public static void closeTreeWriteStream(){
+        try{
+            treeWriter.close();
+        } catch(IOException e){
+            System.out.println("Error closing tree writer stream!");
         }
     }
 

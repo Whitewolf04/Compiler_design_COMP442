@@ -1,5 +1,5 @@
 // ====== struct declarations ====== //
-/*class POLYNOMIAL {
+class POLYNOMIAL {
   public function evaluate: (x: float) => float;
 };
 
@@ -53,7 +53,7 @@ function LINEAR::evaluate(x: float) => float
   result = 0.0;
   result = a * x + b;
   return (result);
-}*/
+}
  
 // ====== main ====== //
 function main() => void

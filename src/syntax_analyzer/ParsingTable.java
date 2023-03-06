@@ -80,14 +80,14 @@ public final class ParsingTable {
         START.tableEntry.put("function", new Stack<GrammarToken>(){{push(prog); push(Terminal.START);}});
         START.tableEntry.put("class", new Stack<GrammarToken>(){{push(prog); push(Terminal.START);}});
 
-        aParams.tableEntry.put("id", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "EPSILON"));}});
+        aParams.tableEntry.put("id", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "expr", "EPSILON"));}});
         aParams.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
-        aParams.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "EPSILON"));}});
-        aParams.tableEntry.put("minus", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "EPSILON"));}});
-        aParams.tableEntry.put("plus", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "EPSILON"));}});
-        aParams.tableEntry.put("not", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "EPSILON"));}});
-        aParams.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "EPSILON"));}});
-        aParams.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "EPSILON"));}});
+        aParams.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "expr", "EPSILON"));}});
+        aParams.tableEntry.put("minus", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "expr", "EPSILON"));}});
+        aParams.tableEntry.put("plus", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "expr", "EPSILON"));}});
+        aParams.tableEntry.put("not", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "expr", "EPSILON"));}});
+        aParams.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "expr", "EPSILON"));}});
+        aParams.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "expr", "EPSILON"));}});
 
         aParamsTail.tableEntry.put("comma", new Stack<GrammarToken>(){{push(Terminal.comma); push(expr);}});
 
@@ -95,17 +95,17 @@ public final class ParsingTable {
         addOp.tableEntry.put("minus", new Stack<GrammarToken>(){{push(Terminal.minus); push(new NodeFactory("minus"));}});
         addOp.tableEntry.put("or", new Stack<GrammarToken>(){{push(Terminal.orW); push(new NodeFactory("or"));}});
 
-        arithExpr.tableEntry.put("id", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "EPSILON"));}});
-        arithExpr.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "EPSILON"));}});
-        arithExpr.tableEntry.put("minus", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "EPSILON"));}});
-        arithExpr.tableEntry.put("plus", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "EPSILON"));}});
-        arithExpr.tableEntry.put("not", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "EPSILON"));}});
-        arithExpr.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "EPSILON"));}});
-        arithExpr.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "EPSILON"));}});
+        arithExpr.tableEntry.put("id", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
+        arithExpr.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
+        arithExpr.tableEntry.put("minus", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
+        arithExpr.tableEntry.put("plus", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
+        arithExpr.tableEntry.put("not", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
+        arithExpr.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
+        arithExpr.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
 
         arrayOrObject.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(aParams); push(Terminal.rpar); push(new SubTreeFactory("arrayOrObject", 1));}});
-        arrayOrObject.tableEntry.put("semi", new Stack<GrammarToken>(){{push(reptArraySize); push(new SubTreeFactory("arraySizeList", "EPSILON")); push(new SubTreeFactory("arrayOrObject", 1));}});
-        arrayOrObject.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptArraySize); push(new SubTreeFactory("arraySizeList", "EPSILON")); push(new SubTreeFactory("arrayOrObject", 1));}});
+        arrayOrObject.tableEntry.put("semi", new Stack<GrammarToken>(){{push(reptArraySize); push(new SubTreeFactory("arraySizeList", "intLit", "EPSILON")); push(new SubTreeFactory("arrayOrObject", 1));}});
+        arrayOrObject.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptArraySize); push(new SubTreeFactory("arraySizeList", "intLit", "EPSILON")); push(new SubTreeFactory("arrayOrObject", 1));}});
 
         arraySize.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(Terminal.lsqbr); push(arraySize2);}});
 
@@ -114,7 +114,7 @@ public final class ParsingTable {
 
         assignOp.tableEntry.put("assign", new Stack<GrammarToken>(){{push(Terminal.assign); push(new NodeFactory("assign"));}});
 
-        classDecl.tableEntry.put("class", new Stack<GrammarToken>(){{push(Terminal.classW); push(Terminal.id); push(new NodeFactory("id")); push(optInherits); push(Terminal.lcurbr); push(reptMemberDecl); push(new SubTreeFactory("memberList", "EPSILON")); push(Terminal.rcurbr); push(Terminal.semi); push(new SubTreeFactory("classDecl", 3));}});
+        classDecl.tableEntry.put("class", new Stack<GrammarToken>(){{push(Terminal.classW); push(Terminal.id); push(new NodeFactory("id")); push(optInherits); push(new SubTreeFactory("inheritList", "isa", "EPSILON")); push(Terminal.lcurbr); push(reptMemberDecl); push(new SubTreeFactory("memberList", "memberDecl", "EPSILON")); push(Terminal.rcurbr); push(Terminal.semi); push(new SubTreeFactory("classDecl", 3));}});
 
         classDeclOrFuncDef.tableEntry.put("class", new Stack<GrammarToken>(){{push(classDecl);}});
         classDeclOrFuncDef.tableEntry.put("function", new Stack<GrammarToken>(){{push(funcDef);}});
@@ -137,7 +137,7 @@ public final class ParsingTable {
         expr2.tableEntry.put("noteq", new Stack<GrammarToken>(){{push(relOp); push(arithExpr); push(new SubTreeFactory("expr2", 2));}});
         expr2.tableEntry.put("eq", new Stack<GrammarToken>(){{push(relOp); push(arithExpr); push(new SubTreeFactory("expr2", 2));}});
 
-        factor.tableEntry.put("id", new Stack<GrammarToken>(){{push(Terminal.id); push(new NodeFactory("id")); push(factor2); push(reptVariableOrFunctionCall); push(new SubTreeFactory("idnestList", "EPSILON")); push(new SubTreeFactory("factor", 3));}});
+        factor.tableEntry.put("id", new Stack<GrammarToken>(){{push(Terminal.id); push(new NodeFactory("id")); push(factor2); push(reptVariableOrFunctionCall); push(new SubTreeFactory("idnestList", "idnest", "EPSILON")); push(new SubTreeFactory("factor", 3));}});
         factor.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(arithExpr); push(Terminal.rpar); push(new SubTreeFactory("factor", 1));}});
         factor.tableEntry.put("minus", new Stack<GrammarToken>(){{push(sign); push(factor); push(new SubTreeFactory("factor", 2));}});
         factor.tableEntry.put("plus", new Stack<GrammarToken>(){{push(sign); push(factor); push(new SubTreeFactory("factor", 2));}});
@@ -145,76 +145,76 @@ public final class ParsingTable {
         factor.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(Terminal.floatLit); push(new NodeFactory("floatLit", "FLOAT")); push(new SubTreeFactory("factor", 1));}});
         factor.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(Terminal.intLit); push(new NodeFactory("intLit", "INTEGER")); push(new SubTreeFactory("factor", 1));}});
 
-        factor2.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
+        factor2.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
         factor2.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(aParams); push(Terminal.rpar);}});
-        factor2.tableEntry.put("dot", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("semi", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("minus", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("plus", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("comma", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("geq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("leq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("gt", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("lt", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("eq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("noteq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("and", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("div", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("mult", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("rsqbr", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        factor2.tableEntry.put("or", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
+        factor2.tableEntry.put("dot", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("semi", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("minus", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("plus", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("comma", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("geq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("leq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("gt", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("lt", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("eq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("noteq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("and", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("div", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("mult", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("rsqbr", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        factor2.tableEntry.put("or", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
 
-        fParams.tableEntry.put("id", new Stack<GrammarToken>(){{push(Terminal.id); push(new NodeFactory("id")); push(Terminal.col); push(type); push(reptFParams3); push(new SubTreeFactory("arraySizeList", "EPSILON")); push(new SubTreeFactory("fParams", 3)); push(reptFParams4);}});
+        fParams.tableEntry.put("id", new Stack<GrammarToken>(){{push(Terminal.id); push(new NodeFactory("id")); push(Terminal.col); push(type); push(reptFParams3); push(new SubTreeFactory("arraySizeList", "intLit", "EPSILON")); push(new SubTreeFactory("fParams", 3)); push(reptFParams4);}});
         fParams.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
 
-        fParamsTail.tableEntry.put("comma", new Stack<GrammarToken>(){{push(Terminal.comma); push(Terminal.id); push(new NodeFactory("id")); push(Terminal.col); push(type); push(reptFParamsTail4); push(new SubTreeFactory("arraySizeList", "EPSILON")); push(new SubTreeFactory("fParams", 3));}});
+        fParamsTail.tableEntry.put("comma", new Stack<GrammarToken>(){{push(Terminal.comma); push(Terminal.id); push(new NodeFactory("id")); push(Terminal.col); push(type); push(reptFParamsTail4); push(new SubTreeFactory("arraySizeList", "intLit", "EPSILON")); push(new SubTreeFactory("fParams", 3));}});
         
-        funcBody.tableEntry.put("lcurbr", new Stack<GrammarToken>(){{push(Terminal.lcurbr); push(reptLocalVarOrStat); push(Terminal.rcurbr); push(new SubTreeFactory("funcBody", "EPSILON"));}});
+        funcBody.tableEntry.put("lcurbr", new Stack<GrammarToken>(){{push(Terminal.lcurbr); push(reptLocalVarOrStat); push(Terminal.rcurbr); push(new SubTreeFactory("funcBody", "localVarOrStat", "EPSILON"));}});
 
         funcDef.tableEntry.put("function", new Stack<GrammarToken>(){{push(funcHead); push(funcBody); push(new SubTreeFactory("funcDef", 2));}});
 
         funcHead.tableEntry.put("function", new Stack<GrammarToken>(){{push(Terminal.functionW); push(Terminal.id); push(new NodeFactory("id")); push(funcHeadTail);}});
 
-        funcHeadMemberTail.tableEntry.put("id", new Stack<GrammarToken>(){{push(Terminal.id); push(new NodeFactory("id")); push(Terminal.lpar); push(fParams); push(new SubTreeFactory("fParamsList", "EPSILON")); push(Terminal.rpar); push(Terminal.arrow); push(returnType); push(new SubTreeFactory("funcHead", 4));}});
-        funcHeadMemberTail.tableEntry.put("constructor", new Stack<GrammarToken>(){{push(Terminal.constructorW); push(Terminal.lpar); push(fParams); push(new SubTreeFactory("fParamsList", "EPSILON")); push(Terminal.rpar); push(new SubTreeFactory("funcHead", 2));}});
+        funcHeadMemberTail.tableEntry.put("id", new Stack<GrammarToken>(){{push(Terminal.id); push(new NodeFactory("id")); push(Terminal.lpar); push(fParams); push(new SubTreeFactory("fParamsList", "fParams", "EPSILON")); push(Terminal.rpar); push(Terminal.arrow); push(returnType); push(new SubTreeFactory("funcHead", 5));}});
+        funcHeadMemberTail.tableEntry.put("constructor", new Stack<GrammarToken>(){{push(Terminal.constructorW); push(new NodeFactory("constructor")); push(Terminal.lpar); push(fParams); push(new SubTreeFactory("fParamsList", "fParams", "EPSILON")); push(Terminal.rpar); push(new SubTreeFactory("funcHead", 4));}});
 
-        funcHeadTail.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(fParams); push(new SubTreeFactory("fParamsList", "EPSILON")); push(Terminal.rpar); push(Terminal.arrow); push(returnType); push(new SubTreeFactory("funcHead", 3));}});
-        funcHeadTail.tableEntry.put("sr", new Stack<GrammarToken>(){{push(Terminal.sr); push(funcHeadMemberTail);}});
+        funcHeadTail.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(fParams); push(new SubTreeFactory("fParamsList", "fParams", "EPSILON")); push(Terminal.rpar); push(Terminal.arrow); push(returnType); push(new SubTreeFactory("funcHead", 3));}});
+        funcHeadTail.tableEntry.put("sr", new Stack<GrammarToken>(){{push(Terminal.sr); push(new NodeFactory("sr")); push(funcHeadMemberTail);}});
 
         idnest.tableEntry.put("dot", new Stack<GrammarToken>(){{push(Terminal.dot); push(new NodeFactory("dot")); push(Terminal.id); push(new NodeFactory("id")); push(idnest2); push(new SubTreeFactory("idnest", 3));}});
 
-        idnest2.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
+        idnest2.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
         idnest2.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(aParams); push(Terminal.rpar);}});
-        idnest2.tableEntry.put("dot", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("semi", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("minus", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("plus", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("comma", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("geq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("leq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("gt", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("lt", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("noteq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("eq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("and", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("div", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("mult", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("rsqbr", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        idnest2.tableEntry.put("or", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
+        idnest2.tableEntry.put("dot", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("semi", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("minus", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("plus", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("comma", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("geq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("leq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("gt", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("lt", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("noteq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("eq", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("and", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("div", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("mult", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("rsqbr", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        idnest2.tableEntry.put("or", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
 
         indice.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(Terminal.lsqbr); push(arithExpr); push(Terminal.rsqbr); push(new SubTreeFactory("indice", 1));}});
 
         localVarDecl.tableEntry.put("localvar", new Stack<GrammarToken>(){{push(Terminal.localvarW); push(Terminal.id); push(new NodeFactory("id")); push(Terminal.col); push(type); push(arrayOrObject); push(Terminal.semi); push(new SubTreeFactory("localVarDecl", 3));}});
 
-        localVarOrStat.tableEntry.put("id", new Stack<GrammarToken>(){{push(statement);}});
-        localVarOrStat.tableEntry.put("return", new Stack<GrammarToken>(){{push(statement);}});
-        localVarOrStat.tableEntry.put("write", new Stack<GrammarToken>(){{push(statement);}});
-        localVarOrStat.tableEntry.put("while", new Stack<GrammarToken>(){{push(statement);}});
-        localVarOrStat.tableEntry.put("read", new Stack<GrammarToken>(){{push(statement);}});
-        localVarOrStat.tableEntry.put("if", new Stack<GrammarToken>(){{push(statement);}});
-        localVarOrStat.tableEntry.put("localvar", new Stack<GrammarToken>(){{push(localVarDecl);}});
+        localVarOrStat.tableEntry.put("id", new Stack<GrammarToken>(){{push(statement); push(new SubTreeFactory("localVarOrStat", 1));}});
+        localVarOrStat.tableEntry.put("return", new Stack<GrammarToken>(){{push(statement); push(new SubTreeFactory("localVarOrStat", 1));}});
+        localVarOrStat.tableEntry.put("write", new Stack<GrammarToken>(){{push(statement); push(new SubTreeFactory("localVarOrStat", 1));}});
+        localVarOrStat.tableEntry.put("while", new Stack<GrammarToken>(){{push(statement); push(new SubTreeFactory("localVarOrStat", 1));}});
+        localVarOrStat.tableEntry.put("read", new Stack<GrammarToken>(){{push(statement); push(new SubTreeFactory("localVarOrStat", 1));}});
+        localVarOrStat.tableEntry.put("if", new Stack<GrammarToken>(){{push(statement); push(new SubTreeFactory("localVarOrStat", 1));}});
+        localVarOrStat.tableEntry.put("localvar", new Stack<GrammarToken>(){{push(localVarDecl); push(new SubTreeFactory("localVarOrStat", 1));}});
 
         memberDecl.tableEntry.put("attribute", new Stack<GrammarToken>(){{push(memberVarDecl);}});
         memberDecl.tableEntry.put("constructor", new Stack<GrammarToken>(){{push(memberFuncDecl);}});
@@ -223,17 +223,17 @@ public final class ParsingTable {
         memberFuncDecl.tableEntry.put("constructor", new Stack<GrammarToken>(){{push(memberFuncHead); push(Terminal.semi);}});
         memberFuncDecl.tableEntry.put("function", new Stack<GrammarToken>(){{push(memberFuncHead); push(Terminal.semi);}});
 
-        memberFuncHead.tableEntry.put("constructor", new Stack<GrammarToken>(){{push(Terminal.constructorW); push(Terminal.col); push(Terminal.lpar); push(fParams); push(new SubTreeFactory("fParamsList", "EPSILON")); push(Terminal.rpar); push(new SubTreeFactory("constructorDecl", 1));}});
-        memberFuncHead.tableEntry.put("function", new Stack<GrammarToken>(){{push(Terminal.functionW); push(Terminal.id); push(new NodeFactory("id")); push(Terminal.col); push(Terminal.lpar); push(fParams); push(new SubTreeFactory("fParamsList", "EPSILON")); push(Terminal.rpar); push(Terminal.arrow); push(returnType); push(new SubTreeFactory("memFuncDecl", 3));}});
+        memberFuncHead.tableEntry.put("constructor", new Stack<GrammarToken>(){{push(Terminal.constructorW); push(Terminal.col); push(Terminal.lpar); push(fParams); push(new SubTreeFactory("fParamsList", "fParams", "EPSILON")); push(Terminal.rpar); push(new SubTreeFactory("constructorDecl", 1));}});
+        memberFuncHead.tableEntry.put("function", new Stack<GrammarToken>(){{push(Terminal.functionW); push(Terminal.id); push(new NodeFactory("id")); push(Terminal.col); push(Terminal.lpar); push(fParams); push(new SubTreeFactory("fParamsList", "fParams", "EPSILON")); push(Terminal.rpar); push(Terminal.arrow); push(returnType); push(new SubTreeFactory("memFuncDecl", 3));}});
 
-        memberVarDecl.tableEntry.put("attribute", new Stack<GrammarToken>(){{push(Terminal.attributeW); push(Terminal.id); push(new NodeFactory("id")); push(Terminal.col); push(type); push(reptArraySize); push(new SubTreeFactory("arraySizeList", "EPSILON")); push(Terminal.semi); push(new SubTreeFactory("memberVarDecl", 3));}});
+        memberVarDecl.tableEntry.put("attribute", new Stack<GrammarToken>(){{push(Terminal.attributeW); push(Terminal.id); push(new NodeFactory("id")); push(Terminal.col); push(type); push(reptArraySize); push(new SubTreeFactory("arraySizeList", "intLit", "EPSILON")); push(Terminal.semi); push(new SubTreeFactory("memberVarDecl", 3));}});
 
-        multOp.tableEntry.put("and", new Stack<GrammarToken>(){{push(Terminal.andW); push(new NodeFactory("and"));}});
-        multOp.tableEntry.put("div", new Stack<GrammarToken>(){{push(Terminal.div); push(new NodeFactory("div"));}});
-        multOp.tableEntry.put("mult", new Stack<GrammarToken>(){{push(Terminal.mult); push(new NodeFactory("mult"));}});
+        multOp.tableEntry.put("and", new Stack<GrammarToken>(){{push(Terminal.andW); push(new NodeFactory("and")); push(new SubTreeFactory("multOp", 1));}});
+        multOp.tableEntry.put("div", new Stack<GrammarToken>(){{push(Terminal.div); push(new NodeFactory("div")); push(new SubTreeFactory("multOp", 1));}});
+        multOp.tableEntry.put("mult", new Stack<GrammarToken>(){{push(Terminal.mult); push(new NodeFactory("mult")); push(new SubTreeFactory("multOp", 1));}});
 
         optInherits.tableEntry.put("lcurbr", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
-        optInherits.tableEntry.put("isa", new Stack<GrammarToken>(){{push(Terminal.isaW); push(new NodeFactory("isa")); push(Terminal.id); push(new NodeFactory("id")); push(reptInheritsList); push(new SubTreeFactory("inheritList", "EPSILON"));}});
+        optInherits.tableEntry.put("isa", new Stack<GrammarToken>(){{push(Terminal.isaW); push(new NodeFactory("isa")); push(Terminal.id); push(new NodeFactory("id")); push(reptInheritsList);}});
 
         prog.tableEntry.put("$", new Stack<GrammarToken>(){{push(reptProg0);}});
         prog.tableEntry.put("function", new Stack<GrammarToken>(){{push(reptProg0);}});
@@ -303,8 +303,8 @@ public final class ParsingTable {
         reptLocalVarOrStat.tableEntry.put("rcurbr", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
         reptLocalVarOrStat.tableEntry.put("localvar", new Stack<GrammarToken>(){{push(localVarOrStat); push(reptLocalVarOrStat);}});
 
-        reptMemberDecl.tableEntry.put("public", new Stack<GrammarToken>(){{push(visibility); push(memberDecl); push(reptMemberDecl);}});
-        reptMemberDecl.tableEntry.put("private", new Stack<GrammarToken>(){{push(visibility); push(memberDecl); push(reptMemberDecl);}});
+        reptMemberDecl.tableEntry.put("public", new Stack<GrammarToken>(){{push(visibility); push(memberDecl); push(new SubTreeFactory("memberDecl", 2)); push(reptMemberDecl);}});
+        reptMemberDecl.tableEntry.put("private", new Stack<GrammarToken>(){{push(visibility); push(memberDecl); push(new SubTreeFactory("memberDecl", 2)); push(reptMemberDecl);}});
         reptMemberDecl.tableEntry.put("rcurbr", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
 
         reptProg0.tableEntry.put("$", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
@@ -340,10 +340,10 @@ public final class ParsingTable {
         reptVariableOrFunctionCall.tableEntry.put("rsqbr", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
         reptVariableOrFunctionCall.tableEntry.put("or", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
 
-        returnType.tableEntry.put("id", new Stack<GrammarToken>(){{push(type);}});
-        returnType.tableEntry.put("float", new Stack<GrammarToken>(){{push(type);}});
-        returnType.tableEntry.put("integer", new Stack<GrammarToken>(){{push(type);}});
-        returnType.tableEntry.put("void", new Stack<GrammarToken>(){{push(Terminal.voidW); push(new NodeFactory("void"));}});
+        returnType.tableEntry.put("id", new Stack<GrammarToken>(){{push(type); push(new SubTreeFactory("returnType", 1));}});
+        returnType.tableEntry.put("float", new Stack<GrammarToken>(){{push(type); push(new SubTreeFactory("returnType", 1));}});
+        returnType.tableEntry.put("integer", new Stack<GrammarToken>(){{push(type); push(new SubTreeFactory("returnType", 1));}});
+        returnType.tableEntry.put("void", new Stack<GrammarToken>(){{push(Terminal.voidW); push(new NodeFactory("void")); push(new SubTreeFactory("returnType", 1));}});
 
         rightRecArithExpr.tableEntry.put("semi", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
         rightRecArithExpr.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
@@ -387,9 +387,9 @@ public final class ParsingTable {
         statBlock.tableEntry.put("while", new Stack<GrammarToken>(){{push(statement); push(new SubTreeFactory("statBlock", 1));}});
         statBlock.tableEntry.put("else", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
         statBlock.tableEntry.put("if", new Stack<GrammarToken>(){{push(statement); push(new SubTreeFactory("statBlock", 1));}});
-        statBlock.tableEntry.put("lcurbr", new Stack<GrammarToken>(){{push(Terminal.lcurbr); push(reptStatBlock1); push(new SubTreeFactory("statementList", "EPSILON")); push(Terminal.rcurbr); push(new SubTreeFactory("statBlock", 1));}});
+        statBlock.tableEntry.put("lcurbr", new Stack<GrammarToken>(){{push(Terminal.lcurbr); push(reptStatBlock1); push(new SubTreeFactory("statementList", "statement", "EPSILON")); push(Terminal.rcurbr); push(new SubTreeFactory("statBlock", 1));}});
 
-        statement.tableEntry.put("id", new Stack<GrammarToken>(){{push(Terminal.id); push(new NodeFactory("id")); push(statementIdnest); push(new SubTreeFactory("assignOrFuncCall", "EPSILON", "expr")); push(Terminal.semi); push(new SubTreeFactory("statement", 2));}});
+        statement.tableEntry.put("id", new Stack<GrammarToken>(){{push(Terminal.id); push(new NodeFactory("id")); push(statementIdnest); push(new SubTreeFactory("assignOrFuncCall", "id", true, "EPSILON", "expr")); push(Terminal.semi); push(new SubTreeFactory("statement", 2));}});
         statement.tableEntry.put("return", new Stack<GrammarToken>(){{push(Terminal.returnW); push(new NodeFactory("return")); push(Terminal.lpar); push(expr); push(Terminal.rpar); push(Terminal.semi); push(new SubTreeFactory("returnStat", 2));}});
         statement.tableEntry.put("write", new Stack<GrammarToken>(){{push(Terminal.writeW); push(new NodeFactory("write")); push(Terminal.lpar); push(expr); push(Terminal.rpar); push(Terminal.semi); push(new SubTreeFactory("writeStat", 2));}});
         statement.tableEntry.put("read", new Stack<GrammarToken>(){{push(Terminal.readW); push(new NodeFactory("read")); push(Terminal.lpar); push(variable); push(Terminal.rpar); push(Terminal.semi); push(new SubTreeFactory("readStat", 2));}});
@@ -398,7 +398,7 @@ public final class ParsingTable {
 
         statementIdnest.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(aParams); push(Terminal.rpar); push(statementIdnest2);}});
         statementIdnest.tableEntry.put("dot", new Stack<GrammarToken>(){{push(Terminal.dot); push(new NodeFactory("dot")); push(Terminal.id); push(new NodeFactory("id")); push(statementIdnest);}});
-        statementIdnest.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(indice); push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON")); push(statementIdnest3);}});
+        statementIdnest.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(indice); push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON")); push(statementIdnest3);}});
         statementIdnest.tableEntry.put("assign", new Stack<GrammarToken>(){{push(assignOp); push(expr);}});
 
         statementIdnest2.tableEntry.put("dot", new Stack<GrammarToken>(){{push(Terminal.dot); push(new NodeFactory("dot")); push(Terminal.id); push(new NodeFactory("id")); push(statementIdnest);}});
@@ -407,34 +407,34 @@ public final class ParsingTable {
         statementIdnest3.tableEntry.put("dot", new Stack<GrammarToken>(){{push(Terminal.dot); push(new NodeFactory("dot")); push(Terminal.id); push(new NodeFactory("id")); push(statementIdnest);}});
         statementIdnest3.tableEntry.put("assign", new Stack<GrammarToken>(){{push(assignOp); push(expr);}});
         
-        term.tableEntry.put("id", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "EPSILON"));}});
-        term.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "EPSILON"));}});
-        term.tableEntry.put("minus", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "EPSILON"));}});
-        term.tableEntry.put("plus", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "EPSILON"));}});
-        term.tableEntry.put("not", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "EPSILON"));}});
-        term.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "EPSILON"));}});
-        term.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "EPSILON"));}});
+        term.tableEntry.put("id", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
+        term.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
+        term.tableEntry.put("minus", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
+        term.tableEntry.put("plus", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
+        term.tableEntry.put("not", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
+        term.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
+        term.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
 
-        type.tableEntry.put("integer", new Stack<GrammarToken>(){{push(Terminal.integerW); push(new NodeFactory("integer"));}});
-        type.tableEntry.put("float", new Stack<GrammarToken>(){{push(Terminal.floatW); push(new NodeFactory("float"));}});
-        type.tableEntry.put("id", new Stack<GrammarToken>(){{push(Terminal.id); push(new NodeFactory("id"));}});
+        type.tableEntry.put("integer", new Stack<GrammarToken>(){{push(Terminal.integerW); push(new NodeFactory("integer")); push(new SubTreeFactory("type", 1));}});
+        type.tableEntry.put("float", new Stack<GrammarToken>(){{push(Terminal.floatW); push(new NodeFactory("float")); push(new SubTreeFactory("type", 1));}});
+        type.tableEntry.put("id", new Stack<GrammarToken>(){{push(Terminal.id); push(new NodeFactory("id")); push(new SubTreeFactory("type", 1));}});
 
         variable.tableEntry.put("id", new Stack<GrammarToken>(){{push(Terminal.id); push(new NodeFactory("id")); push(variable2);}});
 
-        variable2.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON")); push(reptVariable); push(new SubTreeFactory("varIdnest", "EPSILON")); push(new SubTreeFactory("variable", 3));}});
-        variable2.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(aParams); push(Terminal.rpar); push(varIdnest); push(new SubTreeFactory("varIdnest", "indiceList")); push(new SubTreeFactory("variable", 3));}});
-        variable2.tableEntry.put("dot", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON")); push(reptVariable); push(new SubTreeFactory("varIdnest", "EPSILON")); push(new SubTreeFactory("variable", 3));}});
-        variable2.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON")); push(reptVariable); push(new SubTreeFactory("varIdnest", "EPSILON")); push(new SubTreeFactory("variable", 3));}});
+        variable2.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON")); push(reptVariable); push(new SubTreeFactory("varIdnest", "dot", "EPSILON")); push(new SubTreeFactory("variable", 3));}});
+        variable2.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(aParams); push(Terminal.rpar); push(varIdnest); push(new SubTreeFactory("varIdnest", "dot", "indiceList")); push(new SubTreeFactory("variable", 3));}});
+        variable2.tableEntry.put("dot", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON")); push(reptVariable); push(new SubTreeFactory("varIdnest", "dot", "EPSILON")); push(new SubTreeFactory("variable", 3));}});
+        variable2.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON")); push(reptVariable); push(new SubTreeFactory("varIdnest", "dot", "EPSILON")); push(new SubTreeFactory("variable", 3));}});
 
         varIdnest.tableEntry.put("dot", new Stack<GrammarToken>(){{push(Terminal.dot); push(new NodeFactory("dot")); push(Terminal.id); push(new NodeFactory("id")); push(varIdnest2);}});
 
-        varIdnest2.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
+        varIdnest2.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
         varIdnest2.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(aParams); push(Terminal.rpar); push(varIdnest);}});
-        varIdnest2.tableEntry.put("dot", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
-        varIdnest2.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "EPSILON"));}});
+        varIdnest2.tableEntry.put("dot", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
+        varIdnest2.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
 
-        visibility.tableEntry.put("public", new Stack<GrammarToken>(){{push(Terminal.publicW); push(new NodeFactory("public"));}});
-        visibility.tableEntry.put("private", new Stack<GrammarToken>(){{push(Terminal.privateW); push(new NodeFactory("private"));}});
+        visibility.tableEntry.put("public", new Stack<GrammarToken>(){{push(Terminal.publicW); push(new NodeFactory("public")); push(new SubTreeFactory("visibility", 1));}});
+        visibility.tableEntry.put("private", new Stack<GrammarToken>(){{push(Terminal.privateW); push(new NodeFactory("private")); push(new SubTreeFactory("visibility", 1));}});
         
         // Load the table
         table = new HashMap<String, NonTerminal>();

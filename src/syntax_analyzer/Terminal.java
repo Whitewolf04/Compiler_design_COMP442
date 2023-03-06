@@ -1,6 +1,7 @@
 package syntax_analyzer;
 
 public class Terminal extends GrammarToken {
+    String content = null;
     String stringValue;
     TerminalType type;
 
@@ -12,6 +13,12 @@ public class Terminal extends GrammarToken {
     public Terminal(String value, TerminalType type){
         stringValue = value;
         this.type = type;
+    }
+
+    public Terminal(String value, TerminalType type, String content){
+        stringValue = value;
+        this.type = type;
+        this.content = content;
     }
 
     public boolean equals(Terminal anotherTerminal){
@@ -30,6 +37,10 @@ public class Terminal extends GrammarToken {
 
     public String toString(){
         return stringValue;
+    }
+
+    public String getContent(){
+        return content;
     }
 
     static public final Terminal START = new Terminal("$", TerminalType.OTHER);

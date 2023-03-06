@@ -3,6 +3,8 @@ package syntax_analyzer;
 import java.util.Stack;
 
 import AST_generator.Factory;
+import AST_generator.NodeFactory;
+import AST_generator.SubTreeFactory;
 import lexical_analyzer.OutputWriter;
 
 public class SyntaxAnalyzer {
@@ -17,19 +19,24 @@ public class SyntaxAnalyzer {
         GrammarStack.push(ParsingTable.get("START"));
         
         Terminal token = ProgramQueue.nextToken();
+        Terminal curTerminal = null;
         GrammarToken stackTop = GrammarStack.peek();
         boolean error = false;
         Stack<GrammarToken> temp = null;
         Stack<GrammarToken> lookup = null;
         Factory curFactory = null;
+        String terminalContent = null;
 
         while(!stackTop.equals(Terminal.START)){
             // Check if top of the stack is a terminal character
             stackTop = GrammarStack.peek();
             if(stackTop.getClass() == Terminal.EPSILON.getClass()){
-                if(stackTop.equals(Terminal.EPSILON)){
+                curTerminal = (Terminal) stackTop;
+                if(curTerminal.equals(Terminal.EPSILON)){
+                    terminalContent = null;
                     GrammarStack.pop();
-                } else if(stackTop.equals(token)){
+                } else if(curTerminal.equals(token)){
+                    terminalContent = token.getContent();
                     GrammarStack.pop();
                     token = ProgramQueue.nextToken();
                 } else{
@@ -61,7 +68,7 @@ public class SyntaxAnalyzer {
                     curFactory = (Factory) stackTop;
                 }
 
-                curFactory.make();
+                curFactory.make(terminalContent);
                 GrammarStack.pop();
             }
 
@@ -70,6 +77,10 @@ public class SyntaxAnalyzer {
             System.out.println();
             OutputWriter.syntaxOutWriting();
         }
+
+        SubTreeFactory prog = new SubTreeFactory("prog", Factory.nodeStack.size());
+        prog.make(null);
+        System.out.println(Factory.printNodeStack());
 
         if(!stackTop.compareToString("$") || error){
             System.out.println("Program is syntactically invalid!");
@@ -85,7 +96,9 @@ public class SyntaxAnalyzer {
         System.out.println(error);
         OutputWriter.syntaxErrWriting(error);
         NonTerminal temp = null;
-        while(stackTop.getClass() == token.getClass()){
+        NodeFactory nodePlaceholder = new NodeFactory(null);
+        SubTreeFactory subTreePlaceholder = new SubTreeFactory(null, -1);
+        while(stackTop.getClass() == Terminal.EPSILON.getClass() || stackTop.getClass() == nodePlaceholder.getClass() || stackTop.getClass() == subTreePlaceholder.getClass()){
             GrammarStack.pop();
             stackTop = GrammarStack.peek();
         }

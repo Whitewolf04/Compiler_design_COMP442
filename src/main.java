@@ -1,4 +1,6 @@
+import AST_generator.Factory;
 import lexical_analyzer.LexAnalyzer;
+import lexical_analyzer.OutputWriter;
 import syntax_analyzer.ProgramQueue;
 import syntax_analyzer.SyntaxAnalyzer;
 
@@ -8,6 +10,9 @@ public class main {
         LexAnalyzer.analyze("example-bubblesort.src");
 
         SyntaxAnalyzer.analyze();
+        OutputWriter.openTreeWriteStream();
+        Factory.treeToGraph();
+        OutputWriter.closeTreeWriteStream();
 
     }
 }

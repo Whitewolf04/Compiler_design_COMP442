@@ -15,12 +15,15 @@ public class NodeFactory extends Factory{
         this.type = type;
     }
 
-    public void make(){
+    public void make(String value){
         SyntaxTreeNode newNode = new SyntaxTreeNode(content);
         if(type != null){
             newNode.setType(type);
         }
-        Factory.nodeStack.push(newNode);
+        if(value != null){
+            newNode.setValue(value);
+        }
+        Factory.nodeStack.add(newNode);
     }
 
     public String toString(){

@@ -3,6 +3,7 @@ import java.util.regex.Pattern;
 
 import syntax_analyzer.ProgramQueue;
 import syntax_analyzer.Terminal;
+import syntax_analyzer.TerminalType;
 
 public class NumberProcessor implements Processor{
     private String storage;
@@ -60,10 +61,10 @@ public class NumberProcessor implements Processor{
             // Print to output file and add to program queue
             if(numType == NumType.FLOAT){
                 OutputWriter.lexOutWriting("[floatnum, " + this.storage + ", ");
-                ProgramQueue.add(Terminal.floatLit);
+                ProgramQueue.add(new Terminal("floatLit", TerminalType.FLOAT, this.storage));
             } else {
                 OutputWriter.lexOutWriting("[intnum, " + this.storage + ", ");
-                ProgramQueue.add(Terminal.intLit);
+                ProgramQueue.add(new Terminal("intLit", TerminalType.INT, this.storage));
             }
             
             // System.out.println("Number processed: " + this.storage);

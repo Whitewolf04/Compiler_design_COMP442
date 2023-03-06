@@ -1,6 +1,6 @@
 <START> ::= <prog> 'eof' 
 
-<aParams> ::= <expr> <reptAParams1> makeFamily(exprList, expr, untilEPSILON)
+<aParams> ::= <expr> <reptAParams1> makeFamilyUntil(exprList, expr, EPSILON)
 <aParams> ::= EPSILON makeNode(EPSILON)
 
 <aParamsTail> ::= 'comma' <expr> 
@@ -9,9 +9,9 @@
 <addOp> ::= 'minus' makeNode(minus)
 <addOp> ::= 'or' makeNode(or)
 
-<arithExpr> ::= <term> <rightRecArithExpr> makeFamily(termList, term, untilEPSILON)
+<arithExpr> ::= <term> <rightRecArithExpr> makeFamilyUntil(termList, term, EPSILON)
 
-<arrayOrObject> ::= <reptArraySize> makeFamily(arraySizeList, intLit, untilEPSILON) makeFamily(arrayOrObject, arraySizeList)
+<arrayOrObject> ::= <reptArraySize> makeFamilyUntil(arraySizeList, intLit, EPSILON) makeFamily(arrayOrObject, arraySizeList)
 <arrayOrObject> ::= 'lpar' <aParams> 'rpar' makeFamily(arrayOrObject, exprList)
 
 <arraySize2> ::= 'intLit' makeNode(intLit) 'rsqbr' 
@@ -21,7 +21,7 @@
 
 <assignOp> ::= 'equal' makeNode(assign)
 
-<classDecl> ::= 'class' 'id' makeNode(id) <optInherits> makeFamily(inheritList, isa, untilEPSILON) 'lcurbr' <reptMemberDecl> makeFamily(memberList, memberDecl, untilEPSILON) 'rcurbr' 'semi' makeFamily(classDecl, id, inheritList, memberList)
+<classDecl> ::= 'class' 'id' makeNode(id) <optInherits> makeFamilyUntil(inheritList, isa, untilEPSILON) 'lcurbr' <reptMemberDecl> makeFamily(memberList, memberDecl, untilEPSILON) 'rcurbr' 'semi' makeFamily(classDecl, id, inheritList, memberList)
 
 <classDeclOrFuncDef> ::= <classDecl>
 <classDeclOrFuncDef> ::= <funcDef> 

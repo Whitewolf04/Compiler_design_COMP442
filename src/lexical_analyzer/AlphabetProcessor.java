@@ -2,6 +2,7 @@ package lexical_analyzer;
 
 import syntax_analyzer.ProgramQueue;
 import syntax_analyzer.Terminal;
+import syntax_analyzer.TerminalType;
 
 public class AlphabetProcessor implements Processor{
     public String storage;
@@ -69,7 +70,7 @@ public class AlphabetProcessor implements Processor{
             output = true;
 
             // Add to program queue
-            ProgramQueue.add(Terminal.id);
+            ProgramQueue.add(new Terminal("id", TerminalType.ID, this.storage));
         }
 
         this.storage = "";

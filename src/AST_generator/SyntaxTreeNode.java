@@ -1,6 +1,5 @@
 package AST_generator;
 
-import org.jsoup.nodes.Document.OutputSettings.Syntax;
 
 public class SyntaxTreeNode {
     private SyntaxTreeNode parent;
@@ -9,6 +8,9 @@ public class SyntaxTreeNode {
     private SyntaxTreeNode child;
     private String type;
     private String content;
+    private String value = null;
+    private int id;
+    private static int counter = 0;
 
     public SyntaxTreeNode(String content){
         parent = null;
@@ -17,6 +19,7 @@ public class SyntaxTreeNode {
         child = null;
         type = "void";
         this.content = content;
+        id = counter++;
     }
 
     public SyntaxTreeNode(SyntaxTreeNode parent, String content){
@@ -26,6 +29,7 @@ public class SyntaxTreeNode {
         child = null;
         type = "void";
         this.content = content;
+        id = counter++;
     }
 
     public SyntaxTreeNode(SyntaxTreeNode parent, SyntaxTreeNode leftmostSib, String content){
@@ -35,6 +39,7 @@ public class SyntaxTreeNode {
         child = null;
         type = "void";
         this.content = content;
+        id = counter++;
     }
 
     public void setParent(SyntaxTreeNode parent){
@@ -57,6 +62,10 @@ public class SyntaxTreeNode {
         this.type = type;
     }
 
+    public void setValue(String s){
+        value = s;
+    }
+
     public SyntaxTreeNode getParent(){
         return parent;
     }
@@ -73,7 +82,19 @@ public class SyntaxTreeNode {
         return this.type;
     }
 
+    public SyntaxTreeNode getChild(){
+        return child;
+    }
+
     public String toString(){
         return this.content;
+    }
+
+    public String toTree(){
+        if(value != null){
+            return content+id+"_"+value;
+        } else{
+            return content+id;
+        }
     }
 }
