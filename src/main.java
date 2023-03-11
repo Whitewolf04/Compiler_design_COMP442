@@ -7,7 +7,7 @@ import syntax_analyzer.SyntaxAnalyzer;
 public class main {
     public static void main(String[] args) {
         ProgramQueue.initProgramQueue();
-        LexAnalyzer.analyze("example-bubblesort.src");
+        LexAnalyzer.analyze("example-polynomial.src");
 
         SyntaxAnalyzer.analyze();
         OutputWriter.openTreeWriteStream();
