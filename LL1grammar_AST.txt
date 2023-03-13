@@ -26,10 +26,10 @@
 <classDeclOrFuncDef> ::= <classDecl>
 <classDeclOrFuncDef> ::= <funcDef> 
 
-<expr2> ::= <relOp> <arithExpr> makeFamily(expr2, relOp, arithExpr)
+<expr2> ::= <relOp> <arithExpr> makeFamily(expr2, relOp, termList)
 <expr2> ::= EPSILON makeNode(EPSILON)
 
-<expr> ::= <arithExpr> <expr2> makeFamily(expr, arithExpr, expr2)
+<expr> ::= <arithExpr> <expr2> makeFamily(expr, termList, expr2)
 
 <fParams> ::= 'id' makeNode(id) 'col' <type> <reptFParams3> makeFamily(arraySizeList, intLit, untilEPSILON) makeFamily(fParams, id, type, arraySizeList) <reptFParams4> 
 <fParams> ::= EPSILON makeNode(EPSILON)

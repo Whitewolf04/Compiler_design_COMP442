@@ -97,4 +97,6 @@ public class SyntaxTreeNode {
             return content+id;
         }
     }
+
+    public void accept(Visitor visitor){}
 }
