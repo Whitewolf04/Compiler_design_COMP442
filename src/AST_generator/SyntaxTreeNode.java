@@ -1,5 +1,7 @@
 package AST_generator;
 
+import table_generator.SymTabEntry;
+import table_generator.Visitor;
 
 public class SyntaxTreeNode {
     private SyntaxTreeNode parent;
@@ -11,6 +13,7 @@ public class SyntaxTreeNode {
     private String value = null;
     private int id;
     private static int counter = 0;
+    private SymTabEntry tableEntry = null;
 
     public SyntaxTreeNode(String content){
         parent = null;
@@ -66,6 +69,10 @@ public class SyntaxTreeNode {
         value = s;
     }
 
+    public void setTableEntry(SymTabEntry entry){
+        this.tableEntry = entry;
+    }
+
     public SyntaxTreeNode getParent(){
         return parent;
     }
@@ -86,8 +93,16 @@ public class SyntaxTreeNode {
         return child;
     }
 
+    public SymTabEntry getTableEntry(){
+        return this.tableEntry;
+    }
+
     public String toString(){
         return this.content;
+    }
+
+    public String getValue(){
+        return value;
     }
 
     public String toTree(){
@@ -99,4 +114,32 @@ public class SyntaxTreeNode {
     }
 
     public void accept(Visitor visitor){}
+
+    public boolean isEpsilon(){
+        if(this.content.compareTo("EPSILON") == 0){
+            return true;
+        }
+        return false;
+    }
+
+    public int getChildNum(){
+        if(this.child == null){
+            return 0;
+        }
+
+        SyntaxTreeNode cur = this.child;
+        int count = 1;
+        while(cur.rightSib != null){
+            count++;
+            cur = cur.rightSib;
+        }
+        return count;
+    }
+
+    public boolean checkContent(String str){
+        if(this.content.compareTo(str) == 0){
+            return true;
+        }
+        return false;
+    }
 }

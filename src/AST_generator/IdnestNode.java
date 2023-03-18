@@ -1,5 +1,7 @@
 package AST_generator;
 
+import table_generator.Visitor;
+
 public class IdnestNode extends SyntaxTreeNode{
     public IdnestNode(String content){
         super(content);

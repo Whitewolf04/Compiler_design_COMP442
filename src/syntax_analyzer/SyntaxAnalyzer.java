@@ -30,7 +30,7 @@ public class SyntaxAnalyzer {
         while(!stackTop.equals(Terminal.START)){
             // Check if top of the stack is a terminal character
             stackTop = GrammarStack.peek();
-            if(stackTop.getClass() == Terminal.EPSILON.getClass()){
+            if(stackTop.getClass() == Terminal.class){
                 curTerminal = (Terminal) stackTop;
                 if(curTerminal.equals(Terminal.EPSILON)){
                     terminalContent = null;
@@ -43,7 +43,7 @@ public class SyntaxAnalyzer {
                     skipErrors(token, stackTop);
                     error = true;
                 }
-            } else if(stackTop.getClass() == ParsingTable.get("START").getClass()){ 
+            } else if(stackTop.getClass() == NonTerminal.class){ 
                 // Process for stackTop being a non-terminal
                 lookup = ParsingTable.get(stackTop.toString()).tableEntry.get(token.toString());
                 if(lookup != null){
