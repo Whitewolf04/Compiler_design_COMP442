@@ -1,0 +1,8 @@
+expr:
+ - Need to compare type for relOp
+
+arithExpr:
+ - Need to check type for plus/minus/or operation
+
+term:
+ - Need to check type for mult/div/and operation

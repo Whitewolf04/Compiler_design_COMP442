@@ -30,7 +30,7 @@ function QUADRATIC::evaluate(x: float) => float
   //Using Horner's method
   result = a;
   result = result * x + b;
-  result = result * x + c;
+  result = result * not x + c;
   return (result);
 }
 

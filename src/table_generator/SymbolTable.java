@@ -4,9 +4,15 @@ import java.util.HashMap;
 
 public class SymbolTable {
     private HashMap<String, SymTabEntry> table;
+    public String name;
 
     public SymbolTable(){
         table = new HashMap<String, SymTabEntry>();
+    }
+
+    public SymbolTable(String name){
+        table = new HashMap<String, SymTabEntry>();
+        this.name = name;
     }
 
     public HashMap<String, SymTabEntry> getTable(){

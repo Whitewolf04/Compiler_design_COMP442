@@ -27,7 +27,7 @@
 [inlinecmt, //Using Horner's method\n, 30]
 [id, result, 31] [assign, =, 31] [id, a, 31] [semicol, ;, 31] 
 [id, result, 32] [assign, =, 32] [id, result, 32] [mult, *, 32] [id, x, 32] [plus, +, 32] [id, b, 32] [semicol, ;, 32] 
-[id, result, 33] [assign, =, 33] [id, result, 33] [mult, *, 33] [id, x, 33] [plus, +, 33] [id, c, 33] [semicol, ;, 33] 
+[id, result, 33] [assign, =, 33] [id, result, 33] [mult, *, 33] [not, not, 33] [id, x, 33] [plus, +, 33] [id, c, 33] [semicol, ;, 33] 
 [return, return, 34] [openpar, (, 34] [id, result, 34] [closepar, ), 34] [semicol, ;, 34] 
 [closecubr, }, 35] 
 [function, function, 37] [id, QUADRATIC, 37] [scopeop, ::, 37] [constructor, constructor, 37] [openpar, (, 37] [id, A, 37] [colon, :, 37] [float, float, 37] [comma, ,, 37] [id, B, 37] [colon, :, 37] [float, float, 37] [comma, ,, 37] [id, C, 37] [colon, :, 37] [float, float, 37] [closepar, ), 37] 
