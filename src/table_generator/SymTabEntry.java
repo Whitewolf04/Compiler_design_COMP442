@@ -8,11 +8,13 @@ public class SymTabEntry {
     private SymbolTable link = null;
 
     public SymTabEntry(String name, String kind, String type){
+        this.name = name;
         this.kind = kind;
         this.type = type;
     }
 
     public SymTabEntry(String name, String kind, String type, SymbolTable link){
+        this.name = name;
         this.kind = kind;
         this.type = type;
         this.link = link;

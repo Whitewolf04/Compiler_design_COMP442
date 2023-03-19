@@ -1,113 +1,175 @@
 package table_generator;
 
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import AST_generator.SyntaxTreeNode;
 
 public class TableCreationVisitor extends Visitor{
-    // LinkedList<SymTabEntry> buffer;
     SymbolTable table;
 
     public TableCreationVisitor(){
-        // buffer = new LinkedList<SymTabEntry>();
-        // Master table for the program
-        table = new SymbolTable();
+        // Global table for the program
+        table = new SymbolTable("global");
     }
 
     public void visit(SyntaxTreeNode node){
         if(node.checkContent("classDecl")){
             SyntaxTreeNode cur = node.getChild();
-
+            
             // Get ID
             String name = cur.getValue();
+            SymbolTable classTable = new SymbolTable(name);
 
             // Get inherit list
             cur = cur.getRightSib();
-            SyntaxTreeNode parent = cur.getChild();
-            String type = name + "::";
+            SyntaxTreeNode parent = cur.getChild().getRightSib(); // skip through isa operator
+            String type = name + ":";
             while(parent != null && !parent.isEpsilon()){
+                // Check if this class has been declared
+                SymTabEntry parentEntry = this.table.accessClass(parent.getValue());
+                if(parentEntry == null){
+                    System.out.println("ERROR: Class " + parent.getValue() + " has not been declared and cannot be inherited!");
+                    parent = parent.getRightSib();
+                    continue;
+                }
+
+                // Add to inheritance list 
                 type += parent.getValue() + ",";
-                cur = cur.getRightSib();
+                SymbolTable parentTable = parentEntry.getLink();
+                parentTable.copyMemberToTable(classTable);
+                parent = parent.getRightSib();
             }
             type = type.substring(0, type.length()-1);
 
             // Loop through member declaration list
             cur = cur.getRightSib().getChild();
-            SymbolTable classTable = new SymbolTable(name);
-
             // Add self pointer
-            classTable.addEntry("self", new SymTabEntry("self", "variable", name, classTable));
+            classTable.addEntry(new SymTabEntry("self", "variable", name, classTable));
             // Add all variable and functions declared in this class
             while(cur != null && !cur.isEpsilon()){
-                classTable.addEntry(cur.getTableEntry().getName(), cur.getTableEntry());
+                SymTabEntry duplicate = classTable.contains(cur.getTableEntry().getName(), cur.getTableEntry().getType());
+                if(duplicate != null){
+                    duplicate.setLink(cur.getTableEntry().getLink());
+                    if(duplicate.getKind().compareTo("function")==0){
+                        System.out.println("WARNING: Override for function " + cur.getTableEntry().getName() + " in class " + name);
+                    } else {
+                        System.out.println("WARNING: Override for attribute " + cur.getTableEntry().getName() + " in class " + name);
+                    }
+                    
+                } else {
+                    classTable.addEntry(cur.getTableEntry());
+                }
                 cur = cur.getRightSib();
             }
 
-            node.setTableEntry(new SymTabEntry(name, "class", name));
-            this.table.addEntry(name, node.getTableEntry());
+            node.setTableEntry(new SymTabEntry(name, "class", type, classTable));
+            this.table.addEntry(node.getTableEntry());
         } else if(node.checkContent("constructorDecl")){
             SyntaxTreeNode fParams = node.getChild().getChild();
+            String paramTypes = "";
             SymbolTable table = new SymbolTable("constructor");
             while(fParams != null && !fParams.isEpsilon()){
-                table.addEntry(fParams.getTableEntry().getName(), fParams.getTableEntry());
+                table.addEntry(fParams.getTableEntry());
+                paramTypes += fParams.getTableEntry().getType() + ", ";
                 fParams = fParams.getRightSib();
             }
 
-            node.setTableEntry(new SymTabEntry("constructor", "function", "void", table));
+            String type = "void: " + paramTypes;
+            type = type.substring(0, type.length()-2);
+
+            node.setTableEntry(new SymTabEntry("constructor", "function", type, table));
         } else if(node.checkContent("floatLit")){
             node.setTableEntry(new SymTabEntry(node.getValue(), "floatLit", "float"));
         } else if(node.checkContent("funcBody")){
             // Skip through
             return;
         } else if(node.checkContent("funcDef")){
+            SymbolTable table = null;
             SyntaxTreeNode funcHead = node.getChild();
-            node.setTableEntry(new SymTabEntry(funcHead.getTableEntry()));
-
-            SymbolTable table = new SymbolTable();
+            Pattern pattern = Pattern.compile("\\A(.*?)::(.*?)\\Z");
+            Matcher matcher = pattern.matcher(funcHead.getTableEntry().getName());
+            String funcName = null;
+            if(matcher.find()){
+                // Member function definition
+                String ownerName = matcher.group(1);
+                funcName = matcher.group(2);
+                SymTabEntry ownerEntry = this.table.accessClass(ownerName);
+                if(ownerEntry == null){
+                    System.out.println("ERROR: Class " + ownerName + " has not been declared, so its function " + funcName + " cannot be defined!");
+                    return;
+                }
+                SymbolTable ownerTable = ownerEntry.getLink();
+                SymTabEntry funcEntry = ownerTable.contains(funcName, funcHead.getTableEntry().getType());
+                if(funcEntry == null){
+                    System.out.println("ERROR: Function " + funcName + " has not been declared in class " + ownerName + ", so it cannot be defined!");
+                    return;
+                }
+                table = funcEntry.getLink();
+                table.name = funcHead.getTableEntry().getName();
+            } else {
+                // Global function definition
+                funcName = funcHead.getTableEntry().getName();
+                table = new SymbolTable(funcName);
+                SymbolTable paramList = funcHead.getTableEntry().getLink();
+                paramList.pushToTable(table);
+                funcHead.getTableEntry().setLink(null);
+                node.setTableEntry(new SymTabEntry(funcName, "function", funcHead.getTableEntry().getType(), table));
+                this.table.addEntry(node.getTableEntry());
+            }
+            
             // Traverse funcBody node
             SyntaxTreeNode cur = funcHead.getRightSib().getChild();
             while(cur != null && !cur.isEpsilon()){
-                table.addEntry(cur.getTableEntry().getName(), cur.getTableEntry());
+                // Skip through statement
+                if(cur.getTableEntry() == null){
+                    cur = cur.getRightSib();
+                    continue;
+                }
+                table.addEntry(cur.getTableEntry());
                 cur = cur.getRightSib();
             }
-
-            SymbolTable paramList = funcHead.getTableEntry().getLink();
-            paramList.pushToTable(table);
-            funcHead.getTableEntry().setLink(null);
-
-            node.getTableEntry().setLink(table);
-            this.table.addEntry(node.getTableEntry().getName(), node.getTableEntry());
         } else if(node.checkContent("funcHead")){
-            String name = null;
+            // Get ID and attach to class if this is member fund def
             SyntaxTreeNode cur = node.getChild();
-            if(node.getChildNum() == 2){
-                // Constructor
-                name = cur.toString() + "::constructor";
-            } else if(node.getChildNum() == 3){
+            String name = cur.getValue();
+            SymbolTable table = null;
+            if(node.getChildNum() == 3){
                 // Global function
-                name = cur.toString();
             } else if(node.getChildNum() == 4){
+                // Constructor
+                cur = cur.getRightSib().getRightSib(); // Skip through sr to constructor node
+                name += "::constructor";
+            } else if(node.getChildNum() == 5){
                 // Member function
-                name = cur.toString() + "::";
-                // Skip through sr symbol
-                cur = cur.getRightSib();
-                cur = cur.getRightSib();
-                // Add the name of the function
-                name += cur.toString();
+                cur = cur.getRightSib().getRightSib(); // Skip through sr node
+                name += "::" + cur.getValue();
             }
 
             // Switch to fParamsList
             cur = cur.getRightSib();
             SyntaxTreeNode fParams = cur.getChild();
-            SymbolTable table = new SymbolTable();
+            String paramTypes = "";
+            table = new SymbolTable();
             while(fParams != null && !fParams.isEpsilon()){
-                table.addEntry(cur.getTableEntry().getName(), cur.getTableEntry());
+                table.addEntry(cur.getTableEntry());
+                paramTypes += fParams.getTableEntry().getType() + ", ";
                 fParams = fParams.getRightSib();
             }
 
             // Swith to returnType
-            cur = cur.getRightSib();
+            String type = null;
+            if(node.getChildNum() == 4){
+                type = "void: " + paramTypes;
+                type = type.substring(0, type.length()-2);
+            } else {
+                cur = cur.getRightSib();
+                type = cur.getTableEntry().getType() + ": " + paramTypes;
+                type = type.substring(0, type.length()-2);
+            }
             
-            node.setTableEntry(new SymTabEntry(name, "function", cur.getTableEntry().getType(), table));
+            node.setTableEntry(new SymTabEntry(name, "function", type, table));
         } else if(node.checkContent("fParamsList")){
             // Skip through
             return;
@@ -139,6 +201,87 @@ public class TableCreationVisitor extends Visitor{
             return;
         } else if(node.checkContent("intLit")){
             node.setTableEntry(new SymTabEntry(node.getValue(), "intLit", "integer"));
+        } else if(node.checkContent("localVarDecl")){
+            SyntaxTreeNode cur = node.getChild();
+
+            // Get ID
+            String name = cur.getValue();
+
+            // Get type
+            cur = cur.getRightSib();
+            String type = null;
+            if(cur.getChild().checkContent("id")){
+                SymTabEntry ownerEntry = this.table.accessClass(cur.getChild().getValue());
+                // Error handling
+                if(ownerEntry == null){
+                    System.out.println("ERROR: This class/function hasn't been declared, so variable " + name + " cannot be created!");
+                    node.setTableEntry(new SymTabEntry(name, "variable", "ERR@!"));
+                    return;
+                }
+
+                // Get the correct type
+                if(ownerEntry.getKind().compareTo("class") == 0){
+                    // type is a class
+                    type = ownerEntry.getName();
+                    cur = cur.getRightSib().getChild();
+                    if(cur.checkContent("arraySizeList")){
+                        cur = cur.getChild();
+                        while(cur != null && !cur.isEpsilon()){
+                            if(cur.getValue() == null){
+                                type += "[" + "]";
+                            } else {
+                                type += "[" + cur.getValue() + "]";
+                            }
+                        }
+                    }
+                } else {
+                    // type is returned by a function
+                    Pattern pattern = Pattern.compile("\\A(.*?):(.*?)\\Z");
+                    Matcher matcher = pattern.matcher(ownerEntry.getType());
+                    if(matcher.find()){
+                        type = matcher.group(1);
+                    } else {
+                        // In case there's no parameter
+                        type = ownerEntry.getType();
+                    }
+
+                    // Error handling
+                    cur = cur.getRightSib().getChild();
+                    if(cur.checkContent("arraySizeList")){
+                        System.out.println("ERROR: " + type + " is not an object!");
+                        node.setTableEntry(new SymTabEntry(name, "variable", "ERR@!"));
+                        return;
+                    }
+                }
+            } else {
+                type = cur.getChild().toString();
+                // Get arraySizeList if available
+                cur = cur.getRightSib().getChild();
+                if(!cur.checkContent("arraySizeList")){
+                    System.out.println("ERROR: " + type + " is not an object!");
+                    node.setTableEntry(new SymTabEntry(name, "variable", "ERR@!"));
+                    return;
+                } else {
+                    cur = cur.getChild();
+                    while(cur != null && !cur.isEpsilon()){
+                        if(cur.getValue() == null){
+                            type += "[" + "]";
+                        } else {
+                            type += "[" + cur.getValue() + "]";
+                        }
+                    }
+                }
+            }
+            node.setTableEntry(new SymTabEntry(name, "variable", type));
+        } else if(node.checkContent("localVarOrStat")){
+            SyntaxTreeNode cur = node.getChild();
+
+            // Skip non-localVar-declaration statements
+            if(!cur.checkContent("localVarDecl")){
+                return;
+            }
+
+            node.setTableEntry(new SymTabEntry(cur.getTableEntry()));
         } else if(node.checkContent("memberDecl")){
             // Get visibility
             SyntaxTreeNode cur = node.getChild();
@@ -148,7 +291,7 @@ public class TableCreationVisitor extends Visitor{
             cur = cur.getRightSib();
             node.setTableEntry(new SymTabEntry(cur.getTableEntry()));
             node.getTableEntry().setVisibility(visibility ? "public" : "private");
-        } else if(node.checkContent("memberFuncDecl")){
+        } else if(node.checkContent("memFuncDecl")){
             SyntaxTreeNode cur = node.getChild();
 
             // Get ID
@@ -157,15 +300,18 @@ public class TableCreationVisitor extends Visitor{
             // Get fParamsList
             cur = cur.getRightSib();
             SyntaxTreeNode fParams = cur.getChild();
+            String paramTypes = "";
             SymbolTable table = new SymbolTable(name);
             while(fParams != null && !fParams.isEpsilon()){
-                table.addEntry(fParams.getTableEntry().getName(), fParams.getTableEntry());
+                table.addEntry(fParams.getTableEntry());
+                paramTypes += fParams.getTableEntry().getType() + ", ";
                 fParams = fParams.getRightSib();
             }
 
             // Get returnType
             cur = cur.getRightSib();
-            String type = cur.getTableEntry().getType();
+            String type = cur.getTableEntry().getType() + ": " + paramTypes;
+            type = type.substring(0, type.length()-2); // remove redundant character
 
             node.setTableEntry(new SymTabEntry(name, "function", type, table));
 
@@ -190,16 +336,16 @@ public class TableCreationVisitor extends Visitor{
             }
 
             node.setTableEntry(new SymTabEntry(name, "variable", type));
-        } else if(node.checkContent("termList")){
-            SymbolTable table = new SymbolTable("arithExpr");
+        } else if(node.checkContent("returnType")){
             SyntaxTreeNode cur = node.getChild();
-
-            while(cur != null && !cur.isEpsilon()){
-                table.addEntry(cur.getTableEntry().getName(), cur.getTableEntry());
-                cur = cur.getRightSib();
+            String type = null;
+            if(cur.checkContent("type")){
+                type = cur.getTableEntry().getType();
+            } else {
+                type = "void";
             }
 
-            node.setTableEntry(new SymTabEntry(null, "termList", null, table));
+            node.setTableEntry(new SymTabEntry(null, "returnType", type));
         } else if(node.checkContent("type")){
             SyntaxTreeNode cur = node.getChild();
             String type = null;
@@ -217,4 +363,5 @@ public class TableCreationVisitor extends Visitor{
         }
 
     }
+
 }

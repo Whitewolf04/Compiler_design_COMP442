@@ -1,8 +1,10 @@
 import AST_generator.Factory;
+import AST_generator.SyntaxTreeNode;
 import lexical_analyzer.LexAnalyzer;
 import lexical_analyzer.OutputWriter;
 import syntax_analyzer.ProgramQueue;
 import syntax_analyzer.SyntaxAnalyzer;
+import table_generator.Generator;
 
 public class main {
     public static void main(String[] args) {
@@ -14,5 +16,6 @@ public class main {
         Factory.treeToGraph();
         OutputWriter.closeTreeWriteStream();
 
+        Generator.visitTree();
     }
 }

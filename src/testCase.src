@@ -2,7 +2,12 @@ class POLYNOMIAL {
   public function evaluate: (x: float) => float;
 };
 
-class LINEAR isa POLYNOMIAL {
+class RANDOM isa POLYNOMIAL {
+  public function test: () => void;
+  private attribute a: float;
+};
+
+class LINEAR isa POLYNOMIAL, RANDOM {
   private attribute a: float;
   private attribute b: float;
   public  constructor: (A: float, B: float);
@@ -14,6 +19,7 @@ class QUADRATIC isa POLYNOMIAL {
   private attribute b: float;
   private attribute c: float;
   public  constructor: (A: float, B: float, C: float);
+  public  constructor: (A: float);
   public  function evaluate: (x: float) => float;
 };
 
@@ -40,6 +46,11 @@ function QUADRATIC::constructor(A: float, B: float, C: float)
   self.c = C;
 }
 
+function QUADRATIC::constructor(A: float, B: float, C: float)
+{
+  self.a = A;
+}
+
 function LINEAR::constructor(A: float, B: float) 
 {
   self.a = A;
@@ -54,13 +65,18 @@ function LINEAR::evaluate(x: float) => float
   return (result);
 }
 
+function count(x: integer) => integer
+{
+    return (x);
+}
+
 // ====== main ====== //
 function main() => void
 {
   localvar f1: LINEAR(2, 3.5);
   localvar f2: QUADRATIC(-2.0, 1.0, 0.0);
   localvar counter: integer;
-  localvar test: count();
+  localvar test: count(2);
 
   counter = 1;	
 
@@ -72,7 +88,3 @@ function main() => void
   };
 }
 
-function count(x: integer) => integer
-{
-    return (x);
-}
