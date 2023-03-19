@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import AST_generator.Factory;
 import syntax_analyzer.GrammarStack;
 
 
@@ -83,6 +84,7 @@ public final class OutputWriter {
     public static void syntaxOutWriting(){
         try{
             syntaxOutWriter.write(GrammarStack.printStack() + "\n");
+            syntaxOutWriter.write(Factory.printNodeStack() + "\n\n");
             syntaxOutWriter.flush();
         } catch(IOException e){
             System.out.println("Error writing Grammar stack to file!");

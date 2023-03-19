@@ -36,7 +36,7 @@ public class SymbolTable {
         return null;
     }
 
-    public SymTabEntry accessClass(String name){
+    public SymTabEntry accessFromGlobal(String name){
         ListIterator<SymTabEntry> i = table.listIterator();
 
         while(i.hasNext()){

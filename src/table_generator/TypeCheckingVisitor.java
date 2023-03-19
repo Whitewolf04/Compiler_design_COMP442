@@ -6,11 +6,12 @@ import java.util.regex.Pattern;
 import AST_generator.SyntaxTreeNode;
 
 public class TypeCheckingVisitor extends Visitor {
-    private SymbolTable table;
+    private SymbolTable globalTable;
+    private SymbolTable localTable = null;
 
     public TypeCheckingVisitor(SymbolTable table){
         // Get the global table for type checking on functions
-        this.table = table;
+        this.globalTable = table;
     }
     
     public void visit(SyntaxTreeNode node){
@@ -32,11 +33,31 @@ public class TypeCheckingVisitor extends Visitor {
                     System.out.println("ERROR: Circular inheritance found in class " + className + " with parent class " + parent + "!");
                 }
             }
-        }
+        } else if(node.checkContent("factor")){
+            if(node.getChildNum() == 1){
+                // Can be termList, floatLit or intLit
+                node.setType(node.getChild().getType());
+            } else if(node.getChildNum() == 2){
+                node.setType(node.getChild().getRightSib().getType());
+            } else {
+                
+            }
+        } else if(node.checkContent("funcDef")){
+            SyntaxTreeNode funcHead = node.getChild();
+            if(funcHead.getChildNum() == 3){
+                localTable = this.globalTable.accessFromGlobal(funcHead.getChild().getValue()).getLink();
+            } else if(funcHead.getChildNum() == 4){
+                String owner = funcHead.getChild().getValue();
+                SymbolTable classTable = this.globalTable.accessFromGlobal(owner).getLink();
+                funcHead.getTableEntry();
+            }
+        } else if(node.checkContent("localVarDecl")){
+            // TODO: Check for constructor or global function call params
+        } 
     }
 
     private boolean inheritListChecker(String className, String parent){
-        SymTabEntry parentEntry = this.table.accessClass(parent);
+        SymTabEntry parentEntry = this.globalTable.accessFromGlobal(parent);
         String type = parentEntry.getType();
         Pattern pattern = Pattern.compile("\\A(.*?):(.*)\\Z");
         Matcher matcher = pattern.matcher(type);

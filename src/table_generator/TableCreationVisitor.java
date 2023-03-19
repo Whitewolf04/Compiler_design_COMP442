@@ -28,7 +28,7 @@ public class TableCreationVisitor extends Visitor{
             String type = name + ":";
             while(parent != null && !parent.isEpsilon()){
                 // Check if this class has been declared
-                SymTabEntry parentEntry = this.table.accessClass(parent.getValue());
+                SymTabEntry parentEntry = this.table.accessFromGlobal(parent.getValue());
                 if(parentEntry == null){
                     System.out.println("ERROR: Class " + parent.getValue() + " has not been declared and cannot be inherited!");
                     parent = parent.getRightSib();
@@ -95,7 +95,7 @@ public class TableCreationVisitor extends Visitor{
                 // Member function definition
                 String ownerName = matcher.group(1);
                 funcName = matcher.group(2);
-                SymTabEntry ownerEntry = this.table.accessClass(ownerName);
+                SymTabEntry ownerEntry = this.table.accessFromGlobal(ownerName);
                 if(ownerEntry == null){
                     System.out.println("ERROR: Class " + ownerName + " has not been declared, so its function " + funcName + " cannot be defined!");
                     return;
@@ -211,7 +211,7 @@ public class TableCreationVisitor extends Visitor{
             cur = cur.getRightSib();
             String type = null;
             if(cur.getChild().checkContent("id")){
-                SymTabEntry ownerEntry = this.table.accessClass(cur.getChild().getValue());
+                SymTabEntry ownerEntry = this.table.accessFromGlobal(cur.getChild().getValue());
                 // Error handling
                 if(ownerEntry == null){
                     System.out.println("ERROR: This class/function hasn't been declared, so variable " + name + " cannot be created!");
