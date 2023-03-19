@@ -7,7 +7,7 @@ import syntax_analyzer.SyntaxAnalyzer;
 public class main {
     public static void main(String[] args) {
         ProgramQueue.initProgramQueue();
-        LexAnalyzer.analyze("example-polynomial.src");
+        LexAnalyzer.analyze("testCase.src");
 
         SyntaxAnalyzer.analyze();
         OutputWriter.openTreeWriteStream();

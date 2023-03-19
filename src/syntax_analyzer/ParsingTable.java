@@ -109,7 +109,7 @@ public final class ParsingTable {
 
         arraySize.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(Terminal.lsqbr); push(arraySize2);}});
 
-        arraySize2.tableEntry.put("rsqbr", new Stack<GrammarToken>(){{push(Terminal.rsqbr);}});
+        arraySize2.tableEntry.put("rsqbr", new Stack<GrammarToken>(){{push(new NodeFactory("intLit")); push(Terminal.rsqbr);}});
         arraySize2.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(Terminal.intLit); push(new NodeFactory("intLit", "INTEGER")); push(Terminal.rsqbr);}});
 
         assignOp.tableEntry.put("assign", new Stack<GrammarToken>(){{push(Terminal.assign); push(new NodeFactory("assign"));}});

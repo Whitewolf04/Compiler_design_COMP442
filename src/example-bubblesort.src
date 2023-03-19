@@ -1,7 +1,7 @@
 /* sort the array */
 function bubbleSort(arr: integer[], size: integer) => void 
 {
-  localvar n    : integer;
+  localvar n    : integer[2][6];
   localvar i    : integer;
   localvar j    : integer;
   localvar temp : integer; 

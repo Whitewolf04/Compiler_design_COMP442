@@ -4,6 +4,7 @@ public class SymTabEntry {
     private String name;
     private String kind;
     private String type;
+    private boolean publicVis = false;
     private SymbolTable link = null;
 
     public SymTabEntry(String name, String kind, String type){
@@ -40,7 +41,21 @@ public class SymTabEntry {
         return link;
     }
 
+    public boolean getVisibility(){
+        return publicVis;
+    }
+
     public void setLink(SymbolTable link){
         this.link = link;
+    }
+
+    public void setVisibility(String visibility){
+        if(visibility.compareTo("public") == 0){
+            publicVis = true;
+        } else if(visibility.compareTo("private") == 0){
+            publicVis = false;
+        } else{
+            System.out.println("Visibility error!");
+        }
     }
 }

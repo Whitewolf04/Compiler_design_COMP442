@@ -15,7 +15,7 @@
 <arrayOrObject> ::= 'lpar' <aParams> 'rpar' makeFamily(arrayOrObject, exprList)
 
 <arraySize2> ::= 'intLit' makeNode(intLit) 'rsqbr' 
-<arraySize2> ::= 'rsqbr' 
+<arraySize2> ::= makeNode() 'rsqbr' 
 
 <arraySize> ::= 'lsqbr' <arraySize2> 
 
