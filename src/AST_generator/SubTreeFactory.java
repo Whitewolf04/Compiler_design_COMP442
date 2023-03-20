@@ -37,6 +37,8 @@ public class SubTreeFactory extends Factory{
             newNode.setChild(stackTraverseWithNumPop(newNode, null, numPop));
         } else if(numPop == -1 && startingNode != null && nodeToPop != null && nodeToPop2 == null) {
             stackTraverseWithNode(newNode);
+        } else if(numPop == -1 && startingNode != null && nodeToPop != null && nodeToPop2 != null && !exclude){
+            stackTraverseWithTwoNode(newNode);
         } else if(numPop == -1 && startingNode != null && nodeToPop != null && nodeToPop2 != null && exclude) {
             stackTraverseExcludeStart(newNode);
         } else {
@@ -102,6 +104,58 @@ public class SubTreeFactory extends Factory{
             currentNode = right;
             i.remove();
             if(currentNode.toString().equals(nodeToPop)){
+                currentNode.setRightSib(null);
+                if(i.hasNext()){
+                    System.out.println("Warning: nodeToPop is not at the top of the stack!");
+                    break;
+                }
+            }
+        }
+    }
+
+    private void stackTraverseWithTwoNode(SyntaxTreeNode parent){
+        if(Factory.nodeStack.peek() == null){
+            System.out.println("Node stack empty! Cannot find the ending node to make subtree!");
+            System.exit(1);
+        }
+
+        SyntaxTreeNode leftmost = null;
+        SyntaxTreeNode right = null;
+        SyntaxTreeNode currentNode = null;
+        ListIterator<SyntaxTreeNode> i = Factory.nodeStack.listIterator();
+
+        // Iterate until the starting point
+        while(i.hasNext()){
+            currentNode = i.next();
+            if(currentNode.toString().equals(startingNode)){
+                break;
+            } else if(currentNode.toString().equals(nodeToPop)){
+                parent.setChild(currentNode);
+                i.remove();
+                return;
+            }
+        }
+
+        // Check if current node is starting point
+        if(!currentNode.toString().equals(startingNode)){
+            System.out.println("Starting point could not be found! Cannot make subtree:"+content+"!");
+            System.exit(1);
+        }
+
+        parent.setChild(currentNode);
+        leftmost = currentNode;
+        currentNode.setParent(parent);
+        i.remove();
+
+        // Iterate from the starting point to ending node
+        while(i.hasNext()){
+            right = i.next();
+            currentNode.setRightSib(right);
+            right.setParent(parent);
+            right.setLeftmostSib(leftmost);
+            currentNode = right;
+            i.remove();
+            if(currentNode.toString().equals(nodeToPop) || currentNode.toString().equals(nodeToPop2)){
                 currentNode.setRightSib(null);
                 if(i.hasNext()){
                     System.out.println("Warning: nodeToPop is not at the top of the stack!");

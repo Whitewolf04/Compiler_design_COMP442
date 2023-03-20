@@ -51,6 +51,10 @@ public class SymTabEntry {
         this.link = link;
     }
 
+    public void setType(String type){
+        this.type = type;
+    }
+
     public void setVisibility(String visibility){
         if(visibility.compareTo("public") == 0){
             publicVis = true;

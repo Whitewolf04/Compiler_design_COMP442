@@ -5,6 +5,7 @@ class POLYNOMIAL {
 class RANDOM isa POLYNOMIAL {
   public function test: () => void;
   private attribute a: float;
+  private attribute a: integer;
 };
 
 class LINEAR isa POLYNOMIAL, RANDOM {
@@ -46,7 +47,7 @@ function QUADRATIC::constructor(A: float, B: float, C: float)
   self.c = C;
 }
 
-function QUADRATIC::constructor(A: float, B: float, C: float)
+function QUADRATIC::constructor(A: float)
 {
   self.a = A;
 }

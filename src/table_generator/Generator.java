@@ -10,12 +10,16 @@ public class Generator {
         TableCreationVisitor visitor = new TableCreationVisitor();
         treeTraversal(Factory.nodeStack.peek(), visitor);
         printTable(visitor.table);
+        
+        TypeCheckingVisitor typeChecker = new TypeCheckingVisitor(visitor.table);
+        treeTraversal(Factory.nodeStack.peek(), typeChecker);
     }
 
     public static void treeTraversal(SyntaxTreeNode node, Visitor visitor){
         if(node.getChild() != null){
             treeTraversal(node.getChild(), visitor);
         }
+        System.out.println(node.toTree() + "\n");
         visitor.visit(node);
         if(node.getRightSib() != null){
             treeTraversal(node.getRightSib(), visitor);

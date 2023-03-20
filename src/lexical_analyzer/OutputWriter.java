@@ -14,6 +14,8 @@ public final class OutputWriter {
     private static BufferedWriter syntaxErrWriter;
     private static BufferedWriter syntaxOutWriter;
     private static BufferedWriter treeWriter;
+    private static BufferedWriter semanticOutWriter;
+    private static BufferedWriter semanticErrWriter;
     public static int lineCount;
     private static int nextLineCount;
     public static int cmtLineCount;
@@ -52,6 +54,22 @@ public final class OutputWriter {
             treeWriter = new BufferedWriter(new FileWriter("tree.outast"));
         } catch(IOException e){
             System.out.println("Error opening graphviz file to write");
+        }
+    }
+
+    public static void openSemanticOutWriting(){
+        try{
+            semanticOutWriter = new BufferedWriter(new FileWriter("test.outsymboltables"));
+        } catch(IOException e){
+            System.out.println("Error opening out symbol table file to write");
+        }
+    }
+
+    public static void openSemanticErrWriting(){
+        try{
+            semanticOutWriter = new BufferedWriter(new FileWriter("test.outsemanticerrors"));
+        } catch(IOException e){
+            System.out.println("Error opening semantic error file to write");
         }
     }
 
@@ -116,6 +134,24 @@ public final class OutputWriter {
             lexOutWriter.flush();
         } catch(IOException e){
             System.out.println("Error writing comment to file!");
+        }
+    }
+
+    public static void semanticOutWriting(String output){
+        try{
+            semanticOutWriter.write(output + "\n");
+            semanticOutWriter.flush();
+        } catch (IOException e){
+            System.out.println("Error writing symbol tables out to file!");
+        }
+    }
+
+    public static void semanticErrWriting(String output){
+        try{
+            semanticErrWriter.write(output + "\n");
+            semanticErrWriter.flush();
+        } catch (IOException e){
+            System.out.println("Error writing symbol tables out to file!");
         }
     }
 

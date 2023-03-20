@@ -110,7 +110,7 @@ public final class ParsingTable {
         arraySize.tableEntry.put("lsqbr", new Stack<GrammarToken>(){{push(Terminal.lsqbr); push(arraySize2);}});
 
         arraySize2.tableEntry.put("rsqbr", new Stack<GrammarToken>(){{push(new NodeFactory("intLit")); push(Terminal.rsqbr);}});
-        arraySize2.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(Terminal.intLit); push(new NodeFactory("intLit", "INTEGER")); push(Terminal.rsqbr);}});
+        arraySize2.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(Terminal.intLit); push(new NodeFactory("intLit", "integer")); push(Terminal.rsqbr);}});
 
         assignOp.tableEntry.put("assign", new Stack<GrammarToken>(){{push(Terminal.assign); push(new NodeFactory("assign"));}});
 
@@ -142,8 +142,8 @@ public final class ParsingTable {
         factor.tableEntry.put("minus", new Stack<GrammarToken>(){{push(sign); push(factor); push(new SubTreeFactory("factor", 2));}});
         factor.tableEntry.put("plus", new Stack<GrammarToken>(){{push(sign); push(factor); push(new SubTreeFactory("factor", 2));}});
         factor.tableEntry.put("not", new Stack<GrammarToken>(){{push(Terminal.notW); push(new NodeFactory("not")); push(factor); push(new SubTreeFactory("factor", 2));}});
-        factor.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(Terminal.floatLit); push(new NodeFactory("floatLit", "FLOAT")); push(new SubTreeFactory("factor", 1));}});
-        factor.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(Terminal.intLit); push(new NodeFactory("intLit", "INTEGER")); push(new SubTreeFactory("factor", 1));}});
+        factor.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(Terminal.floatLit); push(new NodeFactory("floatLit", "float")); push(new SubTreeFactory("factor", 1));}});
+        factor.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(Terminal.intLit); push(new NodeFactory("intLit", "integer")); push(new SubTreeFactory("factor", 1));}});
 
         factor2.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(reptIdnest1); push(new SubTreeFactory("indiceList", "indice", "EPSILON"));}});
         factor2.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(aParams); push(Terminal.rpar);}});

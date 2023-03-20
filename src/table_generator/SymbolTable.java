@@ -29,11 +29,34 @@ public class SymbolTable {
 
         while(i.hasNext()){
             SymTabEntry cur = i.next();
-            if(cur.getName().compareTo(name) == 0 && cur.getType().compareTo(type) == 0){
+            if(cur.getName().equals(name) && cur.getType().equals(type)){
                 return cur;
             }
         }
         return null;
+    }
+
+    public SymTabEntry containsParams(String name, String paramTypes){
+        ListIterator<SymTabEntry> i = table.listIterator();
+
+        if(paramTypes.isEmpty()){
+            while(i.hasNext()){
+                SymTabEntry cur = i.next();
+                if(cur.getType().indexOf(':') == -1 && cur.getName().equals(name)){
+                    return cur;
+                }
+            }
+            return null;
+        } else {
+            while(i.hasNext()){
+                SymTabEntry cur = i.next();
+                String types = cur.getType().split(":")[1];
+                if(types.equals(paramTypes) && cur.getName().equals(name)){
+                    return cur;
+                }
+            }
+            return null;
+        }
     }
 
     public SymTabEntry accessFromGlobal(String name){
@@ -59,9 +82,24 @@ public class SymbolTable {
         ListIterator<SymTabEntry> i = table.listIterator();
         while(i.hasNext()){
             SymTabEntry cur = i.next();
-            if(cur.getName().compareTo("self") != 0){
+            if(cur.getName().compareTo("self") == 0){
                 // Only copy functions and variables that are not self
-                other.addEntry(new SymTabEntry(cur));
+                cur = i.next();
+                continue;
+            } else if(cur.getKind().compareTo("function")==0){
+                SymTabEntry duplicate = other.contains(cur.getName(), cur.getType());
+                if(duplicate != null){
+                    duplicate.setLink(cur.getLink());
+                } else {
+                    other.addEntry(cur);
+                }
+            } else if(cur.getKind().compareTo("variable")==0){
+                SymTabEntry duplicate = other.accessFromGlobal(cur.getName());
+                if(duplicate != null){
+                    duplicate.setType(cur.getType());
+                } else {
+                    other.addEntry(cur);
+                }
             }
         }
     }

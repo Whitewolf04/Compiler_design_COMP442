@@ -49,17 +49,23 @@ public class TableCreationVisitor extends Visitor{
             classTable.addEntry(new SymTabEntry("self", "variable", name, classTable));
             // Add all variable and functions declared in this class
             while(cur != null && !cur.isEpsilon()){
-                SymTabEntry duplicate = classTable.contains(cur.getTableEntry().getName(), cur.getTableEntry().getType());
-                if(duplicate != null){
-                    duplicate.setLink(cur.getTableEntry().getLink());
-                    if(duplicate.getKind().compareTo("function")==0){
+                // Check for duplicates/overshadowing
+                if(cur.getTableEntry().getKind().compareTo("function")==0){
+                    SymTabEntry duplicate = classTable.contains(cur.getTableEntry().getName(), cur.getTableEntry().getType());
+                    if(duplicate != null){
+                        duplicate.setLink(cur.getTableEntry().getLink());
                         System.out.println("WARNING: Override for function " + cur.getTableEntry().getName() + " in class " + name);
                     } else {
-                        System.out.println("WARNING: Override for attribute " + cur.getTableEntry().getName() + " in class " + name);
+                        classTable.addEntry(cur.getTableEntry());
                     }
-                    
-                } else {
-                    classTable.addEntry(cur.getTableEntry());
+                } else if(cur.getTableEntry().getKind().compareTo("variable")==0){
+                    SymTabEntry duplicate = classTable.accessFromGlobal(cur.getTableEntry().getName());
+                    if(duplicate != null){
+                        duplicate.setType(cur.getTableEntry().getType());
+                        System.out.println("WARNING: Override for attribute " + cur.getTableEntry().getName() + " in class " + name);
+                    } else {
+                        classTable.addEntry(cur.getTableEntry());
+                    }
                 }
                 cur = cur.getRightSib();
             }
@@ -72,12 +78,12 @@ public class TableCreationVisitor extends Visitor{
             SymbolTable table = new SymbolTable("constructor");
             while(fParams != null && !fParams.isEpsilon()){
                 table.addEntry(fParams.getTableEntry());
-                paramTypes += fParams.getTableEntry().getType() + ", ";
+                paramTypes += fParams.getTableEntry().getType() + ",";
                 fParams = fParams.getRightSib();
             }
 
-            String type = "void: " + paramTypes;
-            type = type.substring(0, type.length()-2);
+            String type = "void:" + paramTypes;
+            type = type.substring(0, type.length()-1);
 
             node.setTableEntry(new SymTabEntry("constructor", "function", type, table));
         } else if(node.checkContent("floatLit")){
@@ -154,19 +160,19 @@ public class TableCreationVisitor extends Visitor{
             table = new SymbolTable();
             while(fParams != null && !fParams.isEpsilon()){
                 table.addEntry(cur.getTableEntry());
-                paramTypes += fParams.getTableEntry().getType() + ", ";
+                paramTypes += fParams.getTableEntry().getType() + ",";
                 fParams = fParams.getRightSib();
             }
 
             // Swith to returnType
             String type = null;
             if(node.getChildNum() == 4){
-                type = "void: " + paramTypes;
-                type = type.substring(0, type.length()-2);
+                type = "void:" + paramTypes;
+                type = type.substring(0, type.length()-1);
             } else {
                 cur = cur.getRightSib();
-                type = cur.getTableEntry().getType() + ": " + paramTypes;
-                type = type.substring(0, type.length()-2);
+                type = cur.getTableEntry().getType() + ":" + paramTypes;
+                type = type.substring(0, type.length()-1);
             }
             
             node.setTableEntry(new SymTabEntry(name, "function", type, table));
@@ -203,6 +209,7 @@ public class TableCreationVisitor extends Visitor{
             node.setTableEntry(new SymTabEntry(node.getValue(), "intLit", "integer"));
         } else if(node.checkContent("localVarDecl")){
             SyntaxTreeNode cur = node.getChild();
+            SyntaxTreeNode id = node.getChild();
 
             // Get ID
             String name = cur.getValue();
@@ -272,6 +279,7 @@ public class TableCreationVisitor extends Visitor{
                     }
                 }
             }
+            id.setType(type);
             node.setTableEntry(new SymTabEntry(name, "variable", type));
         } else if(node.checkContent("localVarOrStat")){
             SyntaxTreeNode cur = node.getChild();
@@ -304,14 +312,14 @@ public class TableCreationVisitor extends Visitor{
             SymbolTable table = new SymbolTable(name);
             while(fParams != null && !fParams.isEpsilon()){
                 table.addEntry(fParams.getTableEntry());
-                paramTypes += fParams.getTableEntry().getType() + ", ";
+                paramTypes += fParams.getTableEntry().getType() + ",";
                 fParams = fParams.getRightSib();
             }
 
             // Get returnType
             cur = cur.getRightSib();
-            String type = cur.getTableEntry().getType() + ": " + paramTypes;
-            type = type.substring(0, type.length()-2); // remove redundant character
+            String type = cur.getTableEntry().getType() + ":" + paramTypes;
+            type = type.substring(0, type.length()-1); // remove redundant character
 
             node.setTableEntry(new SymTabEntry(name, "function", type, table));
 
