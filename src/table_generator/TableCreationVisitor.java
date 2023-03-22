@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import AST_generator.SyntaxTreeNode;
+import lexical_analyzer.OutputWriter;
 
 public class TableCreationVisitor extends Visitor{
     SymbolTable table;
@@ -30,7 +31,7 @@ public class TableCreationVisitor extends Visitor{
                 // Check if this class has been declared
                 SymTabEntry parentEntry = this.table.accessFromGlobal(parent.getValue());
                 if(parentEntry == null){
-                    System.out.println("ERROR: Class " + parent.getValue() + " has not been declared and cannot be inherited!");
+                    OutputWriter.semanticErrWriting("ERROR: Class " + parent.getValue() + " has not been declared and cannot be inherited!");
                     parent = parent.getRightSib();
                     continue;
                 }
@@ -54,7 +55,7 @@ public class TableCreationVisitor extends Visitor{
                     SymTabEntry duplicate = classTable.contains(cur.getTableEntry().getName(), cur.getTableEntry().getType());
                     if(duplicate != null){
                         duplicate.setLink(cur.getTableEntry().getLink());
-                        System.out.println("WARNING: Override for function " + cur.getTableEntry().getName() + " in class " + name);
+                        OutputWriter.semanticOutWriting("WARNING: Override for function " + cur.getTableEntry().getName() + " in class " + name);
                     } else {
                         classTable.addEntry(cur.getTableEntry());
                     }
@@ -62,7 +63,7 @@ public class TableCreationVisitor extends Visitor{
                     SymTabEntry duplicate = classTable.accessFromGlobal(cur.getTableEntry().getName());
                     if(duplicate != null){
                         duplicate.setType(cur.getTableEntry().getType());
-                        System.out.println("WARNING: Override for attribute " + cur.getTableEntry().getName() + " in class " + name);
+                        OutputWriter.semanticOutWriting("WARNING: Override for attribute " + cur.getTableEntry().getName() + " in class " + name);
                     } else {
                         classTable.addEntry(cur.getTableEntry());
                     }
@@ -103,13 +104,13 @@ public class TableCreationVisitor extends Visitor{
                 funcName = matcher.group(2);
                 SymTabEntry ownerEntry = this.table.accessFromGlobal(ownerName);
                 if(ownerEntry == null){
-                    System.out.println("ERROR: Class " + ownerName + " has not been declared, so its function " + funcName + " cannot be defined!");
+                    OutputWriter.semanticErrWriting("ERROR: Class " + ownerName + " has not been declared, so its function " + funcName + " cannot be defined!");
                     return;
                 }
                 SymbolTable ownerTable = ownerEntry.getLink();
                 SymTabEntry funcEntry = ownerTable.contains(funcName, funcHead.getTableEntry().getType());
                 if(funcEntry == null){
-                    System.out.println("ERROR: Function " + funcName + " has not been declared in class " + ownerName + ", so it cannot be defined!");
+                    OutputWriter.semanticErrWriting("ERROR: Function " + funcName + " has not been declared in class " + ownerName + ", so it cannot be defined!");
                     return;
                 }
                 table = funcEntry.getLink();
@@ -138,6 +139,7 @@ public class TableCreationVisitor extends Visitor{
             }
         } else if(node.checkContent("funcHead")){
             // Get ID and attach to class if this is member fund def
+            System.out.println("funcHead encountered");
             SyntaxTreeNode cur = node.getChild();
             String name = cur.getValue();
             SymbolTable table = null;
@@ -159,7 +161,7 @@ public class TableCreationVisitor extends Visitor{
             String paramTypes = "";
             table = new SymbolTable();
             while(fParams != null && !fParams.isEpsilon()){
-                table.addEntry(cur.getTableEntry());
+                table.addEntry(fParams.getTableEntry());
                 paramTypes += fParams.getTableEntry().getType() + ",";
                 fParams = fParams.getRightSib();
             }
@@ -221,7 +223,7 @@ public class TableCreationVisitor extends Visitor{
                 SymTabEntry ownerEntry = this.table.accessFromGlobal(cur.getChild().getValue());
                 // Error handling
                 if(ownerEntry == null){
-                    System.out.println("ERROR: This class/function hasn't been declared, so variable " + name + " cannot be created!");
+                    OutputWriter.semanticErrWriting("ERROR: This class/function hasn't been declared, so variable " + name + " cannot be created!");
                     node.setTableEntry(new SymTabEntry(name, "variable", "ERR@!"));
                     return;
                 }
@@ -255,7 +257,7 @@ public class TableCreationVisitor extends Visitor{
                     // Error handling
                     cur = cur.getRightSib().getChild();
                     if(cur.checkContent("arraySizeList")){
-                        System.out.println("ERROR: " + type + " is not an object!");
+                        OutputWriter.semanticErrWriting("ERROR: " + type + " is not an object!");
                         node.setTableEntry(new SymTabEntry(name, "variable", "ERR@!"));
                         return;
                     }
@@ -264,19 +266,14 @@ public class TableCreationVisitor extends Visitor{
                 type = cur.getChild().toString();
                 // Get arraySizeList if available
                 cur = cur.getRightSib().getChild();
-                if(!cur.checkContent("arraySizeList")){
-                    System.out.println("ERROR: " + type + " is not an object!");
-                    node.setTableEntry(new SymTabEntry(name, "variable", "ERR@!"));
-                    return;
-                } else {
-                    cur = cur.getChild();
-                    while(cur != null && !cur.isEpsilon()){
-                        if(cur.getValue() == null){
-                            type += "[" + "]";
-                        } else {
-                            type += "[" + cur.getValue() + "]";
-                        }
+                cur = cur.getChild();
+                while(cur != null && !cur.isEpsilon()){
+                    if(cur.getValue() == null){
+                        type += "[" + "]";
+                    } else {
+                        type += "[" + cur.getValue() + "]";
                     }
+                    cur = cur.getRightSib();
                 }
             }
             id.setType(type);

@@ -15,6 +15,9 @@ public class main {
         Factory.treeToGraph();
         OutputWriter.closeTreeWriteStream();
 
+        OutputWriter.openSemanticErrWriting();
+        OutputWriter.openSemanticOutWriting();
         Generator.visitTree();
+        
     }
 }

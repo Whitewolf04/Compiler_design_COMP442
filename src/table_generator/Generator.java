@@ -4,6 +4,7 @@ import java.util.ListIterator;
 
 import AST_generator.Factory;
 import AST_generator.SyntaxTreeNode;
+import lexical_analyzer.OutputWriter;
 
 public class Generator {
     public static void visitTree(){
@@ -19,7 +20,7 @@ public class Generator {
         if(node.getChild() != null){
             treeTraversal(node.getChild(), visitor);
         }
-        System.out.println(node.toTree() + "\n");
+        // System.out.println(node.toTree() + "\n");
         visitor.visit(node);
         if(node.getRightSib() != null){
             treeTraversal(node.getRightSib(), visitor);
@@ -28,6 +29,7 @@ public class Generator {
 
     public static void printTable(SymbolTable table){
         System.out.println(table.printTable());
+        OutputWriter.semanticOutWriting(table.printTable());
         ListIterator<SymTabEntry> i = table.getTable().listIterator();
 
         while(i.hasNext()){

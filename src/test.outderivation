@@ -208,56 +208,14 @@ type id funcHead
 reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 type id funcHead 
 
-arraySize reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-type id funcHead 
-
-lsqbr arraySize2 reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-type id funcHead 
-
-arraySize2 reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-type id funcHead 
-
-intLit NodeFactory:intLit rsqbr reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-type id funcHead 
-
-NodeFactory:intLit rsqbr reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-type id funcHead 
-
-rsqbr reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-intLit type id funcHead 
-
-reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-intLit type id funcHead 
-
-arraySize reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-intLit type id funcHead 
-
-lsqbr arraySize2 reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-intLit type id funcHead 
-
-arraySize2 reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-intLit type id funcHead 
-
-intLit NodeFactory:intLit rsqbr reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-intLit type id funcHead 
-
-NodeFactory:intLit rsqbr reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-intLit type id funcHead 
-
-rsqbr reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-intLit intLit type id funcHead 
-
-reptArraySize SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-intLit intLit type id funcHead 
-
 EPSILON NodeFactory:EPSILON SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-intLit intLit type id funcHead 
+type id funcHead 
 
 NodeFactory:EPSILON SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-intLit intLit type id funcHead 
+type id funcHead 
 
 SubTreeFactory:arraySizeList SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON intLit intLit type id funcHead 
+EPSILON type id funcHead 
 
 SubTreeFactory:arrayOrObject semi SubTreeFactory:localVarDecl SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 arraySizeList type id funcHead 

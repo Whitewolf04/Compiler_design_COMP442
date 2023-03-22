@@ -50,6 +50,9 @@ public class SymbolTable {
         } else {
             while(i.hasNext()){
                 SymTabEntry cur = i.next();
+                if(cur.getType().indexOf(':') == -1){
+                    continue;
+                }
                 String types = cur.getType().split(":")[1];
                 if(types.equals(paramTypes) && cur.getName().equals(name)){
                     return cur;

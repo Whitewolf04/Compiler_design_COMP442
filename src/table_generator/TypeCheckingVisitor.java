@@ -1,25 +1,31 @@
 package table_generator;
 
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import AST_generator.SyntaxTreeNode;
+import lexical_analyzer.OutputWriter;
 
 public class TypeCheckingVisitor extends Visitor {
     private SymbolTable globalTable;
+    private LinkedList<SymTabEntry> localScopeVar = null;
+    private LinkedList<SymTabEntry> classScopeVar = null;
     private SymbolTable localTable = null;
     private SymbolTable classLevelTable = null;
     private String typeBuffer = null;
+    private String idnestBuffer = null;
 
     public TypeCheckingVisitor(SymbolTable table){
         // Get the global table for type checking on functions
         this.globalTable = table;
+        localScopeVar = new LinkedList<SymTabEntry>();
     }
     
     public void visit(SyntaxTreeNode node){
         if(node.checkContent("assignOrFuncCall")){
             SyntaxTreeNode cur = node.getChild();
-            String lhsType = null;
+            String lhsType = typeBuffer;
 
             if(cur.isEpsilon()){
                 node.setType("void");
@@ -47,7 +53,7 @@ public class TypeCheckingVisitor extends Visitor {
                             SymTabEntry varDecl = this.globalTable.accessFromGlobal(variable);
                             if(varDecl == null){
                                 // Declaration not found, error handling
-                                System.out.println("ERROR: Unable to find this variable " + variable + " declaration, assignOrFuncCall error!");
+                                OutputWriter.semanticErrWriting("ERROR: Unable to find this variable " + variable + " declaration, assignOrFuncCall error!");
                                 node.setType("ERR@!");
                             } else if(varDecl.getKind().equals("class")){
                                 // Found declaration as a constructor
@@ -56,7 +62,7 @@ public class TypeCheckingVisitor extends Visitor {
                                 if(paramTypes.isEmpty()){
                                     SymTabEntry constructor = classTable.contains("constructor", "void");
                                     if(constructor == null){
-                                        System.out.println("ERROR: Unable to find the default constructor for class " + variable + ", assignOrFuncCall error!");
+                                        OutputWriter.semanticErrWriting("ERROR: Unable to find the default constructor for class " + variable + ", assignOrFuncCall error!");
                                         typeBuffer = "ERR@!";
                                     } else {
                                         typeBuffer = variable;
@@ -64,7 +70,7 @@ public class TypeCheckingVisitor extends Visitor {
                                 } else {
                                     SymTabEntry constructor = classTable.containsParams("constructor", paramTypes);
                                     if(constructor == null){
-                                        System.out.println("ERROR: Unable to find the constructor for class " + variable + " with params(" + paramTypes + "), assignOrFuncCall error!");
+                                        OutputWriter.semanticErrWriting("ERROR: Unable to find the constructor for class " + variable + " with params(" + paramTypes + "), assignOrFuncCall error!");
                                         typeBuffer = "ERR@!";
                                     } else {
                                         typeBuffer = variable;
@@ -74,7 +80,7 @@ public class TypeCheckingVisitor extends Visitor {
                                 // Found declaration as a global function
                                 SymTabEntry funcDecl = this.globalTable.containsParams(variable, paramTypes);
                                 if(funcDecl == null){
-                                    System.out.println("ERROR: Unable to find the global function " + variable + " with params(" + paramTypes + "), assignOrFuncCall error!");
+                                    OutputWriter.semanticErrWriting("ERROR: Unable to find the global function " + variable + " with params(" + paramTypes + "), assignOrFuncCall error!");
                                     typeBuffer = "ERR@!";
                                 } else {
                                     if(funcDecl.getType().indexOf(':') != -1){
@@ -96,7 +102,7 @@ public class TypeCheckingVisitor extends Visitor {
                             SymTabEntry classDecl = this.globalTable.accessFromGlobal(typeBuffer);
                             SymTabEntry funcDecl = classDecl.getLink().containsParams(variable, paramTypes);
                             if(funcDecl == null){
-                                System.out.println("ERROR: Function " + variable + " with params (" + paramTypes + ") not found, factor error!");
+                                OutputWriter.semanticErrWriting("ERROR: Function " + variable + " with params (" + paramTypes + ") not found, factor error!");
                                 typeBuffer = "ERR@!";
                             } else{
                                 if(paramTypes.isEmpty()){
@@ -118,7 +124,7 @@ public class TypeCheckingVisitor extends Visitor {
                             int dimension = typeBuffer.length() - typeBuffer.replace("[", "").length();
                             int indicingDim = cur.getChildNum()-1;
                             if(dimension < indicingDim){
-                                System.out.println("ERROR: Array dimension out of bound when indicing variable " + variable);
+                                OutputWriter.semanticErrWriting("ERROR: Array dimension out of bound when indicing variable " + variable);
                             } else if (dimension > indicingDim){
                                 int residual = dimension - indicingDim;
                                 while(residual > 0){
@@ -148,12 +154,44 @@ public class TypeCheckingVisitor extends Visitor {
                     typeBuffer = null;
                     cur = cur.getRightSib();
                     continue;
+                } else if (cur.checkContent("indiceList")){
+                    int indicingDim = cur.getChildNum()-1;
+                    int dimension = typeBuffer.length() - typeBuffer.replace("[", "").length();
+                    
+                    if(dimension < indicingDim){
+                        OutputWriter.semanticErrWriting("ERROR: Array dimension out of bound when indicing variable " + typeBuffer);
+                    } else if (dimension > indicingDim){
+                        int residual = dimension - indicingDim;
+                        while(residual > 0){
+                            typeBuffer = typeBuffer.substring(0, typeBuffer.lastIndexOf('['));
+                            residual--;
+                        }
+                    } else {
+                        typeBuffer = typeBuffer.substring(0, typeBuffer.indexOf('['));
+                    }
+                    cur = cur.getRightSib();
+                    continue;
+                } else if(cur.checkContent("exprList")){
+                    // Check params
+                    cur = cur.getChild();
+                    String paramsType = "";
+                    while(cur != null && !cur.isEpsilon()){
+                        paramsType += cur.getType() + ",";
+                        cur = cur.getRightSib();
+                    }
+                    if(!paramsType.isEmpty()){
+                        paramsType = paramsType.substring(0, paramsType.length()-1);
+                    }
+                    SymTabEntry funcDecl = globalTable.containsParams(idnestBuffer, paramsType);
+                    if(funcDecl == null){
+                        OutputWriter.semanticErrWriting("ERROR: Use of undeclared variable!");
+                    }
                 }
             }
 
             // Compare type
             if(!lhsType.equals(typeBuffer) || lhsType.equals("ERR@!")){
-                System.out.println("ERROR: Mismatch type in assignment statement " + node.toTree() + ", assignOrFuncCall error!");
+                OutputWriter.semanticErrWriting("ERROR: Mismatch type in assignment statement " + node.toTree() + ", assignOrFuncCall error!");
             }
         } else if(node.checkContent("classDecl")){
             // Check for circular inheritance
@@ -170,7 +208,7 @@ public class TypeCheckingVisitor extends Visitor {
                 }
                 parent = cur.getValue();
                 if(inheritListChecker(className, parent)){
-                    System.out.println("ERROR: Circular inheritance found in class " + className + " with parent class " + parent + "!");
+                    OutputWriter.semanticErrWriting("ERROR: Circular inheritance found in class " + className + " with parent class " + parent + "!");
                 }
                 cur = cur.getRightSib();
             }
@@ -194,132 +232,136 @@ public class TypeCheckingVisitor extends Visitor {
             } else {
                 // factor idnest
                 SyntaxTreeNode cur = node.getChild();
-                if(cur.checkContent("id")){
-                    String variable = cur.getValue();
-                    SymTabEntry ID = cur.getTableEntry();
+                String variable = cur.getValue();
 
-                    // Checking the dimension/aParams
-                    cur = cur.getRightSib();
-                    if(cur.checkContent("indiceList")){
-                        // Either a variable or an array
-                        SymTabEntry id = this.localTable.accessFromGlobal(variable);
-                        if(id == null){
-                            id = this.classLevelTable.accessFromGlobal(variable);
-                            if(id == null){
-                                System.out.println("ERROR: Cannot find variable " + id + " in class " + classLevelTable.name + ", factor error!");
+                // Checking the dimension/aParams
+                cur = cur.getRightSib();
+                if(cur.checkContent("indiceList")){
+                    // Either a variable or an array
+                    SymTabEntry id = null;
+
+                    for(SymTabEntry entry : localScopeVar){
+                        if(entry.getName().equals(variable)){
+                            id = entry;
+                            break;
+                        }
+                    }
+                    if(id == null && classScopeVar != null){
+                        for(SymTabEntry entry : classScopeVar){
+                            if(entry.getName().equals(variable)){
+                                id = entry;
+                                break;
+                            }
+                        }
+                    } else if(id == null){
+                        OutputWriter.semanticErrWriting("ERROR: Use of undeclared variable " + variable);
+                        return;
+                    }
+
+                    if(!cur.getChild().isEpsilon()){
+                        // meaning this is an array
+                        int dimension = typeBuffer.length() - typeBuffer.replace("[", "").length();
+                        int indicingDim = cur.getChildNum()-1;
+                        if(dimension < indicingDim){
+                            OutputWriter.semanticErrWriting("ERROR: Array dimension out of bound when indicing variable " + variable);
+                        } else if (dimension > indicingDim){
+                            int residual = dimension - indicingDim;
+                            while(residual > 0){
+                                typeBuffer = typeBuffer.substring(0, typeBuffer.lastIndexOf('['));
+                                residual--;
+                            }
+                        } else {
+                            typeBuffer = typeBuffer.substring(0, typeBuffer.indexOf('['));
+                        }
+                    } else {
+                        typeBuffer = id.getType();
+                    }
+                } else {
+                    // exprList
+                    if(!cur.getChild().isEpsilon()){
+                        SyntaxTreeNode expr = cur.getChild();
+
+                        // Get param types to match with func declaration
+                        String paramTypes = "";
+                        while(expr != null && !expr.isEpsilon()){
+                            paramTypes += expr.getType() + ",";
+                            expr = expr.getRightSib();
+                        }
+                        if(!paramTypes.isEmpty()){
+                            paramTypes = paramTypes.substring(0, paramTypes.length()-1);
+                        }
+                        if(typeBuffer == null){
+                            // Can only be global function or constructor
+                            SymTabEntry variableDecl = this.globalTable.accessFromGlobal(variable);
+                            if(variableDecl == null){
+                                OutputWriter.semanticErrWriting("ERROR: Variable " + variable + " is neither a function nor a class, factor error!");
+                                node.setType("ERR@!");
+                                return;
+                            }
+
+                            if(variableDecl.getKind().equals("class")){
+                                SymTabEntry constructor = variableDecl.getLink().contains("constructor", "void:"+paramTypes);
+                                if(constructor == null){
+                                    OutputWriter.semanticErrWriting("ERROR: Constructor " + variable + " with params (" + paramTypes + ") not found, factor error!");
+                                    node.setType("ERR@!");
+                                    return;
+                                } else {
+                                    typeBuffer = variable;
+                                }
+                            } else {
+                                if(typeBuffer.equals("void") || typeBuffer.equals("ERR@!") || typeBuffer.indexOf(':') != -1){
+                                    typeBuffer = "ERR@!";
+                                    OutputWriter.semanticErrWriting("ERROR: Non-object variable found calling member functions, factor error!");
+                                    node.setType(typeBuffer);
+                                    return;
+                                } else if(paramTypes.isEmpty()){
+                                    if(variableDecl.getType().indexOf(':')==-1){
+                                        typeBuffer = variableDecl.getType();
+                                    } else {
+                                        OutputWriter.semanticErrWriting("ERROR: Function " + variable + " with params (" + paramTypes + ") not found, factor error!");
+                                        node.setType("ERR@!");
+                                        return;
+                                    }
+                                } else {
+                                    String[] funcTypes = variableDecl.getType().split(":");
+                                    if(funcTypes[1].equals(paramTypes)){
+                                        typeBuffer = funcTypes[0];
+                                    } else {
+                                        OutputWriter.semanticErrWriting("ERROR: Function " + variable + " with params (" + paramTypes + ") not found, factor error!");
+                                        node.setType("ERR@!");
+                                        return;
+                                    }
+                                }
+                                
+                            }
+                        } else {
+                            // Can only be member function call
+                            SymTabEntry classDecl = this.globalTable.accessFromGlobal(typeBuffer);
+                            SymTabEntry funcDecl = classDecl.getLink().containsParams(variable, paramTypes);
+                            if(funcDecl == null){
+                                OutputWriter.semanticErrWriting("ERROR: Function " + variable + " with params (" + paramTypes + ") not found, factor error!");
                                 node.setType("ERR@!");
                                 return;
                             } else{
-                                ID.setType(id.getType());
-                            }
-                        } else {
-                            ID.setType(id.getType());
-                        }
-
-                        if(!cur.getChild().isEpsilon()){
-                            // meaning this is an array
-                            int dimension = typeBuffer.length() - typeBuffer.replace("[", "").length();
-                            int indicingDim = cur.getChildNum()-1;
-                            if(dimension < indicingDim){
-                                System.out.println("ERROR: Array dimension out of bound when indicing variable " + variable);
-                            } else if (dimension > indicingDim){
-                                int residual = dimension - indicingDim;
-                                while(residual > 0){
-                                    typeBuffer = typeBuffer.substring(0, typeBuffer.lastIndexOf('['));
-                                    residual--;
-                                }
-                            } else {
-                                typeBuffer = typeBuffer.substring(0, typeBuffer.indexOf('['));
-                            }
-                        } else {
-                            typeBuffer = id.getType();
-                        }
-                    } else {
-                        // exprList
-                        if(!cur.getChild().isEpsilon()){
-                            SyntaxTreeNode expr = cur.getChild();
-
-                            // Get param types to match with func declaration
-                            String paramTypes = "";
-                            while(expr != null && !expr.isEpsilon()){
-                                paramTypes += expr.getType() + ",";
-                                expr = expr.getRightSib();
-                            }
-                            if(!paramTypes.isEmpty()){
-                                paramTypes = paramTypes.substring(0, paramTypes.length()-1);
-                            }
-                            if(typeBuffer == null){
-                                // Can only be global function or constructor
-                                SymTabEntry variableDecl = this.globalTable.accessFromGlobal(variable);
-                                if(variableDecl == null){
-                                    System.out.println("ERROR: Variable " + variable + " is neither a function nor a class, factor error!");
-                                    node.setType("ERR@!");
-                                    return;
-                                }
-
-                                if(variableDecl.getKind().equals("class")){
-                                    SymTabEntry constructor = variableDecl.getLink().contains("constructor", "void:"+paramTypes);
-                                    if(constructor == null){
-                                        System.out.println("ERROR: Constructor " + variable + " with params (" + paramTypes + ") not found, factor error!");
-                                        node.setType("ERR@!");
-                                        return;
-                                    } else {
-                                        typeBuffer = variable;
-                                    }
+                                if(paramTypes.isEmpty()){
+                                    typeBuffer = funcDecl.getType();
                                 } else {
-                                    if(typeBuffer.equals("void") || typeBuffer.equals("ERR@!") || typeBuffer.indexOf(':') != -1){
-                                        typeBuffer = "ERR@!";
-                                        System.out.println("ERROR: Non-object variable found calling member functions, factor error!");
-                                        node.setType(typeBuffer);
-                                        return;
-                                    } else if(paramTypes.isEmpty()){
-                                        if(variableDecl.getType().indexOf(':')==-1){
-                                            typeBuffer = variableDecl.getType();
-                                        } else {
-                                            System.out.println("ERROR: Function " + variable + " with params (" + paramTypes + ") not found, factor error!");
-                                            node.setType("ERR@!");
-                                            return;
-                                        }
-                                    } else {
-                                        String[] funcTypes = variableDecl.getType().split(":");
-                                        if(funcTypes[1].equals(paramTypes)){
-                                            typeBuffer = funcTypes[0];
-                                        } else {
-                                            System.out.println("ERROR: Function " + variable + " with params (" + paramTypes + ") not found, factor error!");
-                                            node.setType("ERR@!");
-                                            return;
-                                        }
-                                    }
-                                    
-                                }
-                            } else {
-                                // Can only be member function call
-                                SymTabEntry classDecl = this.globalTable.accessFromGlobal(typeBuffer);
-                                SymTabEntry funcDecl = classDecl.getLink().containsParams(variable, paramTypes);
-                                if(funcDecl == null){
-                                    System.out.println("ERROR: Function " + variable + " with params (" + paramTypes + ") not found, factor error!");
-                                    node.setType("ERR@!");
-                                    return;
-                                } else{
-                                    if(paramTypes.isEmpty()){
-                                        typeBuffer = funcDecl.getType();
-                                    } else {
-                                        String[] funcTypes = funcDecl.getType().split(":");
-                                        typeBuffer = funcTypes[0];
-                                    }
+                                    String[] funcTypes = funcDecl.getType().split(":");
+                                    typeBuffer = funcTypes[0];
                                 }
                             }
                         }
-                    }
-                    
-                    // Checking idnest list
-                    cur = cur.getRightSib();
-                    if(cur.getChild().isEpsilon()){
-                        node.setType(typeBuffer);
-                    } else {
-                        node.setType(cur.getType());
                     }
                 }
+                
+                // Checking idnest list
+                cur = cur.getRightSib();
+                if(cur.getChild().isEpsilon()){
+                    node.setType(typeBuffer);
+                } else {
+                    node.setType(cur.getType());
+                }
+                
             }
         } else if(node.checkContent("funcHead")){
             // Switch local table for each function definition
@@ -329,29 +371,80 @@ public class TypeCheckingVisitor extends Visitor {
             }
             if(node.getChildNum() == 3){
                 localTable = this.globalTable.accessFromGlobal(node.getChild().getValue()).getLink();
+                for(SymTabEntry entry : localTable.getTable()){
+                    if(entry.getKind().equals("function")){
+                        continue;
+                    } else {
+                        localScopeVar.add(entry);
+                    }
+                }
+                classLevelTable = null;
+                classScopeVar = null;
             } else if(node.getChildNum() == 4){
                 String owner = node.getChild().getValue();
                 classLevelTable = this.globalTable.accessFromGlobal(owner).getLink();
+                classScopeVar = new LinkedList<SymTabEntry>();
+                for(SymTabEntry entry : classLevelTable.getTable()){
+                    if(entry.getKind().equals("function")){
+                        continue;
+                    } else {
+                        classScopeVar.add(entry);
+                    }
+                }
                 this.localTable = classLevelTable.contains("constructor", node.getTableEntry().getType()).getLink();
+                for(SymTabEntry entry : localTable.getTable()){
+                    if(entry.getKind().equals("function")){
+                        continue;
+                    } else {
+                        localScopeVar.add(entry);
+                    }
+                }
             } else {
                 String owner = node.getChild().getValue();
                 classLevelTable = this.globalTable.accessFromGlobal(owner).getLink();
+                classScopeVar = new LinkedList<SymTabEntry>();
+                for(SymTabEntry entry : classLevelTable.getTable()){
+                    if(entry.getKind().equals("function")){
+                        continue;
+                    } else {
+                        classScopeVar.add(entry);
+                    }
+                }
                 this.localTable = classLevelTable.contains(funcName, node.getTableEntry().getType()).getLink();
+                for(SymTabEntry entry : localTable.getTable()){
+                    if(entry.getKind().equals("function")){
+                        continue;
+                    } else {
+                        localScopeVar.add(entry);
+                    }
+                }
             }
         } else if(node.checkContent("id")){
             // Check if the next node is assignOrFuncCall
             if(node.getRightSib() != null && node.getRightSib().checkContent("assignOrFuncCall")){
-                SymTabEntry cur = this.localTable.accessFromGlobal(node.getValue());
-                if(cur == null){
-                    cur = this.classLevelTable.accessFromGlobal(node.getValue());
-                    if(cur == null){
-                        System.out.println("ERROR: Use of undeclared variable!");
-                    } else {
-                        typeBuffer = cur.getType();
+                SymTabEntry id = null;
+                String variable = node.getValue();
+
+                for(SymTabEntry entry : localScopeVar){
+                    if(entry.getName().equals(variable)){
+                        id = entry;
+                        break;
                     }
-                } else {
-                    typeBuffer = cur.getType();
                 }
+                if(id == null && classScopeVar != null){
+                    for(SymTabEntry entry : classScopeVar){
+                        if(entry.getName().equals(variable)){
+                            id = entry;
+                            break;
+                        }
+                    }
+                } else if(id == null){
+                    OutputWriter.semanticErrWriting("ERROR: Use of undeclared variable " + variable);
+                    return;
+                }
+                node.setType(id.getType());
+                typeBuffer = id.getType();
+                idnestBuffer = id.getName();
             }
         } else if(node.checkContent("idnest")){
             SyntaxTreeNode cur = node.getChild().getRightSib().getRightSib(); // Skip through dot and id nodes
@@ -384,7 +477,7 @@ public class TypeCheckingVisitor extends Visitor {
 
                 SymTabEntry varDecl = this.globalTable.accessFromGlobal(variable);
                 if(varDecl == null){
-                    System.out.println("ERROR: Undeclared class/function");
+                    OutputWriter.semanticErrWriting("ERROR: Undeclared class/function");
                 }
             }
         } else if(node.checkContent("relExpr")){
@@ -392,7 +485,7 @@ public class TypeCheckingVisitor extends Visitor {
             SyntaxTreeNode rhs = lhs.getRightSib().getRightSib(); // Skip through the relOp node
 
             if(!lhs.getType().equals(rhs.getType())){
-                System.out.println("ERROR: Type mismatch when comparing between " + lhs + " and " + rhs + ", relExpr error!");
+                OutputWriter.semanticErrWriting("ERROR: Type mismatch when comparing between " + lhs + " and " + rhs + ", relExpr error!");
                 node.setType("ERR@!");
             } else {
                 node.setType("boolean");
@@ -410,11 +503,11 @@ public class TypeCheckingVisitor extends Visitor {
                     continue;
                 }
                 if(!type.equals("integer") && !type.equals("float")){
-                    System.out.println("ERROR: Incompatible type " + type + " for addition!");
+                    OutputWriter.semanticErrWriting("ERROR: Incompatible type " + type + " for addition!");
                     node.setType("ERR@!");
                     return;
                 } else if(!cur.getType().equals(type)){
-                    System.out.println("ERROR: Mismatch type " + type + " and " + cur.getType() + " for addition!");
+                    OutputWriter.semanticErrWriting("ERROR: Mismatch type " + type + " and " + cur.getType() + " for addition!");
                     node.setType("ERR@!");
                     return;
                 } else {
@@ -432,11 +525,11 @@ public class TypeCheckingVisitor extends Visitor {
                     continue;
                 }
                 if(!type.equalsIgnoreCase("integer") && !type.equalsIgnoreCase("float")){
-                    System.out.println("ERROR: Incompatible type " + type + " for addition!");
+                    OutputWriter.semanticErrWriting("ERROR: Incompatible type " + type + " for addition!");
                     node.setType("ERR@!");
                     return;
                 } else if(!cur.getType().equals(type)){
-                    System.out.println("ERROR: Mismatch type " + type + " and " + cur.getType() + " for addition!");
+                    OutputWriter.semanticErrWriting("ERROR: Mismatch type " + type + " and " + cur.getType() + " for addition!");
                     node.setType("ERR@!");
                     return;
                 } else {

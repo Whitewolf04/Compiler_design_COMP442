@@ -67,7 +67,7 @@ public final class OutputWriter {
 
     public static void openSemanticErrWriting(){
         try{
-            semanticOutWriter = new BufferedWriter(new FileWriter("test.outsemanticerrors"));
+            semanticErrWriter = new BufferedWriter(new FileWriter("test.outsemanticerrors"));
         } catch(IOException e){
             System.out.println("Error opening semantic error file to write");
         }
@@ -181,4 +181,19 @@ public final class OutputWriter {
         }
     }
 
+    public static void closeSemanticOutStream(){
+        try{
+            semanticOutWriter.close();
+        } catch(IOException e){
+            System.out.println("Error closing semantic out writer stream!");
+        }
+    }
+
+    public static void closeSemanticErrStream(){
+        try{
+            semanticErrWriter.close();
+        } catch(IOException e){
+            System.out.println("Error closing semantic err writer stream!");
+        }
+    }
 }
