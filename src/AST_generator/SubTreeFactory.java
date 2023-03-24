@@ -4,27 +4,33 @@ import java.util.ListIterator;
 
 public class SubTreeFactory extends Factory{
     String content;
-    int numPop;
+    int numPop = -1;
     String nodeToPop = null;
     String nodeToPop2 = null;
     String startingNode = null;
     boolean exclude = false;
+    boolean selectiveNodePop = false;
 
     public SubTreeFactory(String name, int numPop){
         content = name;
         this.numPop = numPop;
     }
 
+    public SubTreeFactory(String name, String start, String nodeToPop, boolean selective){
+        content = name;
+        this.startingNode = start;
+        this.nodeToPop = nodeToPop;
+        this.selectiveNodePop = selective;
+    }
+
     public SubTreeFactory(String name, String start, String nodeToPop){
         content = name;
-        numPop = -1;
         startingNode = start;
         this.nodeToPop = nodeToPop;
     }
 
     public SubTreeFactory(String name, String start, boolean exclude, String nodeToPop, String nodeToPop2){
         content = name;
-        numPop = -1;
         startingNode = start;
         this.exclude = exclude;
         this.nodeToPop = nodeToPop;
@@ -35,11 +41,13 @@ public class SubTreeFactory extends Factory{
         SyntaxTreeNode newNode = new SyntaxTreeNode(content);
         if(numPop > -1 && startingNode == null){
             newNode.setChild(stackTraverseWithNumPop(newNode, null, numPop));
-        } else if(numPop == -1 && startingNode != null && nodeToPop != null && nodeToPop2 == null) {
+        } else if(nodeToPop != null && nodeToPop2 == null && selectiveNodePop){
+            newNode.setChild(stackTraverseWithStartNode(newNode, null));
+        } else if(nodeToPop != null && nodeToPop2 == null) {
             stackTraverseWithNode(newNode);
-        } else if(numPop == -1 && startingNode != null && nodeToPop != null && nodeToPop2 != null && !exclude){
+        } else if(nodeToPop != null && nodeToPop2 != null && !exclude){
             stackTraverseWithTwoNode(newNode);
-        } else if(numPop == -1 && startingNode != null && nodeToPop != null && nodeToPop2 != null && exclude) {
+        } else if(nodeToPop != null && nodeToPop2 != null && exclude) {
             stackTraverseExcludeStart(newNode);
         } else {
             System.out.println("SubTreeFactory error! Cannot make!");
@@ -58,6 +66,22 @@ public class SubTreeFactory extends Factory{
             return leftmostSib;
         } else {
             return currentNode;
+        }
+    }
+
+    private SyntaxTreeNode stackTraverseWithStartNode(SyntaxTreeNode parent, SyntaxTreeNode rightSib){
+        SyntaxTreeNode currentNode = Factory.nodeStack.peekLast();
+
+        if(currentNode.toString().equals(nodeToPop.toString()) || currentNode.toString().equals(startingNode.toString())){
+            Factory.nodeStack.pollLast();
+            currentNode.setParent(parent);
+            currentNode.setRightSib(rightSib);
+            SyntaxTreeNode leftmostSib = stackTraverseWithStartNode(parent, currentNode);
+            currentNode.setLeftmostSib(leftmostSib);
+            return leftmostSib;
+        } else {
+            // WARNING: The leftmost child will point to itself on the leftmostSib pointer
+            return rightSib;
         }
     }
 

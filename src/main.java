@@ -8,16 +8,17 @@ import table_generator.Generator;
 public class main {
     public static void main(String[] args) {
         ProgramQueue.initProgramQueue();
-        LexAnalyzer.analyze("example-bubblesort.src");
+        LexAnalyzer.analyze("testCase.src");
 
         SyntaxAnalyzer.analyze();
         OutputWriter.openTreeWriteStream();
         Factory.treeToGraph();
         OutputWriter.closeTreeWriteStream();
 
-        OutputWriter.openSemanticErrWriting();
-        OutputWriter.openSemanticOutWriting();
-        Generator.visitTree();
-        
+        // OutputWriter.openSemanticErrWriting();
+        // OutputWriter.openSemanticOutWriting();
+        // Generator.visitTree();
+        // OutputWriter.closeSemanticOutStream();
+        // OutputWriter.closeSemanticOutStream();
     }
 }

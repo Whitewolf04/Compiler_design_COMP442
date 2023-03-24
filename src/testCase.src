@@ -16,7 +16,7 @@ class LINEAR isa POLYNOMIAL, RANDOM {
 };
 
 class QUADRATIC isa POLYNOMIAL {
-  private attribute a: float;
+  private attribute a: integer;
   private attribute b: float;
   private attribute c: float;
   public  constructor: (A: float, B: float, C: float);
@@ -42,7 +42,7 @@ function QUADRATIC::evaluate(x: float) => float
 
 function QUADRATIC::constructor(A: float, B: float, C: float)
 {
-  self.a = id(id).id[id][id];
+  self.a = A;
   self.b = B;
   self.c = C;
 }
@@ -54,7 +54,7 @@ function QUADRATIC::constructor(A: float)
 
 function LINEAR::constructor(A: float, B: float) 
 {
-  self.a = A;
+  self.a = A[a][b];
   self.b = B;
 }
 

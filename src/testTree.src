@@ -1,0 +1,9 @@
+class POLYNOMIAL {
+  public function evaluate: (x: float) => float;
+};
+
+function POLYNOMIAL::evaluate(x: float) => float
+{
+    x = id(id).id[id][id];
+    return (0);
+}
