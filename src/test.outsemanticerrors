@@ -1,4 +1,6 @@
-ERROR: Incompatible type void for addition!
-ERROR: Incompatible type ERR@! for addition!
-ERROR: Incompatible type void for addition!
-ERROR: Incompatible type ERR@! for addition!
+Use of undefined variable! Variable name: id in POLYNOMIAL::evaluate
+Use of undefined variable! Variable name: id in POLYNOMIAL::evaluate
+Use of undefined variable! Variable name: id in POLYNOMIAL::evaluate
+Use of undefined variable! Variable name: id in POLYNOMIAL::evaluate
+Use of undefined variable! Variable name: id in POLYNOMIAL::evaluate
+Use of undefined variable! Variable name: id in POLYNOMIAL::evaluate

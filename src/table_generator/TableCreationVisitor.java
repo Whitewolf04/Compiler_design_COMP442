@@ -55,8 +55,10 @@ public class TableCreationVisitor extends Visitor{
                     SymTabEntry duplicate = classTable.contains(cur.getTableEntry().getName(), cur.getTableEntry().getType());
                     if(duplicate != null){
                         duplicate.setLink(cur.getTableEntry().getLink());
+                        duplicate.getLink().outerTable = classTable;
                         OutputWriter.semanticOutWriting("WARNING: Override for function " + cur.getTableEntry().getName() + " in class " + name);
                     } else {
+                        cur.getTableEntry().getLink().outerTable = classTable;
                         classTable.addEntry(cur.getTableEntry());
                     }
                 } else if(cur.getTableEntry().getKind().compareTo("variable")==0){
@@ -119,6 +121,7 @@ public class TableCreationVisitor extends Visitor{
                 // Global function definition
                 funcName = funcHead.getTableEntry().getName();
                 table = new SymbolTable(funcName);
+                table.outerTable = this.table;
                 SymbolTable paramList = funcHead.getTableEntry().getLink();
                 paramList.pushToTable(table);
                 funcHead.getTableEntry().setLink(null);

@@ -5,6 +5,7 @@ import java.util.ListIterator;
 
 public class SymbolTable {
     private LinkedList<SymTabEntry> table;
+    public SymbolTable outerTable;
     public String name;
 
     public SymbolTable(){

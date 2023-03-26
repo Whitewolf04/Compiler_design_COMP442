@@ -12,7 +12,7 @@ public class Generator {
         treeTraversal(Factory.nodeStack.peek(), visitor);
         printTable(visitor.table);
         
-        TypeCheckingVisitor typeChecker = new TypeCheckingVisitor(visitor.table);
+        TypeAssignVisitor typeChecker = new TypeAssignVisitor(visitor.table);
         treeTraversal(Factory.nodeStack.peek(), typeChecker);
     }
 
