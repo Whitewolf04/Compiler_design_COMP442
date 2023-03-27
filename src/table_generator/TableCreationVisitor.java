@@ -7,6 +7,13 @@ import java.util.regex.Pattern;
 import AST_generator.SyntaxTreeNode;
 import lexical_analyzer.OutputWriter;
 
+/*
+ * List of functionalities
+ * - Create global table
+ * - Create class table
+ * - Create function table
+ * - Assign type for localvar declarations
+ */
 public class TableCreationVisitor extends Visitor{
     SymbolTable table;
 
@@ -29,7 +36,7 @@ public class TableCreationVisitor extends Visitor{
             String type = name + ":";
             while(parent != null && !parent.isEpsilon()){
                 // Check if this class has been declared
-                SymTabEntry parentEntry = this.table.accessFromGlobal(parent.getValue());
+                SymTabEntry parentEntry = this.table.containsName(parent.getValue());
                 if(parentEntry == null){
                     OutputWriter.semanticErrWriting("ERROR: Class " + parent.getValue() + " has not been declared and cannot be inherited!");
                     parent = parent.getRightSib();
@@ -52,7 +59,7 @@ public class TableCreationVisitor extends Visitor{
             while(cur != null && !cur.isEpsilon()){
                 // Check for duplicates/overshadowing
                 if(cur.getTableEntry().getKind().compareTo("function")==0){
-                    SymTabEntry duplicate = classTable.contains(cur.getTableEntry().getName(), cur.getTableEntry().getType());
+                    SymTabEntry duplicate = classTable.containsFunction(cur.getTableEntry().getName(), cur.getTableEntry().getType());
                     if(duplicate != null){
                         duplicate.setLink(cur.getTableEntry().getLink());
                         duplicate.getLink().outerTable = classTable;
@@ -62,7 +69,7 @@ public class TableCreationVisitor extends Visitor{
                         classTable.addEntry(cur.getTableEntry());
                     }
                 } else if(cur.getTableEntry().getKind().compareTo("variable")==0){
-                    SymTabEntry duplicate = classTable.accessFromGlobal(cur.getTableEntry().getName());
+                    SymTabEntry duplicate = classTable.containsName(cur.getTableEntry().getName());
                     if(duplicate != null){
                         duplicate.setType(cur.getTableEntry().getType());
                         OutputWriter.semanticOutWriting("WARNING: Override for attribute " + cur.getTableEntry().getName() + " in class " + name);
@@ -104,13 +111,13 @@ public class TableCreationVisitor extends Visitor{
                 // Member function definition
                 String ownerName = matcher.group(1);
                 funcName = matcher.group(2);
-                SymTabEntry ownerEntry = this.table.accessFromGlobal(ownerName);
+                SymTabEntry ownerEntry = this.table.containsName(ownerName);
                 if(ownerEntry == null){
                     OutputWriter.semanticErrWriting("ERROR: Class " + ownerName + " has not been declared, so its function " + funcName + " cannot be defined!");
                     return;
                 }
                 SymbolTable ownerTable = ownerEntry.getLink();
-                SymTabEntry funcEntry = ownerTable.contains(funcName, funcHead.getTableEntry().getType());
+                SymTabEntry funcEntry = ownerTable.containsFunction(funcName, funcHead.getTableEntry().getType());
                 if(funcEntry == null){
                     OutputWriter.semanticErrWriting("ERROR: Function " + funcName + " has not been declared in class " + ownerName + ", so it cannot be defined!");
                     return;
@@ -223,7 +230,7 @@ public class TableCreationVisitor extends Visitor{
             cur = cur.getRightSib();
             String type = null;
             if(cur.getChild().checkContent("id")){
-                SymTabEntry ownerEntry = this.table.accessFromGlobal(cur.getChild().getValue());
+                SymTabEntry ownerEntry = this.table.containsName(cur.getChild().getValue());
                 // Error handling
                 if(ownerEntry == null){
                     OutputWriter.semanticErrWriting("ERROR: This class/function hasn't been declared, so variable " + name + " cannot be created!");

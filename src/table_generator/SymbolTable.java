@@ -25,7 +25,8 @@ public class SymbolTable {
         table.add(entry);
     }
 
-    public SymTabEntry contains(String name, String type){
+    public SymTabEntry containsFunction(String name, String type){
+        // For function
         ListIterator<SymTabEntry> i = table.listIterator();
 
         while(i.hasNext()){
@@ -63,7 +64,10 @@ public class SymbolTable {
         }
     }
 
-    public SymTabEntry accessFromGlobal(String name){
+    /*
+     * Returns the first symbol table entry that is found
+     */
+    public SymTabEntry containsName(String name){
         ListIterator<SymTabEntry> i = table.listIterator();
 
         while(i.hasNext()){
@@ -91,14 +95,14 @@ public class SymbolTable {
                 cur = i.next();
                 continue;
             } else if(cur.getKind().compareTo("function")==0){
-                SymTabEntry duplicate = other.contains(cur.getName(), cur.getType());
+                SymTabEntry duplicate = other.containsFunction(cur.getName(), cur.getType());
                 if(duplicate != null){
                     duplicate.setLink(cur.getLink());
                 } else {
                     other.addEntry(cur);
                 }
             } else if(cur.getKind().compareTo("variable")==0){
-                SymTabEntry duplicate = other.accessFromGlobal(cur.getName());
+                SymTabEntry duplicate = other.containsName(cur.getName());
                 if(duplicate != null){
                     duplicate.setType(cur.getType());
                 } else {

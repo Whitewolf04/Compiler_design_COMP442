@@ -8,7 +8,7 @@ import table_generator.Generator;
 public class main {
     public static void main(String[] args) {
         ProgramQueue.initProgramQueue();
-        LexAnalyzer.analyze("testIdnest.src");
+        LexAnalyzer.analyze("example-bubblesort.src");
 
         SyntaxAnalyzer.analyze();
         OutputWriter.openTreeWriteStream();

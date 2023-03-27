@@ -50,7 +50,7 @@ public class TypeCheckingVisitor extends Visitor {
                         }
                         if(typeBuffer == null){
                             // global function call or constructor
-                            SymTabEntry varDecl = this.globalTable.accessFromGlobal(variable);
+                            SymTabEntry varDecl = this.globalTable.containsName(variable);
                             if(varDecl == null){
                                 // Declaration not found, error handling
                                 OutputWriter.semanticErrWriting("ERROR: Unable to find this variable " + variable + " declaration, assignOrFuncCall error!");
@@ -60,7 +60,7 @@ public class TypeCheckingVisitor extends Visitor {
                                 SymbolTable classTable = varDecl.getLink();
 
                                 if(paramTypes.isEmpty()){
-                                    SymTabEntry constructor = classTable.contains("constructor", "void");
+                                    SymTabEntry constructor = classTable.containsFunction("constructor", "void");
                                     if(constructor == null){
                                         OutputWriter.semanticErrWriting("ERROR: Unable to find the default constructor for class " + variable + ", assignOrFuncCall error!");
                                         typeBuffer = "ERR@!";
@@ -99,7 +99,7 @@ public class TypeCheckingVisitor extends Visitor {
                                 continue;
                             }
 
-                            SymTabEntry classDecl = this.globalTable.accessFromGlobal(typeBuffer);
+                            SymTabEntry classDecl = this.globalTable.containsName(typeBuffer);
                             SymTabEntry funcDecl = classDecl.getLink().containsParams(variable, paramTypes);
                             if(funcDecl == null){
                                 OutputWriter.semanticErrWriting("ERROR: Function " + variable + " with params (" + paramTypes + ") not found, factor error!");
@@ -118,7 +118,7 @@ public class TypeCheckingVisitor extends Visitor {
                     } else if(cur.getRightSib().checkContent("indiceList")){
                         // Indicing array
                         cur = cur.getRightSib();
-                        typeBuffer = this.localTable.accessFromGlobal(variable).getType();
+                        typeBuffer = this.localTable.containsName(variable).getType();
                         if(!cur.getChild().isEpsilon()){
                             // meaning this is an array
                             int dimension = typeBuffer.length() - typeBuffer.replace("[", "").length();
@@ -292,7 +292,7 @@ public class TypeCheckingVisitor extends Visitor {
                         }
                         if(typeBuffer == null){
                             // Can only be global function or constructor
-                            SymTabEntry variableDecl = this.globalTable.accessFromGlobal(variable);
+                            SymTabEntry variableDecl = this.globalTable.containsName(variable);
                             if(variableDecl == null){
                                 OutputWriter.semanticErrWriting("ERROR: Variable " + variable + " is neither a function nor a class, factor error!");
                                 node.setType("ERR@!");
@@ -300,7 +300,7 @@ public class TypeCheckingVisitor extends Visitor {
                             }
 
                             if(variableDecl.getKind().equals("class")){
-                                SymTabEntry constructor = variableDecl.getLink().contains("constructor", "void:"+paramTypes);
+                                SymTabEntry constructor = variableDecl.getLink().containsFunction("constructor", "void:"+paramTypes);
                                 if(constructor == null){
                                     OutputWriter.semanticErrWriting("ERROR: Constructor " + variable + " with params (" + paramTypes + ") not found, factor error!");
                                     node.setType("ERR@!");
@@ -336,7 +336,7 @@ public class TypeCheckingVisitor extends Visitor {
                             }
                         } else {
                             // Can only be member function call
-                            SymTabEntry classDecl = this.globalTable.accessFromGlobal(typeBuffer);
+                            SymTabEntry classDecl = this.globalTable.containsName(typeBuffer);
                             SymTabEntry funcDecl = classDecl.getLink().containsParams(variable, paramTypes);
                             if(funcDecl == null){
                                 OutputWriter.semanticErrWriting("ERROR: Function " + variable + " with params (" + paramTypes + ") not found, factor error!");
@@ -370,7 +370,7 @@ public class TypeCheckingVisitor extends Visitor {
                 funcName = funcName.substring(funcName.lastIndexOf(':')+1, funcName.length());
             }
             if(node.getChildNum() == 3){
-                localTable = this.globalTable.accessFromGlobal(node.getChild().getValue()).getLink();
+                localTable = this.globalTable.containsName(node.getChild().getValue()).getLink();
                 for(SymTabEntry entry : localTable.getTable()){
                     if(entry.getKind().equals("function")){
                         continue;
@@ -382,7 +382,7 @@ public class TypeCheckingVisitor extends Visitor {
                 classScopeVar = null;
             } else if(node.getChildNum() == 4){
                 String owner = node.getChild().getValue();
-                classLevelTable = this.globalTable.accessFromGlobal(owner).getLink();
+                classLevelTable = this.globalTable.containsName(owner).getLink();
                 classScopeVar = new LinkedList<SymTabEntry>();
                 for(SymTabEntry entry : classLevelTable.getTable()){
                     if(entry.getKind().equals("function")){
@@ -391,7 +391,7 @@ public class TypeCheckingVisitor extends Visitor {
                         classScopeVar.add(entry);
                     }
                 }
-                this.localTable = classLevelTable.contains("constructor", node.getTableEntry().getType()).getLink();
+                this.localTable = classLevelTable.containsFunction("constructor", node.getTableEntry().getType()).getLink();
                 for(SymTabEntry entry : localTable.getTable()){
                     if(entry.getKind().equals("function")){
                         continue;
@@ -401,7 +401,7 @@ public class TypeCheckingVisitor extends Visitor {
                 }
             } else {
                 String owner = node.getChild().getValue();
-                classLevelTable = this.globalTable.accessFromGlobal(owner).getLink();
+                classLevelTable = this.globalTable.containsName(owner).getLink();
                 classScopeVar = new LinkedList<SymTabEntry>();
                 for(SymTabEntry entry : classLevelTable.getTable()){
                     if(entry.getKind().equals("function")){
@@ -410,7 +410,7 @@ public class TypeCheckingVisitor extends Visitor {
                         classScopeVar.add(entry);
                     }
                 }
-                this.localTable = classLevelTable.contains(funcName, node.getTableEntry().getType()).getLink();
+                this.localTable = classLevelTable.containsFunction(funcName, node.getTableEntry().getType()).getLink();
                 for(SymTabEntry entry : localTable.getTable()){
                     if(entry.getKind().equals("function")){
                         continue;
@@ -475,7 +475,7 @@ public class TypeCheckingVisitor extends Visitor {
                     paramTypes = paramTypes.substring(0, paramTypes.length()-1);
                 }
 
-                SymTabEntry varDecl = this.globalTable.accessFromGlobal(variable);
+                SymTabEntry varDecl = this.globalTable.containsName(variable);
                 if(varDecl == null){
                     OutputWriter.semanticErrWriting("ERROR: Undeclared class/function");
                 }
@@ -541,7 +541,7 @@ public class TypeCheckingVisitor extends Visitor {
     }
 
     private boolean inheritListChecker(String className, String parent){
-        SymTabEntry parentEntry = this.globalTable.accessFromGlobal(parent);
+        SymTabEntry parentEntry = this.globalTable.containsName(parent);
         String type = parentEntry.getType();
         Pattern pattern = Pattern.compile("\\A(.*?):(.*)\\Z");
         Matcher matcher = pattern.matcher(type);

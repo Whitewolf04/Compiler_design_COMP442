@@ -1,5 +1,8 @@
 package table_generator;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import AST_generator.SyntaxTreeNode;
 import lexical_analyzer.OutputWriter;
 
@@ -22,17 +25,34 @@ public class TypeAssignVisitor extends Visitor{
     }
 
     public void visit(SyntaxTreeNode node){
-        if(node.checkContent("assignOrFuncCall;")){
+        if(node.checkContent("assignOrFuncCall")){
             // Idnest resolution
             SyntaxTreeNode cur = node.getChild();
             if(!cur.checkContent("assign")){
                 SyntaxTreeNode origin = node.getLeftmostSib();
-                if(origin.getType().equals("integer") || origin.getType().equals("float")){
+                if(origin.getType().equals("ERR@!")){
+                    node.setType("ERR@!");
+                    return;
+                } else if(origin.getType().equals("integer") || origin.getType().equals("float")){
                     // Type check for primitive type
 
-                    // Check for dot notation or function call on primitive type
+                    // Check for dot notation, list indicing, or function call on primitive type
                     SyntaxTreeNode temp = cur;
-                    while(temp.getRightSib() != null){
+                    while(temp.getRightSib() != null && !temp.checkContent("assign")){
+                        if(temp.checkContent("dot") || temp.checkContent("exprList") || temp.checkContent("indiceList")){
+                            OutputWriter.semanticErrWriting("Illegal use on primitive type for variable " + origin.getValue() + " in " + localTable.name);
+                            node.setType("ERR@!");
+                            return;
+                        } else {
+                            temp = temp.getRightSib();
+                        }
+                    }
+                } else if(primitiveArrayIdentifier(origin.getType())){
+                    // Type check for primitive type arrays
+                    
+                    // Check for dot notation or function call on primitive type array
+                    SyntaxTreeNode temp = cur;
+                    while(temp.getRightSib() != null && !temp.checkContent("assign")){
                         if(temp.checkContent("dot") || temp.checkContent("exprList")){
                             OutputWriter.semanticErrWriting("Illegal use on primitive type for variable " + origin.getValue() + " in " + localTable.name);
                             node.setType("ERR@!");
@@ -59,10 +79,229 @@ public class TypeAssignVisitor extends Visitor{
                             System.out.println("Variable " + origin.getValue() + " in " + localTable.name + " has been set to type " + cur.getType());
                         }
                     }
+                } else if(objectArrayIdentifier(origin.getType())) {
+                    // Type check for object array
+                    String typeBuffer = null;
+                    
+                    // Error handling the illegal func call or variable call
+                    if(cur.checkContent("exprList") || cur.checkContent("dot")){
+                        OutputWriter.semanticErrWriting("Illegal function/variable call on object array for variable " + origin.getValue() + " in " + localTable.name);
+                        node.setType("ERR@!");
+                        return;
+                    } else if(cur.checkContent("indiceList")){
+                        // Indice resolution
+
+                        // Error handling if indice type-check fails
+                        if(cur.getType().equals("ERR@!")){
+                            node.setType("ERR@!");
+                            return;
+                        }
+
+                        // Set type accordingly from the indicing list
+                        cur.setType(indiceHandling(origin, cur));
+                        typeBuffer = cur.getType();
+                        if(typeBuffer.equals("ERR@!")){
+                            node.setType("ERR@!");
+                            return;
+                        } else {
+                            System.out.println("Variable " + origin.getValue() + " in " + localTable.name + " has been set to type " + cur.getType());
+                        }
+                    }
+
+                    // Go through idnest list
+                    cur = cur.getRightSib();
+                    SymbolTable classTable = this.globalTable.containsName(origin.getType().substring(0, origin.getType().indexOf('['))).getLink();
+                    SymTabEntry idBuffer = null;
+                    while(cur.getRightSib() != null && !cur.checkContent("assign")){
+                        if(cur.checkContent("dot")){
+                            // Skip through dot symbol
+                            if(typeBuffer != null){
+                                // Return type can only be primitive type or an object type
+                                if(typeBuffer.equals("integer") || typeBuffer.equals("float")){
+                                    OutputWriter.semanticErrWriting("Illegal use on primitive type for variable returned by " + idBuffer.getName() + " in " + localTable.name);
+                                    node.setType("ERR@!");
+                                    return;
+                                } else if(objectArrayIdentifier(typeBuffer)){
+                                    OutputWriter.semanticErrWriting("Illegal function/variable call on object array for variable " + origin.getValue() + " in " + localTable.name);
+                                    node.setType("ERR@!");
+                                    return;
+                                } else {
+                                    classTable = this.globalTable.containsName(typeBuffer).getLink();
+                                }
+                            }
+                            idBuffer = null;
+                            cur = cur.getRightSib();
+                            continue;
+                        } else if(cur.checkContent("id")){
+                            SymTabEntry variable = classTable.containsName(cur.getValue());
+                            if(variable == null){
+                                OutputWriter.semanticErrWriting("Illegal function/variable call on object array for variable " + cur.getValue() + " in " + localTable.name);
+                                node.setType("ERR@!");
+                                return;
+                            }
+                            idBuffer = variable;
+                            typeBuffer = variable.getReturnType();
+                        } else if(cur.checkContent("exprList")){
+                            // Check if we are function calling on a variable
+                            if(idBuffer.getKind().equals("variable") || idBuffer.getKind().equals("parameter")){
+                                OutputWriter.semanticErrWriting("ERROR: Unable to function call on a variable name for variable " + idBuffer.getName() + " in " + localTable.name);
+                                node.setType("ERR@!");
+                                return;
+                            }
+
+                            // Get all the types of parameter
+                            String paramTypes = "";
+                            SyntaxTreeNode param = cur.getChild();
+                            while(param != null && !param.isEpsilon()){
+                                SyntaxTreeNode leafNode = param.getChild();
+                                while(leafNode.getChild() != null){
+                                    leafNode = leafNode.getChild();
+                                }
+                                paramTypes += leafNode.getType() + ",";
+
+                                param = param.getRightSib();
+                            }
+                            paramTypes = paramTypes.substring(0, paramTypes.length()-1);
+                            String functionType = typeBuffer + ":" + paramTypes;
+
+                            // Check for param type
+                            SymTabEntry function = classTable.containsFunction(idBuffer.getName(), functionType);
+                            if(function == null){
+                                OutputWriter.semanticErrWriting("ERROR: Function " + idBuffer.getName() + " with type " + functionType + " doesn't exist in " + classTable.name + ", calling from " + localTable.name);
+                                node.setType("ERR@!");
+                                return;
+                            }
+                        } else if(cur.checkContent("indiceList")){
+                            // Has to be a variable with array-type
+                            if(idBuffer.getKind().equals("function") || idBuffer.getKind().equals("parameter") || !primitiveArrayIdentifier(idBuffer.getType())){
+                                OutputWriter.semanticErrWriting("ERROR: Unable to indice a non-array variable: " + idBuffer.getName() + " in " + localTable.name);
+                                node.setType("ERR@!");
+                                return;
+                            }
+
+                            // Indice resolution
+                            // Error handling if indice type-check fails
+                            if(cur.getType().equals("ERR@!")){
+                                node.setType("ERR@!");
+                                return;
+                            }
+
+                            // Set type accordingly from the indicing list
+                            typeBuffer = indiceHandling(origin, cur);
+                            if(typeBuffer.equals("ERR@!")){
+                                node.setType("ERR@!");
+                                return;
+                            }
+                        } else {
+                            System.out.println("Unexpected token " + cur.toString() + " in assignOrFuncCall subtree");
+                        }
+                        cur = cur.getRightSib();
+                    }
                 } else {
-                    // Type check for objects
+                    // Type check for object
+                    SymbolTable classTable = null;
+                    SymTabEntry funcOrObj = this.globalTable.containsName(origin.getType());
+                    if(funcOrObj != null){
+                        // This is an object
+                        classTable = funcOrObj.getLink();
+                    } else {
+                        funcOrObj = this.globalTable.containsName(origin.getValue());
+                        if(funcOrObj != null){
+                            // This is a function
+                            classTable = funcOrObj.getLink();
+                        } else {
+                            OutputWriter.semanticErrWriting("Use of undefined variable: " + origin.getValue() + " in " + localTable.name);
+                            node.setType("ERR@!");
+                            return;
+                        }
+                    }
+                    SymTabEntry idBuffer = findVariable(origin.getValue());
+                    String typeBuffer = origin.getType();
+                    while(cur.getRightSib() != null && !cur.checkContent("assign")){
+                        if(cur.checkContent("dot")){
+                            // Skip through dot symbol
+                            if(typeBuffer != null){
+                                // Return type can only be primitive type or an object type
+                                if(typeBuffer.equals("integer") || typeBuffer.equals("float")){
+                                    OutputWriter.semanticErrWriting("Illegal use on primitive type for variable returned by " + idBuffer.getName() + " in " + localTable.name);
+                                    node.setType("ERR@!");
+                                    return;
+                                } else if(objectArrayIdentifier(typeBuffer)){
+                                    OutputWriter.semanticErrWriting("Illegal function/variable call on object: " + origin.getValue() + " in " + localTable.name);
+                                    node.setType("ERR@!");
+                                    return;
+                                } else {
+                                    classTable = this.globalTable.containsName(typeBuffer).getLink();
+                                }
+                            }
+                            idBuffer = null;
+                            cur = cur.getRightSib();
+                            continue;
+                        } else if(cur.checkContent("id")){
+                            SymTabEntry variable = classTable.containsName(cur.getValue());
+                            if(variable == null){
+                                OutputWriter.semanticErrWriting("Illegal function/variable call on object: " + cur.getValue() + " in " + localTable.name);
+                                node.setType("ERR@!");
+                                return;
+                            }
+                            idBuffer = variable;
+                            typeBuffer = variable.getReturnType();
+                        } else if(cur.checkContent("exprList")){
+                            // Check if we are function calling on a variable
+                            if(idBuffer.getKind().equals("variable") || idBuffer.getKind().equals("parameter")){
+                                OutputWriter.semanticErrWriting("ERROR: Unable to function call on a variable name for variable " + idBuffer.getName() + " in " + localTable.name);
+                                node.setType("ERR@!");
+                                return;
+                            }
 
+                            // Get all the types of parameter
+                            String paramTypes = "";
+                            SyntaxTreeNode param = cur.getChild();
+                            while(param != null && !param.isEpsilon()){
+                                SyntaxTreeNode leafNode = param.getChild();
+                                while(leafNode.getChild() != null){
+                                    leafNode = leafNode.getChild();
+                                }
+                                paramTypes += leafNode.getType() + ",";
 
+                                param = param.getRightSib();
+                            }
+                            paramTypes = paramTypes.substring(0, paramTypes.length()-1);
+                            String functionType = typeBuffer + ":" + paramTypes;
+
+                            // Check for param type
+                            SymTabEntry function = classTable.containsFunction(idBuffer.getName(), functionType);
+                            if(function == null){
+                                OutputWriter.semanticErrWriting("ERROR: Function " + idBuffer.getName() + " with type " + functionType + " doesn't exist in " + classTable.name + ", calling from " + localTable.name);
+                                node.setType("ERR@!");
+                                return;
+                            }
+                        } else if(cur.checkContent("indiceList")){
+                            // Has to be a variable with array-type
+                            if(idBuffer.getKind().equals("function") || idBuffer.getKind().equals("parameter") || !primitiveArrayIdentifier(idBuffer.getType())){
+                                OutputWriter.semanticErrWriting("ERROR: Unable to indice a non-array variable: " + idBuffer.getName() + " in " + localTable.name);
+                                node.setType("ERR@!");
+                                return;
+                            }
+
+                            // Indice resolution
+                            // Error handling if indice type-check fails
+                            if(cur.getType().equals("ERR@!")){
+                                node.setType("ERR@!");
+                                return;
+                            }
+
+                            // Set type accordingly from the indicing list
+                            typeBuffer = indiceHandling(origin, cur);
+                            if(typeBuffer.equals("ERR@!")){
+                                node.setType("ERR@!");
+                                return;
+                            }
+                        } else {
+                            System.out.println("Unexpected token " + cur.toString() + " in assignOrFuncCall subtree");
+                        }
+                        cur = cur.getRightSib();
+                    }
                 }
             } else {
                 // Skip if assignOrFuncCall starts with assign operator
@@ -75,12 +314,12 @@ public class TypeAssignVisitor extends Visitor{
             }
             if(node.getChildNum() == 3){
                 // Global function scope
-                localTable = this.globalTable.accessFromGlobal(node.getChild().getValue()).getLink();
+                localTable = this.globalTable.containsName(node.getChild().getValue()).getLink();
             } else {
                 // Member function scope
                 String owner = node.getChild().getValue();
-                SymbolTable classTable = this.globalTable.accessFromGlobal(owner).getLink();
-                localTable = classTable.contains(funcName, node.getTableEntry().getType()).getLink();
+                SymbolTable classTable = this.globalTable.containsName(owner).getLink();
+                localTable = classTable.containsFunction(funcName, node.getTableEntry().getType()).getLink();
             }
         } else if(node.checkContent("id")){
             // Avoid assigning type for id in declaration phase or in idnest function call
@@ -90,58 +329,34 @@ public class TypeAssignVisitor extends Visitor{
             }
             
             String varName = node.getValue();
-            SymTabEntry variable = localTable.accessFromGlobal(varName);
-
-            if(variable != null){
-                // Variable is in local table
-                if(variable.getKind().equals("variable") || variable.getKind().equals("parameter")){
-                    // Variable is a localvar or param
-                    node.setType(variable.getType());
-                } else {
-                    // Variable is a function
-                    node.setType(variable.getReturnType());
-                }
-            } else {
-                // Try to search in outer tables
-                SymbolTable outerTable = localTable.outerTable;
-                while(outerTable != null){
-                    variable = outerTable.accessFromGlobal(varName);
-
-                    if(variable != null){
-                        if(variable.getKind().equals("variable") || variable.getKind().equals("parameter")){
-                            // Variable is a localvar or param
-                            node.setType(variable.getType());
-                        } else {
-                            // Variable is a function
-                            node.setType(variable.getReturnType());
-                        }
-                        break;
-                    } else{
-                        outerTable = outerTable.outerTable;
-                    }
-                }
-
-            }
+            SymTabEntry variable = findVariable(varName);
 
             if(variable == null){
                 OutputWriter.semanticErrWriting("Use of undefined variable! Variable name: " + varName + " in " + localTable.name);
                 node.setType("ERR@!");
+                return;
+            } else {
+                if(variable.getKind().equals("function")){
+                    node.setType(variable.getReturnType());
+                } else if(variable.getKind().equals("variable") || variable.getKind().equals("parameter")){
+                    node.setType(variable.getType());
+                }
+                System.out.println("Variable " + varName + " in " + localTable.name + " has been set to type " + node.getType());
             }
-            System.out.println("Variable " + varName + " in " + localTable.name + " has been set to type " + node.getType());
         } else if(node.checkContent("idnest")){
             // Idnest resolution
-
+            
         }
     }
 
     private String indiceHandling(SyntaxTreeNode origin, SyntaxTreeNode indiceList){
-        int indicingDimension = indiceList.getChildNum();
+        int indicingDimension = indiceList.getChildNum()-1;
         int originDimension = 0;
         String originType = origin.getType();
-        while(originType.indexOf(']') != -1 || originDimension <= indicingDimension){
+        while(originType.indexOf(']') != -1 && originDimension < indicingDimension){
             // Only remove dimension until out of dimension or the dimension matches the indicing
-            originDimension++;
-            originType = originType.substring(0, originType.lastIndexOf('['));
+            ++originDimension;
+            originType = originType.substring(0, originType.indexOf('[')) + originType.substring(originType.indexOf(']')+1, originType.length());
         }
 
         if(originDimension < indicingDimension){
@@ -151,5 +366,48 @@ public class TypeAssignVisitor extends Visitor{
             return originType;
         }
 
+    }
+
+    private boolean primitiveArrayIdentifier(String type){
+        Pattern intArrPattern = Pattern.compile("\\Ainteger(\\[.*\\])+\\Z");
+        Pattern floatArrPattern = Pattern.compile("\\Afloat(\\[.*\\])+\\Z");
+        Matcher matcher1 = intArrPattern.matcher(type);
+        Matcher matcher2 = floatArrPattern.matcher(type);
+        if(matcher1.find() || matcher2.find()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean objectArrayIdentifier(String type){
+        Pattern pattern = Pattern.compile("\\A.*(\\[.*\\])+\\Z");
+        Matcher matcher = pattern.matcher(type);
+        if(matcher.find()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private SymTabEntry findVariable(String name){
+        SymTabEntry variable = localTable.containsName(name);
+
+        if(variable != null){
+            // Variable is in local table
+            return variable;
+        } else {
+            // Try to search in outer tables
+            SymbolTable outerTable = localTable.outerTable;
+            while(outerTable != null){
+                variable = outerTable.containsName(name);
+                if(variable != null){
+                    return variable;
+                }
+                outerTable = outerTable.outerTable;
+            }
+
+        }
+        return variable;
     }
 }
