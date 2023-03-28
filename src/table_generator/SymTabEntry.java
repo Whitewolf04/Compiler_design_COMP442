@@ -39,6 +39,15 @@ public class SymTabEntry {
         return type;
     }
 
+    public String getReturnType(){
+        if(type.indexOf(':') == -1){
+            return type;
+        } else {
+            String returnType = type.substring(0, type.indexOf(':'));
+            return returnType;
+        }
+    }
+
     public SymbolTable getLink(){
         return link;
     }

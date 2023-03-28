@@ -76,7 +76,7 @@ function main() => void
 {
   localvar f1: LINEAR(2, 3.5);
   localvar f2: QUADRATIC(-2.0, 1.0, 0.0);
-  localvar counter: integer;
+  localvar counter: float;
   localvar test: count(2);
 
   counter = 1;	

@@ -1,4 +1,3 @@
-ERROR: Incompatible type void for addition!
-ERROR: Incompatible type ERR@! for addition!
-ERROR: Incompatible type void for addition!
-ERROR: Incompatible type ERR@! for addition!
+ERROR: Function printArray with type void:integer[7],integer doesn't exist in printArray, calling from main
+ERROR: Function bubbleSort with type void:integer[7],integer doesn't exist in bubbleSort, calling from main
+ERROR: Function printArray with type void:integer[7],integer doesn't exist in printArray, calling from main

@@ -1,0 +1,12 @@
+class POLYNOMIAL {
+  public function evaluate: (x: float) => float;
+};
+
+function POLYNOMIAL::evaluate(x: float) => float
+{
+    localvar id1: integer[7][8];
+    localvar id2: integer;
+    id1[0][1] = id1[0];
+    id1[15][x].id(id).id[id] = id(id).id[id][id];
+    return (0);
+}

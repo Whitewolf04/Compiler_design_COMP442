@@ -2,9 +2,12 @@ package table_generator;
 
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SymbolTable {
     private LinkedList<SymTabEntry> table;
+    public SymbolTable outerTable;
     public String name;
 
     public SymbolTable(){
@@ -24,12 +27,13 @@ public class SymbolTable {
         table.add(entry);
     }
 
-    public SymTabEntry contains(String name, String type){
+    public SymTabEntry containsFunction(String name, String type){
+        // For function
         ListIterator<SymTabEntry> i = table.listIterator();
 
         while(i.hasNext()){
             SymTabEntry cur = i.next();
-            if(cur.getName().equals(name) && cur.getType().equals(type)){
+            if(cur.getName().equals(name) && compareFunctionTypes(cur.getType(), type)){
                 return cur;
             }
         }
@@ -54,7 +58,7 @@ public class SymbolTable {
                     continue;
                 }
                 String types = cur.getType().split(":")[1];
-                if(types.equals(paramTypes) && cur.getName().equals(name)){
+                if(compareParamTypes(types, paramTypes) && cur.getName().equals(name)){
                     return cur;
                 }
             }
@@ -62,7 +66,68 @@ public class SymbolTable {
         }
     }
 
-    public SymTabEntry accessFromGlobal(String name){
+    private boolean compareParamTypes(String originTypes, String paramTypes){
+        if(originTypes.equals(paramTypes)){
+            return true;
+        } else {
+            // Might contain array
+            String[] origin = originTypes.split(",");
+            String[] param = paramTypes.split(",");
+            if(origin.length == param.length){
+                for(int i = 0; i < origin.length; i++){
+                    if(arrayIdentifier(origin[i]) && arrayIdentifier(param[i])){
+                        String paramOG = origin[i].replaceAll("\\[[^\\]*]\\]", "[]");
+                        String paramIP = param[i].replaceAll("\\[[^\\]*]\\]", "[]");
+                        return paramOG.equals(paramIP) ? true : false;
+                    } else if(arrayIdentifier(origin[i]) || arrayIdentifier(param[i])){
+                        return false;
+                    } else {
+                        if(origin[i].equals(param[i])){
+                            continue;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    private boolean compareFunctionTypes(String functionType, String inputType){
+        if(functionType.indexOf(':') != -1 && functionType.indexOf(':') != -1){
+            String funcReturnType = functionType.substring(0, functionType.indexOf(':'));
+            String inputReturnType = inputType.substring(0, inputType.indexOf(':'));
+            if(!funcReturnType.equals(inputReturnType)){
+                return false;
+            }
+
+            String funcParamType = functionType.substring(functionType.indexOf(':')+1);
+            String inputParamType = inputType.substring(inputType.indexOf(':')+1);
+            return compareParamTypes(funcParamType, inputParamType);
+        } else if(functionType.indexOf(':') != -1 || functionType.indexOf(':') != -1){
+            return false;
+        } else {
+            return functionType.equals(inputType) ? true : false;
+        }
+    }
+
+    private boolean arrayIdentifier(String type){
+        Pattern pattern = Pattern.compile("\\A.*(\\[.*\\])+\\Z");
+        Matcher matcher = pattern.matcher(type);
+        if(matcher.find()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
+     * Returns the first symbol table entry that is found
+     */
+    public SymTabEntry containsName(String name){
         ListIterator<SymTabEntry> i = table.listIterator();
 
         while(i.hasNext()){
@@ -90,14 +155,14 @@ public class SymbolTable {
                 cur = i.next();
                 continue;
             } else if(cur.getKind().compareTo("function")==0){
-                SymTabEntry duplicate = other.contains(cur.getName(), cur.getType());
+                SymTabEntry duplicate = other.containsFunction(cur.getName(), cur.getType());
                 if(duplicate != null){
                     duplicate.setLink(cur.getLink());
                 } else {
                     other.addEntry(cur);
                 }
             } else if(cur.getKind().compareTo("variable")==0){
-                SymTabEntry duplicate = other.accessFromGlobal(cur.getName());
+                SymTabEntry duplicate = other.containsName(cur.getName());
                 if(duplicate != null){
                     duplicate.setType(cur.getType());
                 } else {
@@ -112,20 +177,20 @@ public class SymbolTable {
     }
 
     public String printTable(){
-        String output = "+----------------------------------------------+\n";
-        output += String.format("| %-30s |%n", this.name);
-        output += "+----------------------------------------------+\n";
+        String output = "+---------------------------------------------------------------------------------------------------------------+\n";
+        output += String.format("| %-109s |%n", this.name);
+        output += "+---------------------------------------------------------------------------------------------------------------+\n";
 
         ListIterator<SymTabEntry> i = table.listIterator();
         while(i.hasNext()){
             SymTabEntry cur = i.next();
             SymbolTable link = cur.getLink();
             if(link == null){
-                output += String.format("| %-6s | %-6s | %-10s | %-8s |%n", cur.getName(), cur.getKind(), cur.getType(), "");
+                output += String.format("| %-15s | %-15s | %-40s | %-30s |%n", cur.getName(), cur.getKind(), cur.getType(), "");
             } else {
-                output += String.format("| %-6s | %-6s | %-10s | %-8s |%n", cur.getName(), cur.getKind(), cur.getType(), cur.getLink().name);
+                output += String.format("| %-15s | %-15s | %-40s | %-30s |%n", cur.getName(), cur.getKind(), cur.getType(), cur.getLink().name);
             }
-            output += "+----------------------------------------------+\n";
+            output += "+---------------------------------------------------------------------------------------------------------------+\n";
         }
 
         return output;
