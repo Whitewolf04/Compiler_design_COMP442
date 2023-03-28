@@ -13,6 +13,7 @@ import lexical_analyzer.OutputWriter;
  *   Any resulting type from idnest will be assigned to the last node of this chain
  * - Type check for idnest (and partly assignOrFuncCall)
  * - Type check for indice
+ * - Param check for idnest calls
  */
 
 public class TypeAssignVisitor extends Visitor{
@@ -266,7 +267,9 @@ public class TypeAssignVisitor extends Visitor{
 
                                 param = param.getRightSib();
                             }
-                            paramTypes = paramTypes.substring(0, paramTypes.length()-1);
+                            if(!paramTypes.isEmpty()){
+                                paramTypes = paramTypes.substring(0, paramTypes.length()-1);
+                            }
                             String functionType = typeBuffer + ":" + paramTypes;
 
                             // Check for param type
@@ -343,9 +346,142 @@ public class TypeAssignVisitor extends Visitor{
                 }
                 System.out.println("Variable " + varName + " in " + localTable.name + " has been set to type " + node.getType());
             }
-        } else if(node.checkContent("idnest")){
+        } else if(node.checkContent("idnestList")){
             // Idnest resolution
-            
+            if(node.getChild().isEpsilon()){
+                return;
+            }
+
+            // Get the origin id
+            SyntaxTreeNode origin = node.getLeftmostSib();
+            if(origin.getType().equals("ERR@!")){
+                node.setType("ERR@!");
+                return;
+            }
+
+            // Check if origin type is compatible for idnest calls
+            String typeBuffer = null;
+            if(origin.getRightSib().checkContent("indiceList")){
+                typeBuffer = indiceHandling(origin, origin.getRightSib());
+            } else {
+                typeBuffer = origin.getType();
+            }
+            if(objectArrayIdentifier(typeBuffer) || typeBuffer.equals("integer") || typeBuffer.equals("float")){
+                OutputWriter.semanticErrWriting("ERROR: Unable to function call on a variable of array/primitive type: " + origin.getValue() + " in " + localTable.name);
+                node.setType("ERR@!");
+                return;
+            }
+
+            // Idnest calls
+            SyntaxTreeNode cur = node.getChild();
+            SymbolTable classTable = null;
+            SymTabEntry funcOrObj = this.globalTable.containsName(typeBuffer);
+            if(funcOrObj != null){
+                // This is an object
+                classTable = funcOrObj.getLink();
+            } else {
+                funcOrObj = this.globalTable.containsName(origin.getValue());
+                if(funcOrObj != null){
+                    // This is a function
+                    classTable = funcOrObj.getLink();
+                } else {
+                    OutputWriter.semanticErrWriting("Use of undefined variable: " + origin.getValue() + " in " + localTable.name);
+                    node.setType("ERR@!");
+                    return;
+                }
+            }
+            while(cur != null && !cur.isEpsilon()){
+                SyntaxTreeNode id = cur.getChild().getRightSib();
+                SyntaxTreeNode indiceOrExpr = id.getRightSib();
+
+                // Check if previous type is compatible for idnest calls
+                if(objectArrayIdentifier(typeBuffer) || typeBuffer.equals("void") || typeBuffer.equals("integer") || typeBuffer.equals("float")){
+                    OutputWriter.semanticErrWriting("ERROR: Unable to function call on variable: " + origin.getValue() + " of type " + typeBuffer + " in " + localTable.name);
+                    node.setType("ERR@!");
+                    return;
+                } else if(typeBuffer.equals("ERR@!")){
+                    // Don't throw double error
+                    node.setType("ERR@!");
+                    return;
+                }
+
+                // Check to see if id is in the class table
+                funcOrObj = classTable.containsName(id.getValue());
+                if(funcOrObj == null){
+                    OutputWriter.semanticErrWriting("Use of undefined variable: " + id.getValue() + " in " + localTable.name);
+                    node.setType("ERR@!");
+                    return;
+                }
+
+                // Check on the kind of variable
+                if(funcOrObj.getKind().equals("variable")){
+                    if(indiceOrExpr.checkContent("exprList")){
+                        OutputWriter.semanticErrWriting("ERROR: Passing parameter to a non-function variable: " + id.getValue() + " in " + localTable.name);
+                        node.setType("ERR@!");
+                        return;
+                    } else {
+                        // indiceOrExpr is indiceList which can contain EPSILON
+                        if(!indiceOrExpr.isEpsilon() && !objectArrayIdentifier(funcOrObj.getType())){
+                            OutputWriter.semanticErrWriting("ERROR: Indicing a non-array variable: " + id.getValue() + " in " + localTable.name);
+                            node.setType("ERR@!");
+                            return;
+                        } else if(!indiceOrExpr.isEpsilon() && objectArrayIdentifier(funcOrObj.getType())){
+                            typeBuffer = indiceHandling(id, indiceOrExpr);
+                        } else {
+                            typeBuffer = id.getType();
+                        }
+                    }
+                } else {
+                    // This is a function
+                    if(indiceOrExpr.checkContent("indiceList")){
+                        OutputWriter.semanticErrWriting("ERROR: Indicing a function: " + id.getValue() + " in " + localTable.name);
+                        node.setType("ERR@!");
+                        return;
+                    } else {
+                        // indiceOrExpr is exprList
+                        // Get all the types of parameter
+                        String paramTypes = "";
+                        SyntaxTreeNode param = indiceOrExpr.getChild();
+                        while(param != null && !param.isEpsilon()){
+                            SyntaxTreeNode leafNode = param.getChild();
+                            while(leafNode.getChild() != null){
+                                leafNode = leafNode.getChild();
+                            }
+                            paramTypes += leafNode.getType() + ",";
+
+                            param = param.getRightSib();
+                        }
+                        if(!paramTypes.isEmpty()){
+                            paramTypes = paramTypes.substring(0, paramTypes.length()-1);
+                        }
+
+                        // Get the correct function from class table (in case of overloading)
+                        funcOrObj = classTable.containsParams(id.getValue(), paramTypes);
+                        if(funcOrObj == null){
+                            OutputWriter.semanticErrWriting("ERROR: There's no function " + id.getValue() + " in " + classTable.name + " with the corresponding params, calling from " + localTable.name);
+                            node.setType("ERR@!");
+                            return;
+                        }
+
+                        // Load return type to type buffer
+                        typeBuffer = funcOrObj.getReturnType();
+                    }
+                }
+
+                // Change the class table
+                funcOrObj = this.globalTable.containsName(typeBuffer);
+                if(funcOrObj != null){
+                    // This is an object
+                    classTable = funcOrObj.getLink();
+                } else if(!cur.getRightSib().isEpsilon()) {
+                    OutputWriter.semanticErrWriting("ERROR: Use of undefined object of type " + typeBuffer + " in " + localTable.name);
+                    node.setType("ERR@!");
+                    return;
+                }
+
+                // Go to the next idnest
+                cur = cur.getRightSib();
+            }
         }
     }
 
