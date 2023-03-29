@@ -208,8 +208,8 @@ public class TypeAssignVisitor extends Visitor{
                     } else {
                         funcOrObj = this.globalTable.containsName(origin.getValue());
                         if(funcOrObj != null){
-                            // This is a function
-                            classTable = funcOrObj.getLink();
+                            // This is a global function
+                            classTable = this.globalTable;
                         } else {
                             OutputWriter.semanticErrWriting("Use of undefined variable: " + origin.getValue() + " in " + localTable.name);
                             node.setType("ERR@!");
