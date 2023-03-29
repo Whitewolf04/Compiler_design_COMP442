@@ -77,7 +77,7 @@ public class TypeAssignVisitor extends Visitor{
                             node.setType("ERR@!");
                             return;
                         } else {
-                            System.out.println("Variable " + origin.getValue() + " in " + localTable.name + " has been set to type " + cur.getType());
+                            // System.out.println("Variable " + origin.getValue() + " in " + localTable.name + " has been set to type " + cur.getType());
                         }
                     }
                 } else if(objectArrayIdentifier(origin.getType())) {
@@ -105,7 +105,7 @@ public class TypeAssignVisitor extends Visitor{
                             node.setType("ERR@!");
                             return;
                         } else {
-                            System.out.println("Variable " + origin.getValue() + " in " + localTable.name + " has been set to type " + cur.getType());
+                            // System.out.println("Variable " + origin.getValue() + " in " + localTable.name + " has been set to type " + cur.getType());
                         }
                     }
 
@@ -344,7 +344,7 @@ public class TypeAssignVisitor extends Visitor{
                 } else if(variable.getKind().equals("variable") || variable.getKind().equals("parameter")){
                     node.setType(variable.getType());
                 }
-                System.out.println("Variable " + varName + " in " + localTable.name + " has been set to type " + node.getType());
+                // System.out.println("Variable " + varName + " in " + localTable.name + " has been set to type " + node.getType());
             }
         } else if(node.checkContent("idnestList")){
             // Idnest resolution

@@ -6,13 +6,16 @@ import AST_generator.Factory;
 import AST_generator.SyntaxTreeNode;
 import lexical_analyzer.OutputWriter;
 
-public class Generator {
+public class SymbolTableGenerator {
+    public static SymbolTable globalTable;
+
     public static void visitTree(){
         TableCreationVisitor visitor = new TableCreationVisitor();
         treeTraversal(Factory.nodeStack.peek(), visitor);
-        printTable(visitor.table);
+        printSymbolTable(visitor.table);
+        globalTable = visitor.table;
         
-        TypeAssignVisitor typeChecker = new TypeAssignVisitor(visitor.table);
+        TypeAssignVisitor typeChecker = new TypeAssignVisitor(globalTable);
         treeTraversal(Factory.nodeStack.peek(), typeChecker);
     }
 
@@ -27,8 +30,8 @@ public class Generator {
         }
     }
 
-    public static void printTable(SymbolTable table){
-        System.out.println(table.printTable());
+    public static void printSymbolTable(SymbolTable table){
+        // System.out.println(table.printTable());
         OutputWriter.semanticOutWriting(table.printTable());
         ListIterator<SymTabEntry> i = table.getTable().listIterator();
 
@@ -36,9 +39,8 @@ public class Generator {
             SymTabEntry cur = i.next();
             if(cur.getName().compareTo("self") == 0){
                 continue;
-            }
-            if(cur.getLink() != null){
-                printTable(cur.getLink());
+            } else if(cur.getLink() != null){
+                printSymbolTable(cur.getLink());
             }
         }
     }

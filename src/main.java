@@ -1,9 +1,10 @@
 import AST_generator.Factory;
+import code_generator.CodeGenerator;
 import lexical_analyzer.LexAnalyzer;
 import lexical_analyzer.OutputWriter;
 import syntax_analyzer.ProgramQueue;
 import syntax_analyzer.SyntaxAnalyzer;
-import table_generator.Generator;
+import table_generator.SymbolTableGenerator;
 
 public class main {
     public static void main(String[] args) {
@@ -17,8 +18,10 @@ public class main {
 
         OutputWriter.openSemanticErrWriting();
         OutputWriter.openSemanticOutWriting();
-        Generator.visitTree();
+        SymbolTableGenerator.visitTree();
         OutputWriter.closeSemanticOutStream();
         OutputWriter.closeSemanticOutStream();
+
+        CodeGenerator.createTable();
     }
 }

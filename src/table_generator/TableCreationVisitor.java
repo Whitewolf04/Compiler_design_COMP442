@@ -63,7 +63,7 @@ public class TableCreationVisitor extends Visitor{
                     if(duplicate != null){
                         duplicate.setLink(cur.getTableEntry().getLink());
                         duplicate.getLink().outerTable = classTable;
-                        OutputWriter.semanticOutWriting("WARNING: Override for function " + cur.getTableEntry().getName() + " in class " + name);
+                        OutputWriter.semanticErrWriting("WARNING: Override for function " + cur.getTableEntry().getName() + " in class " + name);
                     } else {
                         cur.getTableEntry().getLink().outerTable = classTable;
                         classTable.addEntry(cur.getTableEntry());
@@ -72,7 +72,7 @@ public class TableCreationVisitor extends Visitor{
                     SymTabEntry duplicate = classTable.containsName(cur.getTableEntry().getName());
                     if(duplicate != null){
                         duplicate.setType(cur.getTableEntry().getType());
-                        OutputWriter.semanticOutWriting("WARNING: Override for attribute " + cur.getTableEntry().getName() + " in class " + name);
+                        OutputWriter.semanticErrWriting("WARNING: Override for attribute " + cur.getTableEntry().getName() + " in class " + name);
                     } else {
                         classTable.addEntry(cur.getTableEntry());
                     }
@@ -149,7 +149,6 @@ public class TableCreationVisitor extends Visitor{
             }
         } else if(node.checkContent("funcHead")){
             // Get ID and attach to class if this is member fund def
-            System.out.println("funcHead encountered");
             SyntaxTreeNode cur = node.getChild();
             String name = cur.getValue();
             SymbolTable table = null;
