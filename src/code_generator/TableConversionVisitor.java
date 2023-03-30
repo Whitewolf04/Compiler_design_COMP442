@@ -35,15 +35,15 @@ public class TableConversionVisitor {
                 // Allocate size for variables
                 if(cur.getType().equals("integer")){
                     tempSizeCounter += 4;
-                    outputTable.addEntry(new CodeTabEntry(cur, 4, tempSizeCounter*(-1)));
+                    outputTable.addEntry(new CodeTabEntry(cur, 4, tempSizeCounter));
                 } else if(cur.getType().equals("float")){
                     tempSizeCounter += 8;
-                    outputTable.addEntry(new CodeTabEntry(cur, 8, tempSizeCounter*(-1)));
+                    outputTable.addEntry(new CodeTabEntry(cur, 8, tempSizeCounter));
                 } else if(cur.getType().indexOf('[') != -1){
                     // array type, parameter might have no definite size
                     int arraySize = arraySizeCalculator(cur.getType(), outputTable);
                     tempSizeCounter += arraySize;
-                    outputTable.addEntry(new CodeTabEntry(cur, arraySize, tempSizeCounter*(-1)));
+                    outputTable.addEntry(new CodeTabEntry(cur, arraySize, tempSizeCounter));
                 } else {
                     // Object type
                     if(cur.getName().equals("self")){
@@ -51,19 +51,17 @@ public class TableConversionVisitor {
                     } else {
                         int objectSize = findObjectSize(cur.getType(), outputTable);
                         tempSizeCounter += objectSize;
-                        outputTable.addEntry(new CodeTabEntry(cur, objectSize, tempSizeCounter*(-1)));
+                        outputTable.addEntry(new CodeTabEntry(cur, objectSize, tempSizeCounter));
                     }
                 }
             } else if(cur.getKind().equals("function")){
                 // Allocate size for functions
                 CodeGenTable functionTable = convert(cur.getLink(), outputTable);
-                tempSizeCounter += functionTable.scopeSize;
-                outputTable.addEntry(new CodeTabEntry(cur, functionTable.scopeSize, tempSizeCounter*(-1), functionTable));
+                outputTable.addEntry(new CodeTabEntry(cur, functionTable.scopeSize, tempSizeCounter, functionTable));
             } else if(cur.getKind().equals("class")){
                 // Allocate size for classes
                 CodeGenTable classTable = convert(cur.getLink(), outputTable);
-                tempSizeCounter += classTable.scopeSize;
-                outputTable.addEntry(new CodeTabEntry(cur, classTable.scopeSize, tempSizeCounter*(-1), classTable));
+                outputTable.addEntry(new CodeTabEntry(cur, classTable.scopeSize, tempSizeCounter, classTable));
             }
         }
         outputTable.scopeSize = tempSizeCounter;
@@ -72,9 +70,10 @@ public class TableConversionVisitor {
     }
 
     private int arraySizeCalculator(String type, CodeGenTable localTable){
-        Pattern pattern = Pattern.compile("\\A([^\\[]*)(\\[.*\\])\\Z");
+        Pattern pattern = Pattern.compile("\\A([^\\[]*){1}(\\[.*\\])\\Z");
         Matcher matcher = pattern.matcher(type);
 
+        matcher.find();
         String arrayType = matcher.group(1);
         String dimension = matcher.group(2);
         int size = 0;

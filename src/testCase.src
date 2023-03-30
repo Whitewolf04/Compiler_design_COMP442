@@ -1,38 +1,38 @@
 class POLYNOMIAL {
-  public function evaluate: (x: float) => float;
+  public function evaluate: (x: integer) => integer;
 };
 
 class RANDOM isa POLYNOMIAL {
   public function test: () => void;
-  private attribute a: float;
+  private attribute a: integer;
   private attribute a: integer;
 };
 
 class LINEAR isa POLYNOMIAL, RANDOM {
-  private attribute a: float;
-  private attribute b: float;
-  public  constructor: (A: float, B: float);
-  public  function evaluate: (x: float) => float;
+  private attribute a: integer;
+  private attribute b: integer;
+  public  constructor: (A: integer, B: integer);
+  public  function evaluate: (x: integer) => integer;
 };
 
 class QUADRATIC isa POLYNOMIAL {
   private attribute a: integer;
-  private attribute b: float;
-  private attribute c: float;
-  public  constructor: (A: float, B: float, C: float);
-  public  constructor: (A: float);
-  public  function evaluate: (x: float) => float;
+  private attribute b: integer;
+  private attribute c: integer;
+  public  constructor: (A: integer, B: integer, C: integer);
+  public  constructor: (A: integer);
+  public  function evaluate: (x: integer) => integer;
 };
 
 // ====== member function implementations ====== //  
-function POLYNOMIAL::evaluate(x: float) => float
+function POLYNOMIAL::evaluate(x: integer) => integer
 {
   return (0);
 }
 
-function QUADRATIC::evaluate(x: float) => float
+function QUADRATIC::evaluate(x: integer) => integer
 {
-  localvar result: float;
+  localvar result: integer;
   //Using Horner's method
   result = a;
   result = result * x + b;
@@ -40,28 +40,28 @@ function QUADRATIC::evaluate(x: float) => float
   return (result);
 }
 
-function QUADRATIC::constructor(A: float, B: float, C: float)
+function QUADRATIC::constructor(A: integer, B: integer, C: integer)
 {
   self.a = A;
   self.b = B;
   self.c = C;
 }
 
-function QUADRATIC::constructor(A: float)
+function QUADRATIC::constructor(A: integer)
 {
   self.a = A;
 }
 
-function LINEAR::constructor(A: float, B: float) 
+function LINEAR::constructor(A: integer, B: integer) 
 {
   self.a = A[a][b];
   self.b = B;
 }
 
-function LINEAR::evaluate(x: float) => float 
+function LINEAR::evaluate(x: integer) => integer 
 {
-  localvar result: float;
-  result = 0.0;
+  localvar result: integer;
+  result = 0;
   result = a * x + b;
   return (result);
 }
@@ -74,9 +74,9 @@ function count(x: integer) => integer
 // ====== main ====== //
 function main() => void
 {
-  localvar f1: LINEAR(2, 3.5);
-  localvar f2: QUADRATIC(-2.0, 1.0, 0.0);
-  localvar counter: float;
+  localvar f1: LINEAR(2, 3);
+  localvar f2: QUADRATIC(-2, 1, 0);
+  localvar counter: integer;
   localvar test: count(2);
 
   counter = 1;	

@@ -16,6 +16,7 @@ public final class OutputWriter {
     private static BufferedWriter treeWriter;
     private static BufferedWriter semanticOutWriter;
     private static BufferedWriter semanticErrWriter;
+    private static BufferedWriter codeDeclWriter;
     public static int lineCount;
     private static int nextLineCount;
     public static int cmtLineCount;
@@ -68,6 +69,14 @@ public final class OutputWriter {
     public static void openSemanticErrWriting(){
         try{
             semanticErrWriter = new BufferedWriter(new FileWriter("test.outsemanticerrors"));
+        } catch(IOException e){
+            System.out.println("Error opening semantic error file to write");
+        }
+    }
+
+    public static void openCodeDeclGen(){
+        try{
+            codeDeclWriter = new BufferedWriter(new FileWriter("decl.m"));
         } catch(IOException e){
             System.out.println("Error opening semantic error file to write");
         }
@@ -155,6 +164,15 @@ public final class OutputWriter {
         }
     }
 
+    public static void codeDeclGen(String output){
+        try{
+            codeDeclWriter.write(output + "\n");
+            codeDeclWriter.flush();
+        } catch (IOException e){
+            System.out.println("Error writing symbol tables out to file!");
+        }
+    }
+
     public static void closeLexWriteStream(){
         try{
             lexErrWriter.close();
@@ -192,6 +210,14 @@ public final class OutputWriter {
     public static void closeSemanticErrStream(){
         try{
             semanticErrWriter.close();
+        } catch(IOException e){
+            System.out.println("Error closing semantic err writer stream!");
+        }
+    }
+
+    public static void closeCodeDeclGenStream(){
+        try{
+            codeDeclWriter.close();
         } catch(IOException e){
             System.out.println("Error closing semantic err writer stream!");
         }

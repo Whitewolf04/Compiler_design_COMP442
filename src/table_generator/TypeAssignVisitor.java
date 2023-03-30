@@ -14,6 +14,7 @@ import lexical_analyzer.OutputWriter;
  * - Type check for idnest (and partly assignOrFuncCall)
  * - Type check for indice
  * - Param check for idnest calls
+ * - Aggregate type to factor
  */
 
 public class TypeAssignVisitor extends Visitor{
@@ -310,7 +311,69 @@ public class TypeAssignVisitor extends Visitor{
                 // Skip if assignOrFuncCall starts with assign operator
                 return;
             }
-        }else if(node.checkContent("funcHead")){
+        } else if(node.checkContent("factor")){
+            int numChild = node.getChildNum();
+            if(numChild == 1){
+                node.setType(node.getChild().getType());
+            } else if(numChild == 2){
+                node.setType(node.getChild().getRightSib().getType());
+            } else {
+                // factor containing id
+                SyntaxTreeNode id = node.getChild();
+                SyntaxTreeNode indiceOrExpr = id.getRightSib();
+                SyntaxTreeNode idnestList = indiceOrExpr.getRightSib();
+
+                if(!idnestList.getChild().isEpsilon()){
+                    node.setType(idnestList.getType());
+                } else if(!indiceOrExpr.getChild().isEpsilon()){
+                    if(indiceOrExpr.checkContent("indiceList")){
+                        node.setType(indiceHandling(node, indiceOrExpr));
+                    } else {
+                        SymTabEntry functionOrClass = findVariable(id.getValue());
+                        if(functionOrClass == null){
+                            OutputWriter.semanticErrWriting("ERROR: Use of undeclared variable: " + id.getValue() + " in " + localTable.name);
+                            node.setType("ERR@!");
+                            return;
+                        } else if(functionOrClass.getKind().equals("variable") || functionOrClass.getKind().equals("parameter")){
+                            OutputWriter.semanticErrWriting("ERROR: Unable to function call on variable: " + id.getValue() + " in " + localTable.name);
+                            node.setType("ERR@!");
+                            return;
+                        } else if(functionOrClass.getKind().equals("class")){
+                            node.setType(id.getType());
+                        } else {
+                            // Origin is a function call, has to be global function
+                            // Get all param types
+                            String paramTypes = "";
+                            SyntaxTreeNode param = id.getRightSib().getChild();
+                            while(param != null && !param.isEpsilon()){
+                                SyntaxTreeNode leafNode = param.getChild();
+                                while(leafNode.getChild() != null){
+                                    leafNode = leafNode.getChild();
+                                }
+                                paramTypes += leafNode.getType() + ",";
+
+                                param = param.getRightSib();
+                            }
+                            if(!paramTypes.isEmpty()){
+                                paramTypes = paramTypes.substring(0, paramTypes.length()-1);
+                            }
+
+                            // Find the right function
+                            functionOrClass = this.globalTable.containsFunction(id.getValue(), paramTypes);
+                            if(functionOrClass == null){
+                                OutputWriter.semanticErrWriting("ERROR: There is no global function: " + id.getValue() + " that has these parameters: " + paramTypes + ", calling from " + localTable.name);
+                                node.setType("ERR@!");
+                                return;
+                            } else {
+                                node.setType(functionOrClass.getReturnType());
+                            }
+                        }
+                    }
+                } else {
+                    node.setType(id.getType());
+                }
+            }
+        } else if(node.checkContent("funcHead")){
             String funcName = node.getTableEntry().getName();
             if(funcName.indexOf(':') != -1){
                 funcName = funcName.substring(funcName.lastIndexOf(':')+1, funcName.length());
@@ -362,9 +425,53 @@ public class TypeAssignVisitor extends Visitor{
             // Check if origin type is compatible for idnest calls
             String typeBuffer = null;
             if(origin.getRightSib().checkContent("indiceList")){
-                typeBuffer = indiceHandling(origin, origin.getRightSib());
+                if(origin.getRightSib().isEpsilon()){
+                    typeBuffer = origin.getType();
+                } else {
+                    typeBuffer = indiceHandling(origin, origin.getRightSib());
+                }
             } else {
-                typeBuffer = origin.getType();
+                // exprList
+                SymTabEntry functionOrClass = findVariable(origin.getValue());
+                if(functionOrClass == null){
+                    OutputWriter.semanticErrWriting("ERROR: Use of undeclared variable: " + origin.getValue() + " in " + localTable.name);
+                    node.setType("ERR@!");
+                    return;
+                } else if(functionOrClass.getKind().equals("variable") || functionOrClass.getKind().equals("parameter")){
+                    OutputWriter.semanticErrWriting("ERROR: Unable to function call on variable: " + origin.getValue() + " in " + localTable.name);
+                    node.setType("ERR@!");
+                    return;
+                } else if(functionOrClass.getKind().equals("class")){
+                    typeBuffer = origin.getType();
+                } else {
+                    // Origin is a function call, has to be global function
+                    // Get all param types
+                    String paramTypes = "";
+                    SyntaxTreeNode param = origin.getRightSib().getChild();
+                    while(param != null && !param.isEpsilon()){
+                        SyntaxTreeNode leafNode = param.getChild();
+                        while(leafNode.getChild() != null){
+                            leafNode = leafNode.getChild();
+                        }
+                        paramTypes += leafNode.getType() + ",";
+
+                        param = param.getRightSib();
+                    }
+                    if(!paramTypes.isEmpty()){
+                        paramTypes = paramTypes.substring(0, paramTypes.length()-1);
+                    }
+
+                    // Find the right function
+                    functionOrClass = this.globalTable.containsFunction(origin.getValue(), paramTypes);
+                    if(functionOrClass == null){
+                        OutputWriter.semanticErrWriting("ERROR: There is no global function: " + origin.getValue() + " that has these parameters: " + paramTypes + ", calling from " + localTable.name);
+                        node.setType("ERR@!");
+                        return;
+                    } else {
+                        typeBuffer = functionOrClass.getReturnType();
+                    }
+                }
+                
             }
             if(objectArrayIdentifier(typeBuffer) || typeBuffer.equals("integer") || typeBuffer.equals("float")){
                 OutputWriter.semanticErrWriting("ERROR: Unable to function call on a variable of array/primitive type: " + origin.getValue() + " in " + localTable.name);
@@ -482,6 +589,8 @@ public class TypeAssignVisitor extends Visitor{
                 // Go to the next idnest
                 cur = cur.getRightSib();
             }
+
+            node.setType(typeBuffer);
         }
     }
 

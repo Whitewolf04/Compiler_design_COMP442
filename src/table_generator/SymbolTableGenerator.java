@@ -15,8 +15,12 @@ public class SymbolTableGenerator {
         printSymbolTable(visitor.table);
         globalTable = visitor.table;
         
-        TypeAssignVisitor typeChecker = new TypeAssignVisitor(globalTable);
+        TypeAssignVisitor typeAssigner = new TypeAssignVisitor(globalTable);
+        treeTraversal(Factory.nodeStack.peek(), typeAssigner);
+
+        TypeCheckingVisitor typeChecker = new TypeCheckingVisitor(globalTable);
         treeTraversal(Factory.nodeStack.peek(), typeChecker);
+        System.out.println("Done type checking!");
     }
 
     public static void treeTraversal(SyntaxTreeNode node, Visitor visitor){

@@ -35,4 +35,16 @@ public class CodeTabEntry {
         this.offset = offset;
         this.link = link;
     }
+
+    public CodeTabEntry(String name, String kind, String type, int size, int offset){
+        this.name = name;
+        this.kind = kind;
+        this.type = type;
+        this.size = size;
+        this.offset = offset;
+    }
+
+    public int getOffset(){
+        return offset*(-1);
+    }
 }

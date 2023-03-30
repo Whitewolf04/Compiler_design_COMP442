@@ -2,7 +2,11 @@ package code_generator;
 
 import java.util.ListIterator;
 
+import AST_generator.Factory;
+import AST_generator.SyntaxTreeNode;
+import lexical_analyzer.OutputWriter;
 import table_generator.SymbolTableGenerator;
+import table_generator.Visitor;
 
 public class CodeGenerator {
     public static CodeGenTable globalTable;
@@ -10,7 +14,17 @@ public class CodeGenerator {
     public static void createTable(){
         TableConversionVisitor tableConverter = new TableConversionVisitor(SymbolTableGenerator.globalTable);
         tableConverter.convertSymbolTable();
+        globalTable = tableConverter.codeTable;
+
+        TempVarVisitor tempVarVisitor = new TempVarVisitor(globalTable);
+        treeTraversal(Factory.nodeStack.peek(), tempVarVisitor);
+
         printCodeGenTable(tableConverter.codeTable);
+
+        OutputWriter.openCodeDeclGen();
+        CodeGenerationVisitor1 codeGen1 = new CodeGenerationVisitor1(globalTable);
+        treeTraversal(Factory.nodeStack.peek(), codeGen1);
+        OutputWriter.closeCodeDeclGenStream();
     }
     
     public static void printCodeGenTable(CodeGenTable table){
@@ -25,6 +39,17 @@ public class CodeGenerator {
             if(cur.link != null){
                 printCodeGenTable(cur.link);
             }
+        }
+    }
+
+    public static void treeTraversal(SyntaxTreeNode node, Visitor visitor){
+        if(node.getChild() != null){
+            treeTraversal(node.getChild(), visitor);
+        }
+        // System.out.println(node.toTree() + "\n");
+        visitor.visit(node);
+        if(node.getRightSib() != null){
+            treeTraversal(node.getRightSib(), visitor);
         }
     }
 }

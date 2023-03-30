@@ -1,2 +1,8 @@
-WARNING: Override for attribute a in class RANDOM
-WARNING: Override for attribute a in class LINEAR
+Indicing dimension out of bounds for variable null in POLYNOMIAL::evaluate
+Use of undefined variable! Variable name: id in POLYNOMIAL::evaluate
+Use of undefined variable! Variable name: id in POLYNOMIAL::evaluate
+Use of undefined variable! Variable name: id in POLYNOMIAL::evaluate
+Use of undefined variable! Variable name: id in POLYNOMIAL::evaluate
+Use of undefined variable! Variable name: id in POLYNOMIAL::evaluate
+Use of undefined variable! Variable name: id in POLYNOMIAL::evaluate
+Illegal use on primitive type for variable id1 in POLYNOMIAL::evaluate
