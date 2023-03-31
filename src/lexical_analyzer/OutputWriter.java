@@ -77,6 +77,21 @@ public final class OutputWriter {
     public static void openCodeDeclGen(){
         try{
             codeDeclWriter = new BufferedWriter(new FileWriter("decl.m"));
+            codeDeclWriter.write("% Convention:\n");
+            codeDeclWriter.write("%\tr14 is used for stack pointer\n");
+            codeDeclWriter.write("%\tr13 is used for frame pointer");
+            codeDeclWriter.write("\n\n% Utils:\n");
+            codeDeclWriter.write("% Write an int to stdout.\n");
+            codeDeclWriter.write("% Entry: -4(r10) -> int/float argument\n");
+            codeDeclWriter.write("putint\tlw r1,-8(r10)\n");
+            codeDeclWriter.write("\t\taddi r2,r0,0\n");
+            codeDeclWriter.write("putint1\tlb r2,0(r1)\n");
+            codeDeclWriter.write("\t\tceqi r3,r2,0\n");
+            codeDeclWriter.write("\t\tbnz r3,putint2\n");
+            codeDeclWriter.write("\t\tputc r2\n");
+            codeDeclWriter.write("\t\taddi r1,r1,1\n");
+            codeDeclWriter.write("\t\tj putint1\n");
+            codeDeclWriter.write("putint2\tjr r15\n");
         } catch(IOException e){
             System.out.println("Error opening semantic error file to write");
         }

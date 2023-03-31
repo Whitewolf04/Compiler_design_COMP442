@@ -31,19 +31,21 @@ public class TableConversionVisitor {
             SymTabEntry cur = i.next();
             
             // Check for the type of symbol table entry to allocate the right size
-            if(cur.getKind().equals("variable")){
-                // Allocate size for variables
+            if(cur.getKind().equals("variable") || cur.getKind().equals("parameter")){
+                // Allocate size for variables and parameters
                 if(cur.getType().equals("integer")){
                     tempSizeCounter += 4;
                     outputTable.addEntry(new CodeTabEntry(cur, 4, tempSizeCounter));
                 } else if(cur.getType().equals("float")){
                     tempSizeCounter += 8;
                     outputTable.addEntry(new CodeTabEntry(cur, 8, tempSizeCounter));
-                } else if(cur.getType().indexOf('[') != -1){
+                } else if(cur.getType().indexOf('[') != -1 && cur.getKind().equals("variable")){
                     // array type, parameter might have no definite size
                     int arraySize = arraySizeCalculator(cur.getType(), outputTable);
                     tempSizeCounter += arraySize;
                     outputTable.addEntry(new CodeTabEntry(cur, arraySize, tempSizeCounter));
+                } else if(cur.getType().indexOf('[') != -1){
+                    //TODO: Handling for array-type parameter
                 } else {
                     // Object type
                     if(cur.getName().equals("self")){

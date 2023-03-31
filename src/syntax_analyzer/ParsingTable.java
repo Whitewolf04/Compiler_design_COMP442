@@ -81,7 +81,7 @@ public final class ParsingTable {
         START.tableEntry.put("class", new Stack<GrammarToken>(){{push(prog); push(Terminal.START);}});
 
         aParams.tableEntry.put("id", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "expr", "EPSILON"));}});
-        aParams.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
+        aParams.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON")); push(new SubTreeFactory("exprList", 1));}});
         aParams.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "expr", "EPSILON"));}});
         aParams.tableEntry.put("minus", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "expr", "EPSILON"));}});
         aParams.tableEntry.put("plus", new Stack<GrammarToken>(){{push(expr); push(reptAParams1); push(new SubTreeFactory("exprList", "expr", "EPSILON"));}});

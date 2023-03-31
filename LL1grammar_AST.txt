@@ -1,7 +1,7 @@
 <START> ::= <prog> 'eof' 
 
 <aParams> ::= <expr> <reptAParams1> makeFamily(exprList, expr, untilEPSILON)
-<aParams> ::= EPSILON makeNode(EPSILON)
+<aParams> ::= EPSILON makeNode(EPSILON) makeFamily(expr, EPSILON)
 
 <aParamsTail> ::= 'comma' <expr> 
 

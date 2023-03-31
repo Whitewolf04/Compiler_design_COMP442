@@ -1,0 +1,13 @@
+function main() => void {
+    localvar x: integer;
+    localvar y: integer;
+    localvar z: integer;
+
+    x = 1;
+    y = 2;
+    z = x + y * x * x + y * 2;
+    z = func() * 1;
+    z = x / y * z;
+    write(z);
+    write(x);
+}
