@@ -2,6 +2,7 @@ package code_generator;
 
 import java.util.ListIterator;
 
+
 import AST_generator.SyntaxTreeNode;
 import lexical_analyzer.OutputWriter;
 import table_generator.Visitor;
@@ -64,5 +65,18 @@ public class CodeGenerationVisitor1 extends Visitor{
         }
         OutputWriter.codeDeclGen("\n");
         
+    }
+
+    private void plusWriter(SyntaxTreeNode LHS, SyntaxTreeNode RHS){
+
+    }
+
+    private void multWriter(SyntaxTreeNode LHS, SyntaxTreeNode RHS){
+        // Check if LHS has a literal number
+        if(LHS.getChildNum() == 1){
+            // Use tempvar to store the number
+            CodeTabEntry tempvar = localTable.litval.poll();
+            LHS.setValue(tempvar.name);
+        }
     }
 }
