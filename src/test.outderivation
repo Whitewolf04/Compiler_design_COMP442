@@ -64,6 +64,9 @@ type id id
 arraySize2 reptFParams3 SubTreeFactory:arraySizeList SubTreeFactory:fParams reptFParams4 SubTreeFactory:fParamsList rpar arrow returnType SubTreeFactory:funcHead funcBody SubTreeFactory:funcDef reptProg0 $ 
 type id id 
 
+intLit NodeFactory:intLit rsqbr reptFParams3 SubTreeFactory:arraySizeList SubTreeFactory:fParams reptFParams4 SubTreeFactory:fParamsList rpar arrow returnType SubTreeFactory:funcHead funcBody SubTreeFactory:funcDef reptProg0 $ 
+type id id 
+
 NodeFactory:intLit rsqbr reptFParams3 SubTreeFactory:arraySizeList SubTreeFactory:fParams reptFParams4 SubTreeFactory:fParamsList rpar arrow returnType SubTreeFactory:funcHead funcBody SubTreeFactory:funcDef reptProg0 $ 
 type id id 
 
@@ -2996,6 +2999,9 @@ lsqbr arraySize2 reptFParams3 SubTreeFactory:arraySizeList SubTreeFactory:fParam
 type id id funcDef 
 
 arraySize2 reptFParams3 SubTreeFactory:arraySizeList SubTreeFactory:fParams reptFParams4 SubTreeFactory:fParamsList rpar arrow returnType SubTreeFactory:funcHead funcBody SubTreeFactory:funcDef reptProg0 $ 
+type id id funcDef 
+
+intLit NodeFactory:intLit rsqbr reptFParams3 SubTreeFactory:arraySizeList SubTreeFactory:fParams reptFParams4 SubTreeFactory:fParamsList rpar arrow returnType SubTreeFactory:funcHead funcBody SubTreeFactory:funcDef reptProg0 $ 
 type id id funcDef 
 
 NodeFactory:intLit rsqbr reptFParams3 SubTreeFactory:arraySizeList SubTreeFactory:fParams reptFParams4 SubTreeFactory:fParamsList rpar arrow returnType SubTreeFactory:funcHead funcBody SubTreeFactory:funcDef reptProg0 $ 

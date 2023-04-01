@@ -13,12 +13,14 @@ public class CodeGenTable {
     LinkedList<CodeTabEntry> litval;
     LinkedList<CodeTabEntry> tempvar;
     LinkedList<CodeTabEntry> statementList;
+    LinkedList<CodeTabEntry> tempArrVar;
 
     public CodeGenTable(){
         table = new LinkedList<CodeTabEntry>();
         litval = new LinkedList<CodeTabEntry>();
         tempvar = new LinkedList<CodeTabEntry>();
         statementList = new LinkedList<CodeTabEntry>();
+        tempArrVar = new LinkedList<CodeTabEntry>();
         scopeSize = 0;
     }
 

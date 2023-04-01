@@ -2,12 +2,14 @@ function main() => void {
     localvar x: integer;
     localvar y: integer;
     localvar z: integer;
+    localvar arr: integer[7];
 
     x = 1;
     y = 2;
     z = x + y * x * x + y * 2;
     z = func() * 1;
     z = x / y * z;
+    arr[1] = z;
     write(z);
     write(x);
 }

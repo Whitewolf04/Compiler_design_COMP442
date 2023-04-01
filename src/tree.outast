@@ -8,8 +8,8 @@ graph G {
 {rank=same;id1_arr;type3;}	type3 -- fParams7;
 	type3 -- integer2;
 {rank=same;type3;arraySizeList6;}	arraySizeList6 -- fParams7;
-	arraySizeList6 -- intLit4;
-{rank=same;intLit4;EPSILON5;}	EPSILON5 -- arraySizeList6;
+	arraySizeList6 -- intLit4_7;
+{rank=same;intLit4_7;EPSILON5;}	EPSILON5 -- arraySizeList6;
 {rank=same;fParams7;fParams13;}	fParams13 -- fParamsList15;
 	fParams13 -- id8_size;
 {rank=same;id8_size;type10;}	type10 -- fParams13;
@@ -402,8 +402,8 @@ graph G {
 {rank=same;id395_arr;type397;}	type397 -- fParams401;
 	type397 -- integer396;
 {rank=same;type397;arraySizeList400;}	arraySizeList400 -- fParams401;
-	arraySizeList400 -- intLit398;
-{rank=same;intLit398;EPSILON399;}	EPSILON399 -- arraySizeList400;
+	arraySizeList400 -- intLit398_7;
+{rank=same;intLit398_7;EPSILON399;}	EPSILON399 -- arraySizeList400;
 {rank=same;fParams401;fParams407;}	fParams407 -- fParamsList409;
 	fParams407 -- id402_size;
 {rank=same;id402_size;type404;}	type404 -- fParams407;

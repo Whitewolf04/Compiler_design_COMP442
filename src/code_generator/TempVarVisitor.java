@@ -21,13 +21,13 @@ public class TempVarVisitor extends Visitor{
             int numChild = node.getChildNum();
             if(numChild == 1){
                 if(node.getChild().getType().equals("integer")){
-                    localTable.scopeSize += 4;
                     CodeTabEntry newEntry = new CodeTabEntry("t"+tempVarID++, "litval", "integer", 4, localTable.scopeSize);
+                    localTable.scopeSize += 4;
                     localTable.addEntry(newEntry);
                     localTable.litval.add(newEntry);
                 } else if(node.getChild().getType().equals("float")) {
-                    localTable.scopeSize += 8;
                     CodeTabEntry newEntry = new CodeTabEntry("t"+tempVarID++, "litval", "float", 8, localTable.scopeSize);
+                    localTable.scopeSize += 8;
                     localTable.addEntry(newEntry);
                     localTable.litval.add(newEntry);
                 } else {
@@ -51,10 +51,26 @@ public class TempVarVisitor extends Visitor{
                     size = findObjectSize(factor.getType(), localTable);
                     type = factor.getType();
                 }
-                localTable.scopeSize += size;
                 CodeTabEntry newEntry = new CodeTabEntry("t"+tempVarID++, "tempvar", type, size, localTable.scopeSize);
+                localTable.scopeSize += size;
                 localTable.addEntry(newEntry);
                 localTable.tempvar.add(newEntry);
+            } else {
+                // Factor might contain idnest
+                SyntaxTreeNode id = node.getChild();
+                SyntaxTreeNode indiceOrExpr = id.getRightSib();
+                SyntaxTreeNode idnestList = indiceOrExpr.getRightSib();
+
+                if(indiceOrExpr.checkContent("indiceList") && idnestList.getChild().isEpsilon()){
+                    if(indiceOrExpr.getChild().isEpsilon()){
+                        return;
+                    } else {
+                        CodeTabEntry newEntry = new CodeTabEntry("t"+tempVarID++, "tempArrVar", "integer", 4, localTable.scopeSize);
+                        localTable.scopeSize += 4;
+                        localTable.addEntry(newEntry);
+                        localTable.tempArrVar.add(newEntry);
+                    }
+                }
             }
         } else if(node.checkContent("funcHead")){
             String funcName = node.getTableEntry().getName();
@@ -90,8 +106,8 @@ public class TempVarVisitor extends Visitor{
                     if(cur.checkContent("factor") && cur.getType().equals("ERR@!")){
                         return;
                     } else if(cur.checkContent("multOp")){
-                        localTable.scopeSize += size;
                         CodeTabEntry newEntry = new CodeTabEntry("t"+tempVarID++, "tempvar", type, size, localTable.scopeSize);
+                        localTable.scopeSize += size;
                         localTable.addEntry(newEntry);
                         localTable.tempvar.add(newEntry);
                     }
@@ -117,8 +133,8 @@ public class TempVarVisitor extends Visitor{
                     if(cur.checkContent("term") && cur.getType().equals("ERR@!")){
                         return;
                     } else if(cur.checkContent("plus") || cur.checkContent("minus") || cur.checkContent("or")){
-                        localTable.scopeSize += size;
                         CodeTabEntry newEntry = new CodeTabEntry("t"+tempVarID++, "tempvar", type, size, localTable.scopeSize);
+                        localTable.scopeSize += size;
                         localTable.addEntry(newEntry);
                         localTable.tempvar.add(newEntry);
                     }

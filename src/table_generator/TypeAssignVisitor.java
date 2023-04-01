@@ -327,7 +327,7 @@ public class TypeAssignVisitor extends Visitor{
                     node.setType(idnestList.getType());
                 } else if(!indiceOrExpr.getChild().isEpsilon()){
                     if(indiceOrExpr.checkContent("indiceList")){
-                        node.setType(indiceHandling(node, indiceOrExpr));
+                        node.setType(indiceHandling(id, indiceOrExpr));
                     } else {
                         SymTabEntry functionOrClass = findVariable(id.getValue());
                         if(functionOrClass == null){

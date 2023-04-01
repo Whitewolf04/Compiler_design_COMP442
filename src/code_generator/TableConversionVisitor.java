@@ -34,26 +34,33 @@ public class TableConversionVisitor {
             if(cur.getKind().equals("variable") || cur.getKind().equals("parameter")){
                 // Allocate size for variables and parameters
                 if(cur.getType().equals("integer")){
-                    tempSizeCounter += 4;
                     outputTable.addEntry(new CodeTabEntry(cur, 4, tempSizeCounter));
+                    tempSizeCounter += 4;
                 } else if(cur.getType().equals("float")){
-                    tempSizeCounter += 8;
                     outputTable.addEntry(new CodeTabEntry(cur, 8, tempSizeCounter));
+                    tempSizeCounter += 8;
                 } else if(cur.getType().indexOf('[') != -1 && cur.getKind().equals("variable")){
                     // array type, parameter might have no definite size
                     int arraySize = arraySizeCalculator(cur.getType(), outputTable);
-                    tempSizeCounter += arraySize;
                     outputTable.addEntry(new CodeTabEntry(cur, arraySize, tempSizeCounter));
+                    tempSizeCounter += arraySize;
                 } else if(cur.getType().indexOf('[') != -1){
-                    //TODO: Handling for array-type parameter
+                    int arraySize = arraySizeCalculator(cur.getType(), outputTable);
+                    if(arraySize == -1){
+                        // Skip through array-type parameter that has no definite size
+                        continue;
+                    } else {
+                        outputTable.addEntry(new CodeTabEntry(cur, arraySize, tempSizeCounter));
+                        tempSizeCounter += arraySize;
+                    }
                 } else {
                     // Object type
                     if(cur.getName().equals("self")){
                         outputTable.addEntry(new CodeTabEntry(cur));
                     } else {
                         int objectSize = findObjectSize(cur.getType(), outputTable);
-                        tempSizeCounter += objectSize;
                         outputTable.addEntry(new CodeTabEntry(cur, objectSize, tempSizeCounter));
+                        tempSizeCounter += objectSize;
                     }
                 }
             } else if(cur.getKind().equals("function")){
@@ -92,8 +99,12 @@ public class TableConversionVisitor {
         }
         while(dimension.indexOf('[') != -1){
             String dimensionSize = dimension.substring(dimension.lastIndexOf('[')+1, dimension.lastIndexOf(']'));
-            size *= Integer.parseInt(dimensionSize);
-            dimension = dimension.substring(0, dimension.lastIndexOf('['));
+            if(dimensionSize.isEmpty()){
+                return -1;
+            } else {
+                size *= Integer.parseInt(dimensionSize);
+                dimension = dimension.substring(0, dimension.lastIndexOf('['));
+            }
         }
 
         return size;
