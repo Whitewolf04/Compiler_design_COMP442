@@ -72,6 +72,9 @@ public class TempVarVisitor extends Visitor{
                     }
                 }
             }
+        } else if(node.checkContent("funcDef")){
+            localTable.addEntry(new CodeTabEntry("link", "link", "integer", 4, localTable.scopeSize));
+            localTable.scopeSize += 4;
         } else if(node.checkContent("funcHead")){
             String funcName = node.getTableEntry().getName();
             if(funcName.indexOf(':') != -1){

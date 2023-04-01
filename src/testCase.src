@@ -54,7 +54,7 @@ function QUADRATIC::constructor(A: integer)
 
 function LINEAR::constructor(A: integer, B: integer) 
 {
-  self.a = A[a][b];
+  self.a = A;
   self.b = B;
 }
 

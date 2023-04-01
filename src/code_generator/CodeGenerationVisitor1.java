@@ -1,5 +1,6 @@
 package code_generator;
 
+import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -82,6 +83,8 @@ public class CodeGenerationVisitor1 extends Visitor{
                 // TODO: Idnest calls
 
             }
+        } else if(node.checkContent("classDecl")){
+            OutputWriter.codeDeclGen(localTable.name + "\tres " + localTable.scopeSize);
         } else if(node.checkContent("else")){
             String statementName = statementStack.peek();
             OutputWriter.codeDeclGen("\tj " + statementName + "ENDIF");
@@ -173,8 +176,9 @@ public class CodeGenerationVisitor1 extends Visitor{
                     }
                 }
             }
+        } else if(node.checkContent("funcDef")){
+            OutputWriter.codeDeclGen(localTable.name + "\tres " + localTable.scopeSize);
         } else if(node.checkContent("funcHead")){
-            // Visitor is at a funcDef
             String funcName = node.getTableEntry().getName();
             if(funcName.indexOf(':') != -1){
                 funcName = funcName.substring(funcName.lastIndexOf(':')+1, funcName.length());
@@ -188,7 +192,17 @@ public class CodeGenerationVisitor1 extends Visitor{
                 CodeGenTable classTable = this.globalTable.containsName(owner).link;
                 localTable = classTable.containsFunction(funcName, node.getTableEntry().getType()).link;
             }
-            tableVisitor(localTable);
+
+            if(localTable.scopeSize == 0){
+                return;
+            } else {
+                OutputWriter.codeDeclGen("\n");
+                OutputWriter.codeDeclGen("% Start of function/class " + localTable.name);
+                OutputWriter.codeDeclGen("\taddi r14, r0, topaddr\t% initialize the stack pointer");
+                OutputWriter.codeDeclGen("\taddi r13, r0, topaddr\t% initialize the frame pointer");
+                OutputWriter.codeDeclGen("\tsubi r14, r14, " + localTable.scopeSize + "\t% set the stack pointer to the top position of the stack");
+            }
+            funcDeclWriter();
         } else if(node.checkContent("if")){
             String statementName = "s"+statementCount++;
             localTable.statementList.add(new CodeTabEntry(statementName, "ifStat", "void", 0, 0));
@@ -200,7 +214,11 @@ public class CodeGenerationVisitor1 extends Visitor{
             // Visitor is at a classDecl
             String className = node.getLeftmostSib().getValue();
             localTable = this.globalTable.containsName(className).link;
-            tableVisitor(localTable);
+            OutputWriter.codeDeclGen("\n");
+            OutputWriter.codeDeclGen("% Start of function/class " + localTable.name);
+            OutputWriter.codeDeclGen("\taddi r14, r0, topaddr\t% initialize the stack pointer");
+            OutputWriter.codeDeclGen("\taddi r13, r0, topaddr\t% initialize the frame pointer");
+            OutputWriter.codeDeclGen("\tsubi r14, r14, " + localTable.scopeSize + "\t% set the stack pointer to the top position of the stack");
         } else if(node.checkContent("relExpr")){
             SyntaxTreeNode LHS = node.getChild();
             SyntaxTreeNode relOp = LHS.getRightSib();
@@ -220,6 +238,25 @@ public class CodeGenerationVisitor1 extends Visitor{
             OutputWriter.codeDeclGen("\tbz r11," + statementName + "ENDWHILE");
             OutputWriter.codeDeclGen(statementName + "STARTWHILE\taddi r0,r0,0");
             node.setValue(statementName + "STARTWHILE");
+        } else if(node.checkContent("statement")){
+            SyntaxTreeNode statementType = node.getChild();
+
+            if(statementType.checkContent("write")){
+                SyntaxTreeNode expr = statementType.getRightSib();
+
+            if(expr.getType() == null || expr.getType().equals("ERR@!")){
+                // Skip through unknown or error types
+                return;
+            } else {
+                if(expr.getType().equals("integer")){
+                    writeIntWriter(expr);
+                } else if(expr.getType().equals("float")){
+                    writeFloatWriter(expr);
+                } else {
+                    //TODO: Writer for objects
+                }
+            }
+            }
         } else if(node.checkContent("term")){
             if(node.getChildNum() > 2){
                 SyntaxTreeNode cur = node.getChild();
@@ -296,59 +333,20 @@ public class CodeGenerationVisitor1 extends Visitor{
             OutputWriter.codeDeclGen("% While statement");
             OutputWriter.codeDeclGen(statementName + "WHILE\taddi r11,r0,0");
             node.setValue(statementName+"WHILE");
-        } else if(node.checkContent("write")){
-            SyntaxTreeNode expr = node.getRightSib();
-
-            if(expr.getType() == null || expr.getType().equals("ERR@!")){
-                // Skip through unknown or error types
-                return;
-            } else {
-                if(expr.getType().equals("integer")){
-                    writeIntWriter(expr);
-                } else if(expr.getType().equals("float")){
-                    writeFloatWriter(expr);
-                } else {
-                    //TODO: Writer for objects
-                }
-            }
         }
     }
 
-    private void tableVisitor(CodeGenTable table){
-        // Reserve a memory amount for the whole class/function
-        if(table.scopeSize == 0){
-            return;
-        } else {
-            OutputWriter.codeDeclGen("\n");
-            OutputWriter.codeDeclGen("% Start of function/class " + table.name);
-            OutputWriter.codeDeclGen("\taddi r14, r0, topaddr\t% initialize the stack pointer");
-            OutputWriter.codeDeclGen("\taddi r13, r0, topaddr\t% initialize the frame pointer");
-            OutputWriter.codeDeclGen("\tsubi r14, r14, " + table.scopeSize + "\t% set the stack pointer to the top position of the stack");
-            OutputWriter.codeDeclGen(table.name + "\tres " + table.scopeSize);
-        }
+    private void funcDeclWriter(){
+        // Save the link to this function
+        CodeTabEntry link = findVariable("link");
+        OutputWriter.codeDeclGen("\tsw " + link.getOffset() + "(r13),r15\t% Put link onto stack frame");
 
-        // Declare all member variables
-        ListIterator<CodeTabEntry> i = table.getTable().listIterator();
-
-        while(i.hasNext()){
-            CodeTabEntry cur = i.next();
-            
-            // Only declare variables
-            if(cur.kind.equals("variable") || cur.kind.equals("parameter")){
-                if(cur.size == 0){
-                    continue;
-                } else {
-                    OutputWriter.codeDeclGen(nameConverter(localTable.name) + cur.name + "\tres " + cur.size);
-                }
-            } else if(cur.kind.equals("tempvar") || cur.kind.equals("litval") || cur.kind.equals("tempArrVar")){
-                if(cur.size == 0){
-                    continue;
-                } else {
-                    OutputWriter.codeDeclGen(cur.name + "\tres " + cur.size);
-                }
-            }
+        LinkedList<CodeTabEntry> parameterList = localTable.parameterList;
+        int counter = 1;
+        while(!parameterList.isEmpty()){
+            CodeTabEntry parameter = parameterList.poll();
+            OutputWriter.codeDeclGen("\tsw " + parameter.getOffset() + "(r13),r" + counter++ + "\t% Storing parameter " + parameter.name + " into stack frame");
         }
-        
     }
 
     private void plusWriter(SyntaxTreeNode LHS, SyntaxTreeNode RHS){

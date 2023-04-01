@@ -14,6 +14,7 @@ public class CodeGenTable {
     LinkedList<CodeTabEntry> tempvar;
     LinkedList<CodeTabEntry> statementList;
     LinkedList<CodeTabEntry> tempArrVar;
+    LinkedList<CodeTabEntry> parameterList;
 
     public CodeGenTable(){
         table = new LinkedList<CodeTabEntry>();
@@ -21,6 +22,7 @@ public class CodeGenTable {
         tempvar = new LinkedList<CodeTabEntry>();
         statementList = new LinkedList<CodeTabEntry>();
         tempArrVar = new LinkedList<CodeTabEntry>();
+        parameterList = new LinkedList<CodeTabEntry>();
         scopeSize = 0;
     }
 

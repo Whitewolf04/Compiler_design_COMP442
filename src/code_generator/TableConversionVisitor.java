@@ -39,20 +39,11 @@ public class TableConversionVisitor {
                 } else if(cur.getType().equals("float")){
                     outputTable.addEntry(new CodeTabEntry(cur, 8, tempSizeCounter));
                     tempSizeCounter += 8;
-                } else if(cur.getType().indexOf('[') != -1 && cur.getKind().equals("variable")){
+                } else if(cur.getType().indexOf('[') != -1){
                     // array type, parameter might have no definite size
                     int arraySize = arraySizeCalculator(cur.getType(), outputTable);
                     outputTable.addEntry(new CodeTabEntry(cur, arraySize, tempSizeCounter));
                     tempSizeCounter += arraySize;
-                } else if(cur.getType().indexOf('[') != -1){
-                    int arraySize = arraySizeCalculator(cur.getType(), outputTable);
-                    if(arraySize == -1){
-                        // Skip through array-type parameter that has no definite size
-                        continue;
-                    } else {
-                        outputTable.addEntry(new CodeTabEntry(cur, arraySize, tempSizeCounter));
-                        tempSizeCounter += arraySize;
-                    }
                 } else {
                     // Object type
                     if(cur.getName().equals("self")){
@@ -63,9 +54,58 @@ public class TableConversionVisitor {
                         tempSizeCounter += objectSize;
                     }
                 }
+            } else if(cur.getKind().equals("parameter")){
+                CodeTabEntry newEntry = null;
+                if(cur.getType().equals("integer")){
+                    newEntry = new CodeTabEntry(cur, 4, tempSizeCounter);
+                    outputTable.addEntry(newEntry);
+                    outputTable.parameterList.add(newEntry);
+                    tempSizeCounter += 4;
+                } else if(cur.getType().equals("float")){
+                    newEntry = new CodeTabEntry(cur, 8, tempSizeCounter);
+                    outputTable.addEntry(newEntry);
+                    outputTable.parameterList.add(newEntry);
+                    tempSizeCounter += 8;
+                } else if(cur.getType().indexOf('[') != -1){
+                    int arraySize = arraySizeCalculator(cur.getType(), outputTable);
+                    if(arraySize == -1){
+                        // Skip through array-type parameter that has no definite size
+                        continue;
+                    } else {
+                        newEntry = new CodeTabEntry(cur, arraySize, tempSizeCounter);
+                        outputTable.addEntry(newEntry);
+                        outputTable.parameterList.add(newEntry);
+                        tempSizeCounter += arraySize;
+                    }
+                } else {
+                    // Object type
+                    int objectSize = findObjectSize(cur.getType(), outputTable);
+                    newEntry = new CodeTabEntry(cur, objectSize, tempSizeCounter);
+                    outputTable.addEntry(newEntry);
+                    outputTable.parameterList.add(newEntry);
+                    tempSizeCounter += objectSize;
+                }
             } else if(cur.getKind().equals("function")){
                 // Allocate size for functions
                 CodeGenTable functionTable = convert(cur.getLink(), outputTable);
+
+                // Add return value to function table
+                String returnType = cur.getReturnType();
+                if(returnType.equals("integer")){
+                    functionTable.addEntry(new CodeTabEntry("return", "retVal", returnType, 4, functionTable.scopeSize));
+                    functionTable.scopeSize += 4;
+                } else if(returnType.equals("float")){
+                    functionTable.addEntry(new CodeTabEntry("return", "retVal", returnType, 8, functionTable.scopeSize));
+                    functionTable.scopeSize += 8;
+                } else if(returnType.equals("void")){
+                    // Skip through void
+                } else {
+                    int returnSize = findObjectSize(returnType, functionTable);
+                    functionTable.addEntry(new CodeTabEntry("return", "retVal", returnType, returnSize, functionTable.scopeSize));
+                    functionTable.scopeSize += returnSize;
+                }
+
+                // Add this entry to the output table
                 outputTable.addEntry(new CodeTabEntry(cur, functionTable.scopeSize, tempSizeCounter, functionTable));
             } else if(cur.getKind().equals("class")){
                 // Allocate size for classes
