@@ -68,6 +68,8 @@ t17	res 4
 % Assigning t2 to temp
 	lw r1,-32(r13)
 	sw -20(r13),r1
+% While statement
+s0WHILE	addi r11,r0,0
 % Storing 1 into t3
 	addi r1, r0, 0
 	addi r1, r0, 1
@@ -77,6 +79,14 @@ t17	res 4
 	lw r2,-36(r13)
 	sub r3,r1,r2
 	sw -40(r13),r3	% Store result into t4
+	lw r1,-12(r13)
+	lw r2,-40(r13)
+	sub r3,r1,r2
+	clti r11,r3,0
+	bz r11,s0ENDWHILE
+s0STARTWHILE	addi r0,r0,0
+% While statement
+s1WHILE	addi r11,r0,0
 % Storing 1 into t5
 	addi r1, r0, 0
 	addi r1, r0, 1
@@ -91,6 +101,14 @@ t17	res 4
 	lw r2,-44(r13)
 	sub r3,r1,r2
 	sw -52(r13),r3	% Store result into t7
+	lw r1,-16(r13)
+	lw r2,-52(r13)
+	sub r3,r1,r2
+	clti r11,r3,0
+	bz r11,s1ENDWHILE
+s1STARTWHILE	addi r0,r0,0
+% If statement
+s2IF	addi r0,r0,0
 % Storing 1 into t8
 	addi r1, r0, 0
 	addi r1, r0, 1
@@ -100,6 +118,9 @@ t17	res 4
 	lw r2,-56(r13)
 	add r3,r1,r2
 	sw -60(r13),r3	% Store result into t9
+	bnz r11,s2THEN
+	j s2ELSE
+s2THEN	align
 % Assigning null to temp
 	lw r1,99999999(r13)
 	sw -20(r13),r1
@@ -121,6 +142,9 @@ t17	res 4
 	lw r2,-72(r13)
 	add r3,r1,r2
 	sw -76(r13),r3	% Store result into t13
+	j s2ENDIF
+s2ELSE	addi r0,r0,0
+s2ENDIF	addi r0,r0,0
 % Storing 1 into t14
 	addi r1, r0, 0
 	addi r1, r0, 1
@@ -133,6 +157,8 @@ t17	res 4
 % Assigning t15 to j
 	lw r1,-84(r13)
 	sw -16(r13),r1
+	j s1WHILE
+s1ENDWHILE	addi r0,r0,0
 % Storing 1 into t16
 	addi r1, r0, 0
 	addi r1, r0, 1
@@ -145,6 +171,8 @@ t17	res 4
 % Assigning t17 to i
 	lw r1,-92(r13)
 	sw -12(r13),r1
+	j s0WHILE
+s0ENDWHILE	addi r0,r0,0
 
 
 % Start of function/class printArray
@@ -168,6 +196,14 @@ t20	res 4
 % Assigning t18 to i
 	lw r1,-16(r13)
 	sw -12(r13),r1
+% While statement
+s3WHILE	addi r11,r0,0
+	lw r1,-12(r13)
+	lw r2,-8(r13)
+	sub r3,r1,r2
+	clti r11,r3,0
+	bz r11,s3ENDWHILE
+s3STARTWHILE	addi r0,r0,0
 % Storing 1 into t19
 	addi r1, r0, 0
 	addi r1, r0, 1
@@ -180,6 +216,8 @@ t20	res 4
 % Assigning t20 to i
 	lw r1,-24(r13)
 	sw -12(r13),r1
+	j s3WHILE
+s3ENDWHILE	addi r0,r0,0
 
 
 % Start of function/class main

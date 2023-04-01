@@ -154,11 +154,11 @@
 <statBlock> ::= EPSILON makeFamily(statBlock, EPSILON)
 
 <statement> ::= 'id' makeNode(id) <statementIdnest> makeFamily(assignOrFuncCall, exclude[id], untilEPSILONorExpr) 'semi' makeFamily(statement, id, assignOrFuncCall) 
-<statement> ::= 'if' makeNode(if) 'lpar' <relExpr> 'rpar' 'then' <statBlock> 'else' <statBlock> 'semi' makeFamily(ifStat, if, relExpr, then, statBlock, else, statBlock)
-<statement> ::= 'while' makeNode(while) 'lpar' <relExpr> 'rpar' <statBlock> 'semi' makeFamily(whileStat, while, relExpr, statBlock)
-<statement> ::= 'read' makeNode(read) 'lpar' <variable> 'rpar' 'semi' makeFamily(readStat, read, variable)
-<statement> ::= 'write' makeNode(write) 'lpar' <expr> 'rpar' 'semi' makeFamily(writeStat, write, expr)
-<statement> ::= 'return' makeNode(return) 'lpar' <expr> 'rpar' 'semi' makeFamily(returnStat, return, expr)
+<statement> ::= 'if' makeNode(if) 'lpar' <relExpr> 'rpar' 'then' <statBlock> 'else' <statBlock> 'semi' makeFamily(statement, if, relExpr, then, statBlock, else, statBlock)
+<statement> ::= 'while' makeNode(while) 'lpar' <relExpr> 'rpar' makeNode(startWhile) <statBlock> makeNode(endWhile) 'semi' makeFamily(statement, while, relExpr, startWhile, statBlock, endWhile)
+<statement> ::= 'read' makeNode(read) 'lpar' <variable> 'rpar' 'semi' makeFamily(statement, read, variable)
+<statement> ::= 'write' makeNode(write) 'lpar' <expr> 'rpar' 'semi' makeFamily(statement, write, expr)
+<statement> ::= 'return' makeNode(return) 'lpar' <expr> 'rpar' 'semi' makeFamily(statement, return, expr)
 
 <statementIdnest2> ::= EPSILON makeNode(EPSILON)
 <statementIdnest2> ::= 'dot' makeNode(dot) 'id' makeNode(id) <statementIdnest> 

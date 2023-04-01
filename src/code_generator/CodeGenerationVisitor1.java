@@ -1,6 +1,7 @@
 package code_generator;
 
 import java.util.ListIterator;
+import java.util.Stack;
 
 import AST_generator.SyntaxTreeNode;
 import lexical_analyzer.OutputWriter;
@@ -9,9 +10,12 @@ import table_generator.Visitor;
 public class CodeGenerationVisitor1 extends Visitor{
     private CodeGenTable globalTable;
     private CodeGenTable localTable;
+    int statementCount = 0;
+    Stack<String> statementStack;
 
     public CodeGenerationVisitor1(CodeGenTable table){
         this.globalTable = table;
+        statementStack = new Stack<String>();
     }
 
     public void visit(SyntaxTreeNode node){
@@ -26,7 +30,21 @@ public class CodeGenerationVisitor1 extends Visitor{
             } else {
                 // TODO: idnest call
             }
-        }if(node.checkContent("expr")){
+        } else if(node.checkContent("else")){
+            String statementName = statementStack.peek();
+            OutputWriter.codeDeclGen("\tj " + statementName + "ENDIF");
+            OutputWriter.codeDeclGen(statementName + "ELSE\taddi r0,r0,0");
+            node.setValue(statementName + "ELSE");
+        } else if(node.checkContent("endIf")){
+            String statementName = statementStack.pop();
+            OutputWriter.codeDeclGen(statementName + "ENDIF\taddi r0,r0,0");
+            node.setValue(statementName + "ENDIF");
+        } else if(node.checkContent("endWhile")){
+            String statementName = statementStack.pop();
+            OutputWriter.codeDeclGen("\tj " + statementName + "WHILE");
+            OutputWriter.codeDeclGen(statementName + "ENDWHILE\taddi r0,r0,0");
+            node.setValue(statementName + "ENDWHILE");
+        } else if(node.checkContent("expr")){
             SyntaxTreeNode termList = node.getChild();
             SyntaxTreeNode expr2 = termList.getRightSib();
 
@@ -87,11 +105,37 @@ public class CodeGenerationVisitor1 extends Visitor{
                 localTable = classTable.containsFunction(funcName, node.getTableEntry().getType()).link;
             }
             tableVisitor(localTable);
+        } else if(node.checkContent("if")){
+            String statementName = "s"+statementCount++;
+            localTable.statementList.add(new CodeTabEntry(statementName, "ifStat", "void", 0, 0));
+            statementStack.push(statementName);
+            OutputWriter.codeDeclGen("% If statement");
+            OutputWriter.codeDeclGen(statementName + "IF\taddi r0,r0,0");
+            node.setValue(statementName + "IF");
         } else if(node.checkContent("inheritList")){
             // Visitor is at a classDecl
             String className = node.getLeftmostSib().getValue();
             localTable = this.globalTable.containsName(className).link;
             tableVisitor(localTable);
+        } else if(node.checkContent("relExpr")){
+            SyntaxTreeNode LHS = node.getChild();
+            SyntaxTreeNode relOp = LHS.getRightSib();
+            SyntaxTreeNode RHS = relOp.getRightSib();
+
+            if(LHS.getType().equals("integer")){
+                // Comparison for integer type
+                writeIntComparison(LHS, relOp, RHS);
+            } else if(LHS.getType().equals("float")){
+                // Comparison for float type
+            } else {
+                // Comparison for incompatible types
+                return;
+            }
+        } else if(node.checkContent("startWhile")){
+            String statementName = statementStack.peek();
+            OutputWriter.codeDeclGen("\tbz r11," + statementName + "ENDWHILE");
+            OutputWriter.codeDeclGen(statementName + "STARTWHILE\taddi r0,r0,0");
+            node.setValue(statementName + "STARTWHILE");
         } else if(node.checkContent("term")){
             if(node.getChildNum() > 2){
                 SyntaxTreeNode cur = node.getChild();
@@ -155,8 +199,21 @@ public class CodeGenerationVisitor1 extends Visitor{
                 node.setValue(node.getChild().getValue());
                 node.setOffset(node.getChild().getOffset());
             }
-        } else if(node.checkContent("writeStat")){
-            SyntaxTreeNode expr = node.getChild().getRightSib();
+        } else if(node.checkContent("then")){
+            String statementName = statementStack.peek();
+            OutputWriter.codeDeclGen("\tbnz r11," + statementName + "THEN");
+            OutputWriter.codeDeclGen("\tj " + statementName + "ELSE");
+            OutputWriter.codeDeclGen(statementName + "THEN\talign");
+            node.setValue(statementName + "THEN");
+        } else if(node.checkContent("while")){
+            String statementName = "s" + statementCount++;
+            localTable.statementList.add(new CodeTabEntry(statementName, "whileStat", "void", 0, 0));
+            statementStack.push(statementName);
+            OutputWriter.codeDeclGen("% While statement");
+            OutputWriter.codeDeclGen(statementName + "WHILE\taddi r11,r0,0");
+            node.setValue(statementName+"WHILE");
+        } else if(node.checkContent("write")){
+            SyntaxTreeNode expr = node.getRightSib();
 
             if(expr.getType() == null || expr.getType().equals("ERR@!")){
                 // Skip through unknown or error types
@@ -285,6 +342,26 @@ public class CodeGenerationVisitor1 extends Visitor{
 
     private void writeFloatWriter(SyntaxTreeNode expr){
 
+    }
+
+    private void writeIntComparison(SyntaxTreeNode LHS, SyntaxTreeNode relOp, SyntaxTreeNode RHS){
+        OutputWriter.codeDeclGen("\tlw r1," + LHS.getOffset() + "(r13)");
+        OutputWriter.codeDeclGen("\tlw r2," + RHS.getOffset() + "(r13)");
+        OutputWriter.codeDeclGen("\tsub r3,r1,r2");
+
+        if(relOp.checkContent("eq")){
+            OutputWriter.codeDeclGen("\tceqi r11,r3,0");
+        } else if(relOp.checkContent("noteq")){
+            OutputWriter.codeDeclGen("\tcnei r11,r3,0");
+        } else if(relOp.checkContent("gt")){
+            OutputWriter.codeDeclGen("\tcgti r11,r3,0");
+        } else if(relOp.checkContent("lt")){
+            OutputWriter.codeDeclGen("\tclti r11,r3,0");
+        } else if(relOp.checkContent("geq")){
+            OutputWriter.codeDeclGen("\tcgei r11,r3,0");
+        } else {
+            OutputWriter.codeDeclGen("\tclei r11,r3,0");
+        }
     }
 
     private CodeTabEntry findVariable(String name){
