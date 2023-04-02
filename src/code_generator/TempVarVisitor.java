@@ -135,7 +135,7 @@ public class TempVarVisitor extends Visitor{
                 while(cur != null && !cur.isEpsilon()){
                     if(cur.checkContent("term") && cur.getType().equals("ERR@!")){
                         return;
-                    } else if(cur.checkContent("plus") || cur.checkContent("minus") || cur.checkContent("or")){
+                    } else if(cur.checkContent("addOp")){
                         CodeTabEntry newEntry = new CodeTabEntry("t"+tempVarID++, "tempvar", type, size, localTable.scopeSize);
                         localTable.scopeSize += size;
                         localTable.addEntry(newEntry);

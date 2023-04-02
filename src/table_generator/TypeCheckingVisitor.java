@@ -180,7 +180,7 @@ public class TypeCheckingVisitor extends Visitor {
             } else {
                 String type = cur.getType();
                 while(cur != null && !cur.isEpsilon()){
-                    if(cur.checkContent("plus") || cur.checkContent("minus") || cur.checkContent("or")){
+                    if(cur.checkContent("addOp")){
                         cur = cur.getRightSib();
                         continue;
                     } else if(cur.checkContent("term")){

@@ -17,21 +17,32 @@ public class TableConversionVisitor {
     }
 
     public void convertSymbolTable(){
-        codeTable = convert(globalTable, null);
+        codeTable = convert(globalTable, null, null);
     }
 
-    private CodeGenTable convert(SymbolTable table, CodeGenTable upperTable){
+    private CodeGenTable convert(SymbolTable table, CodeGenTable upperTable, String isFunction){
         int tempSizeCounter = 0;
         ListIterator<SymTabEntry> i = table.getTable().listIterator();
         CodeGenTable outputTable = new CodeGenTable();
         outputTable.outerTable = upperTable;
         outputTable.name = table.name;
 
+        if(isFunction != null){
+            if(!isFunction.equals("void")){
+                int returnSize = convertSize(isFunction, outputTable);
+
+                outputTable.addEntry(new CodeTabEntry("return", "retVal", isFunction, returnSize, tempSizeCounter));
+                tempSizeCounter += returnSize;
+            } else {
+                // Skip through void
+            }
+        }
+
         while(i.hasNext()){
             SymTabEntry cur = i.next();
             
             // Check for the type of symbol table entry to allocate the right size
-            if(cur.getKind().equals("variable") || cur.getKind().equals("parameter")){
+            if(cur.getKind().equals("variable")){
                 // Allocate size for variables and parameters
                 if(cur.getType().equals("integer")){
                     outputTable.addEntry(new CodeTabEntry(cur, 4, tempSizeCounter));
@@ -87,29 +98,14 @@ public class TableConversionVisitor {
                 }
             } else if(cur.getKind().equals("function")){
                 // Allocate size for functions
-                CodeGenTable functionTable = convert(cur.getLink(), outputTable);
-
-                // Add return value to function table
                 String returnType = cur.getReturnType();
-                if(returnType.equals("integer")){
-                    functionTable.addEntry(new CodeTabEntry("return", "retVal", returnType, 4, functionTable.scopeSize));
-                    functionTable.scopeSize += 4;
-                } else if(returnType.equals("float")){
-                    functionTable.addEntry(new CodeTabEntry("return", "retVal", returnType, 8, functionTable.scopeSize));
-                    functionTable.scopeSize += 8;
-                } else if(returnType.equals("void")){
-                    // Skip through void
-                } else {
-                    int returnSize = findObjectSize(returnType, functionTable);
-                    functionTable.addEntry(new CodeTabEntry("return", "retVal", returnType, returnSize, functionTable.scopeSize));
-                    functionTable.scopeSize += returnSize;
-                }
+                CodeGenTable functionTable = convert(cur.getLink(), outputTable, returnType);
 
                 // Add this entry to the output table
                 outputTable.addEntry(new CodeTabEntry(cur, functionTable.scopeSize, tempSizeCounter, functionTable));
             } else if(cur.getKind().equals("class")){
                 // Allocate size for classes
-                CodeGenTable classTable = convert(cur.getLink(), outputTable);
+                CodeGenTable classTable = convert(cur.getLink(), outputTable, null);
                 outputTable.addEntry(new CodeTabEntry(cur, classTable.scopeSize, tempSizeCounter, classTable));
             }
         }
@@ -159,5 +155,16 @@ public class TableConversionVisitor {
         }
 
         return temp.size;
+    }
+
+    private int convertSize(String type, CodeGenTable localTable){
+        if(type.equals("integer")){
+            return 4;
+        } else if(type.equals("float")){
+            return 8;
+        } else {
+            // Handle type for object
+            return findObjectSize(type, localTable);
+        }
     }
 }

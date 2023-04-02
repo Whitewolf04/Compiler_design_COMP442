@@ -2293,77 +2293,80 @@ term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDec
 addOp term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
-plus NodeFactory:plus term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+plus NodeFactory:plus SubTreeFactory:addOp term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
-NodeFactory:plus term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+NodeFactory:plus SubTreeFactory:addOp term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+
+SubTreeFactory:addOp term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 id NodeFactory:id factor2 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:id factor2 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 factor2 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 reptIdnest1 SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 EPSILON NodeFactory:EPSILON SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:EPSILON SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON id plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+EPSILON id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-indiceList id plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+indiceList id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 EPSILON NodeFactory:EPSILON SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-indiceList id plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+indiceList id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:EPSILON SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-indiceList id plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+indiceList id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON indiceList id plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+EPSILON indiceList id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-idnestList indiceList id plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+idnestList indiceList id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-factor plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+factor addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 EPSILON NodeFactory:EPSILON SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-factor plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+factor addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:EPSILON SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-factor plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+factor addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON factor plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+EPSILON factor addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-term plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+term addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 EPSILON NodeFactory:EPSILON SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-term plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+term addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:EPSILON SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-term plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+term addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON term plus term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+EPSILON term addOp term assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 termList assign id localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
@@ -2548,77 +2551,80 @@ term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef cla
 addOp term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
-plus NodeFactory:plus term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+plus NodeFactory:plus SubTreeFactory:addOp term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
-NodeFactory:plus term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+NodeFactory:plus SubTreeFactory:addOp term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+
+SubTreeFactory:addOp term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 id NodeFactory:id factor2 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:id factor2 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 factor2 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+id addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 reptIdnest1 SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+id addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 EPSILON NodeFactory:EPSILON SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+id addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:EPSILON SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+id addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON id plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+EPSILON id addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-indiceList id plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+indiceList id addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 EPSILON NodeFactory:EPSILON SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-indiceList id plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+indiceList id addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:EPSILON SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-indiceList id plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+indiceList id addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON indiceList id plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+EPSILON indiceList id addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-idnestList indiceList id plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+idnestList indiceList id addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-factor plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+factor addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 EPSILON NodeFactory:EPSILON SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-factor plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+factor addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:EPSILON SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-factor plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+factor addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON factor plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+EPSILON factor addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-term plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+term addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 EPSILON NodeFactory:EPSILON SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-term plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+term addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:EPSILON SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-term plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+term addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON term plus term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
+EPSILON term addOp term assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
 
 expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 termList assign id localVarOrStat localVarOrStat localVarOrStat funcHead funcDef classDecl classDecl classDecl classDecl 
@@ -4537,77 +4543,80 @@ term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef fu
 addOp term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
-plus NodeFactory:plus term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+plus NodeFactory:plus SubTreeFactory:addOp term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
-NodeFactory:plus term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+NodeFactory:plus SubTreeFactory:addOp term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+
+SubTreeFactory:addOp term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 id NodeFactory:id factor2 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:id factor2 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 factor2 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 reptIdnest1 SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 EPSILON NodeFactory:EPSILON SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:EPSILON SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON id plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+EPSILON id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-indiceList id plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+indiceList id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 EPSILON NodeFactory:EPSILON SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-indiceList id plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+indiceList id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:EPSILON SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-indiceList id plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+indiceList id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON indiceList id plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+EPSILON indiceList id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-idnestList indiceList id plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+idnestList indiceList id addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-factor plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+factor addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 EPSILON NodeFactory:EPSILON SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-factor plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+factor addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:EPSILON SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-factor plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+factor addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON factor plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+EPSILON factor addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-term plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+term addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 EPSILON NodeFactory:EPSILON SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-term plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+term addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 NodeFactory:EPSILON SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-term plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+term addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON term plus term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
+EPSILON term addOp term assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 
 
 expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 termList assign id localVarOrStat localVarOrStat funcHead funcDef funcDef funcDef funcDef funcDef classDecl classDecl classDecl classDecl 

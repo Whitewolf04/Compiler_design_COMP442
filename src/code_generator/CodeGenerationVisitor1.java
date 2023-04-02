@@ -37,48 +37,27 @@ public class CodeGenerationVisitor1 extends Visitor{
                 SyntaxTreeNode expr = cur.getRightSib();
                 assignWriter(origin.getValue(), originEntry.getOffset(), expr);
             } else if(cur.checkContent("indiceList") && cur.getRightSib().checkContent("assign")){
-                // Get type size of origin
-                int size = arrayTypeSize(originEntry.type);
-                if(size == -1){
-                    return;
-                }
-
-                // Calculate array offset
-                OutputWriter.codeDeclGen("% Offsetting array " + originEntry.name);
-                Stack<Integer> indexUnpack = indiceHandling(origin.getType());
                 SyntaxTreeNode expr = cur.getRightSib().getRightSib();
+                arrayIndiceWriter(cur, originEntry);
 
-                if(indexUnpack == null){
-                    // Skip unresolved array indicing
-                    OutputWriter.codeDeclGen("% Offsetting fail for array " + originEntry.name);
-                    return;
-                } else {
-                    // Go through each indice
-                    SyntaxTreeNode indice = cur.getChild();
-
-                    if(indice.isEpsilon()){
-                        return;
-                    }
-
-                    // Store the base address offset into register 9
-                    OutputWriter.codeDeclGen("\tsubi r9,r0," + originEntry.getOffset());
-                    while(indice != null && !indice.isEpsilon()){
-                        OutputWriter.codeDeclGen("\tlw r1," + indice.getChild().getOffset() + "(r13)\t% Loading index " + indice.getChild().getValue());
-                        OutputWriter.codeDeclGen(("\tmuli r2,r1," + indexUnpack.pop() + "\t% Multiply with number of columns"));
-                        OutputWriter.codeDeclGen("\tmuli r2,r2," + size + "\t% Multiply with array type");
-                        OutputWriter.codeDeclGen("\tadd r9,r9,r2");
-
-                        indice = indice.getRightSib();
-                    }
-                    // Convert back to negative offset
-                    OutputWriter.codeDeclGen("\tsub r9,r0,r9");
-                    
-
-                    // Assign this array index to the new value
-                    OutputWriter.codeDeclGen("% Storing " + expr.getValue() + " into " + originEntry.name);
-                    OutputWriter.codeDeclGen("\tlw r1," + expr.getOffset() + "(r13)");
-                    OutputWriter.codeDeclGen("\tsw r9(r13),r1");
+                // Assign this array index to the new value
+                OutputWriter.codeDeclGen("% Storing " + expr.getValue() + " into " + originEntry.name);
+                OutputWriter.codeDeclGen("\tlw r1," + expr.getOffset() + "(r13)");
+                OutputWriter.codeDeclGen("\tsw r9(r13),r1");
+                
+            } else if(cur.checkContent("exprList") && cur.getRightSib().isEpsilon()) {
+                // Must be a global function
+                int funcSize = originEntry.link.scopeSize;
+                
+                SyntaxTreeNode expr = cur.getChild();
+                int counter = 1;
+                while(expr != null && !expr.isEpsilon()){
+                    OutputWriter.codeDeclGen("\tlw r" + counter++ + "," + expr.getOffset() + "(r13)\t% Load parameter " + expr.getValue());
+                    expr = expr.getRightSib();
                 }
+                OutputWriter.codeDeclGen("jl r15," + originEntry.name);
+                OutputWriter.codeDeclGen("addi r13,r13," + funcSize);
+                OutputWriter.codeDeclGen("addi r14,r14," + funcSize);
             } else {
                 // TODO: Idnest calls
 
@@ -136,26 +115,7 @@ public class CodeGenerationVisitor1 extends Visitor{
                 } else {
                     if(idnestList.getChild().isEpsilon()){
                         if(indiceOrExpr.checkContent("indiceList")){
-                            Stack<Integer> indexUnpack = indiceHandling(id.getType());
-                            int arrayTypeSize = arrayTypeSize(id.getType());
-
-                            if(indexUnpack == null){
-                                // SKip through unresolved array
-                                return;
-                            }
-
-                            // Go through indice list
-                            SyntaxTreeNode indice = indiceOrExpr.getChild();
-                            OutputWriter.codeDeclGen("% Getting array element from array " + id.getValue());
-                            OutputWriter.codeDeclGen("\taddi r9,r0,0");
-                            while(indice != null && !indice.isEpsilon()){
-                                OutputWriter.codeDeclGen("\tlw r1," + indice.getChild().getOffset() + "(r13)\t% Loading index " + indice.getChild().getValue());
-                                OutputWriter.codeDeclGen(("\tmuli r2,r1," + indexUnpack.pop() + "\t% Multiply with number of columns"));
-                                OutputWriter.codeDeclGen("\tmuli r2,r2," + arrayTypeSize + "\t% Multiply with array type");
-                                OutputWriter.codeDeclGen("\tadd r9,r9,r2");
-
-                                indice = indice.getRightSib();
-                            }
+                            arrayIndiceWriter(indiceOrExpr, idEntry);
                             
                             // Store the offset in a temp variable
                             CodeTabEntry tempArrVar = localTable.tempArrVar.pop();
@@ -177,7 +137,20 @@ public class CodeGenerationVisitor1 extends Visitor{
                 }
             }
         } else if(node.checkContent("funcDef")){
+            CodeTabEntry link = findVariable("link");
+
+            OutputWriter.codeDeclGen("\tlw r15," + link.getOffset() + "(r13)");
+            OutputWriter.codeDeclGen("\tjr r15\t% Jump back to the calling function");
             OutputWriter.codeDeclGen(localTable.name + "\tres " + localTable.scopeSize);
+
+            ListIterator<CodeTabEntry> i = localTable.getTable().listIterator();
+            while(i.hasNext()){
+                CodeTabEntry cur = i.next();
+
+                if(cur.kind.equals("tempvar") || cur.kind.equals("tempArrVar")){
+                    OutputWriter.codeDeclGen(cur.name + "\tres " + cur.size);
+                }
+            }
         } else if(node.checkContent("funcHead")){
             String funcName = node.getTableEntry().getName();
             if(funcName.indexOf(':') != -1){
@@ -198,6 +171,12 @@ public class CodeGenerationVisitor1 extends Visitor{
             } else {
                 OutputWriter.codeDeclGen("\n");
                 OutputWriter.codeDeclGen("% Start of function/class " + localTable.name);
+
+                // Add the entry point for main function
+                if(funcName.equals("main")){
+                    OutputWriter.codeDeclGen("\tentry");
+                    OutputWriter.codeDeclGen("\talign");
+                }
                 OutputWriter.codeDeclGen("\taddi r14, r0, topaddr\t% initialize the stack pointer");
                 OutputWriter.codeDeclGen("\taddi r13, r0, topaddr\t% initialize the frame pointer");
                 OutputWriter.codeDeclGen("\tsubi r14, r14, " + localTable.scopeSize + "\t% set the stack pointer to the top position of the stack");
@@ -244,18 +223,28 @@ public class CodeGenerationVisitor1 extends Visitor{
             if(statementType.checkContent("write")){
                 SyntaxTreeNode expr = statementType.getRightSib();
 
-            if(expr.getType() == null || expr.getType().equals("ERR@!")){
-                // Skip through unknown or error types
-                return;
-            } else {
-                if(expr.getType().equals("integer")){
-                    writeIntWriter(expr);
-                } else if(expr.getType().equals("float")){
-                    writeFloatWriter(expr);
+                if(expr.getType() == null || expr.getType().equals("ERR@!")){
+                    // Skip through unknown or error types
+                    return;
                 } else {
-                    //TODO: Writer for objects
+                    if(expr.getType().equals("integer")){
+                        writeIntWriter(expr);
+                    } else if(expr.getType().equals("float")){
+                        writeFloatWriter(expr);
+                    } else {
+                        //TODO: Writer for objects
+                    }
                 }
-            }
+            } else if(statementType.checkContent("return")){
+                SyntaxTreeNode expr = statementType.getRightSib();
+
+                if(expr.getType() == null || expr.getType().equals("ERR@!")){
+                    // Skip through unknown or error types
+                    return;
+                } else {
+                    OutputWriter.codeDeclGen("\tlw r1," + expr.getOffset() + "(r13)\t% Get the return value " + expr.getValue());
+                    OutputWriter.codeDeclGen("\tsw 0(r13),r1");
+                }
             }
         } else if(node.checkContent("term")){
             if(node.getChildNum() > 2){
@@ -291,29 +280,23 @@ public class CodeGenerationVisitor1 extends Visitor{
                 SyntaxTreeNode prev = cur;
 
                 while(cur != null){
-                    boolean unresolved = false;
-                    if(cur.checkContent("plus")){
+                    if(cur.checkContent("addOp")){
                         if(prev.getValue() == null || cur.getRightSib().getValue() == null){
-                            // Skip through if term is not resolved
-                            unresolved = true;
+                            // Skip through if factor is not resolved
+                        } else if(cur.getChild().checkContent("plus")){
+                            plusWriter(prev, cur.getRightSib());
+                        } else if(cur.getChild().checkContent("minus")){
+                            minusWriter(prev, cur.getRightSib());
                         }
-                        plusWriter(prev, cur.getRightSib());
-                    } else if(cur.checkContent("minus")){
-                        if(prev.getValue() == null || cur.getRightSib().getValue() == null){
-                            // Skip through if term is not resolved
-                            unresolved = true;
-                        }
-                        minusWriter(prev, cur.getRightSib());
                     }
                     prev = cur;
                     cur = cur.getRightSib();
-                    if(cur.isEpsilon() && !unresolved){
+                    if(cur.isEpsilon()){
                         // Store the final result of the calculation
                         node.setValue(prev.getValue());
                         node.setOffset(prev.getOffset());
                         break;
                     }
-                    unresolved = false;
                 }
             } else {
                 // There's only one term
@@ -499,6 +482,55 @@ public class CodeGenerationVisitor1 extends Visitor{
         }
     }
 
+    private void arrayIndiceWriter(SyntaxTreeNode indiceList, CodeTabEntry id){
+        OutputWriter.codeDeclGen("% Offsetting array " + id.name);
+        
+        // Get type size
+        int size = arrayTypeSize(id.type);
+        if(size == -1){
+            return;
+        }
+
+        // Get all indices
+        Stack<Integer> indexUnpack = indiceHandling(id.type);
+        if(indexUnpack == null){
+            return;
+        }
+        
+        // Go through each indice
+        SyntaxTreeNode indice = indiceList.getChild();
+        if(indice.isEpsilon()){
+            return;
+        }
+
+        // Store the base address offset into register 9
+        OutputWriter.codeDeclGen("\tsubi r9,r0," + id.getOffset());
+        while(indice != null && !indice.isEpsilon()){
+            OutputWriter.codeDeclGen("\tlw r1," + indice.getChild().getOffset() + "(r13)\t% Loading index " + indice.getChild().getValue());
+            OutputWriter.codeDeclGen(("\tmuli r2,r1," + indexUnpack.pop() + "\t% Multiply with number of columns"));
+            OutputWriter.codeDeclGen("\tmuli r2,r2," + size + "\t% Multiply with array type");
+            OutputWriter.codeDeclGen("\tadd r9,r9,r2");
+
+            indice = indice.getRightSib();
+        }
+        // Convert back to negative offset
+        OutputWriter.codeDeclGen("\tsub r9,r0,r9");
+    }
+
+    private void funcCallWriter(SyntaxTreeNode exprList, CodeTabEntry idEntry){
+        int funcSize = idEntry.link.scopeSize;
+                
+            SyntaxTreeNode expr = exprList.getChild();
+            int counter = 1;
+            while(expr != null && !expr.isEpsilon()){
+                OutputWriter.codeDeclGen("\tlw r" + counter++ + "," + expr.getOffset() + "(r13)\t% Load parameter " + expr.getValue());
+                expr = expr.getRightSib();
+            }
+            OutputWriter.codeDeclGen("jl r15," + idEntry.name);
+            OutputWriter.codeDeclGen("addi r13,r13," + funcSize);
+            OutputWriter.codeDeclGen("addi r14,r14," + funcSize);
+    }
+
     private CodeTabEntry findVariable(String name){
         CodeTabEntry variable = localTable.containsName(name);
 
@@ -518,34 +550,6 @@ public class CodeGenerationVisitor1 extends Visitor{
 
         }
         return variable;
-    }
-
-    // private String findVariableFromOffset(String offset){
-    //     int offsetToFind = Integer.parseInt(offset)*(-1);
-    //     ListIterator<CodeTabEntry> i = localTable.getTable().listIterator();
-
-    //     while(i.hasNext()){
-    //         CodeTabEntry cur = i.next();
-    //         if(cur.offset < offsetToFind){
-    //             continue;
-    //         } else if(cur.offset == offsetToFind){
-    //             return cur.name;
-    //         } else {
-    //             break;
-    //         }
-    //     }
-    //     // Return null if offset not found
-    //     return null;
-    // }
-
-    private String nameConverter(String name){
-        String[] names = name.split("::");
-        String output = "";
-        for(String str : names){
-            output += str;
-        }
-        output += 1;
-        return output;
     }
 
     private void litvalStoreWriter(String value, CodeTabEntry tempvar){

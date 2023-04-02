@@ -91,9 +91,9 @@ public final class ParsingTable {
 
         aParamsTail.tableEntry.put("comma", new Stack<GrammarToken>(){{push(Terminal.comma); push(expr);}});
 
-        addOp.tableEntry.put("plus", new Stack<GrammarToken>(){{push(Terminal.plus); push(new NodeFactory("plus"));}});
-        addOp.tableEntry.put("minus", new Stack<GrammarToken>(){{push(Terminal.minus); push(new NodeFactory("minus"));}});
-        addOp.tableEntry.put("or", new Stack<GrammarToken>(){{push(Terminal.orW); push(new NodeFactory("or"));}});
+        addOp.tableEntry.put("plus", new Stack<GrammarToken>(){{push(Terminal.plus); push(new NodeFactory("plus")); push(new SubTreeFactory("addOp", 1));}});
+        addOp.tableEntry.put("minus", new Stack<GrammarToken>(){{push(Terminal.minus); push(new NodeFactory("minus")); push(new SubTreeFactory("addOp", 1));}});
+        addOp.tableEntry.put("or", new Stack<GrammarToken>(){{push(Terminal.orW); push(new NodeFactory("or")); push(new SubTreeFactory("addOp", 1));}});
 
         arithExpr.tableEntry.put("id", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
         arithExpr.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
