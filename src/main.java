@@ -9,7 +9,7 @@ import table_generator.SymbolTableGenerator;
 public class main {
     public static void main(String[] args) {
         ProgramQueue.initProgramQueue();
-        LexAnalyzer.analyze("testCase.src");
+        LexAnalyzer.analyze("example-bubblesort.src");
 
         SyntaxAnalyzer.analyze();
         OutputWriter.openTreeWriteStream();

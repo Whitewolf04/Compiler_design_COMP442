@@ -47,4 +47,13 @@ public class CodeTabEntry {
     public int getOffset(){
         return offset*(-1);
     }
+
+    public String getReturnType(){
+        if(type.indexOf(':') == -1){
+            return type;
+        } else {
+            String returnType = type.substring(0, type.indexOf(':'));
+            return returnType;
+        }
+    }
 }

@@ -62,7 +62,7 @@ function LINEAR::evaluate(x: integer) => integer
 {
   localvar result: integer;
   result = 0;
-  result = a * x + b;
+  result = self.a * x + b;
   return (result);
 }
 
@@ -86,6 +86,7 @@ function main() => void
     write(counter);
     write(f1.evaluate(counter));
     write(f2.evaluate(counter));
+    write(f1.a);
   };
 }
 

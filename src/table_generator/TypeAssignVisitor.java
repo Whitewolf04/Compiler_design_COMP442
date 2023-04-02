@@ -528,14 +528,24 @@ public class TypeAssignVisitor extends Visitor{
                         return;
                     } else {
                         // indiceOrExpr is indiceList which can contain EPSILON
-                        if(!indiceOrExpr.isEpsilon() && !objectArrayIdentifier(funcOrObj.getType())){
+                        if(!indiceOrExpr.isEpsilon() && !indiceOrExpr.getChild().isEpsilon() && !objectArrayIdentifier(funcOrObj.getType())){
                             OutputWriter.semanticErrWriting("ERROR: Indicing a non-array variable: " + id.getValue() + " in " + localTable.name);
                             node.setType("ERR@!");
                             return;
                         } else if(!indiceOrExpr.isEpsilon() && objectArrayIdentifier(funcOrObj.getType())){
                             typeBuffer = indiceHandling(id, indiceOrExpr);
                         } else {
-                            typeBuffer = id.getType();
+                            SymTabEntry memberVariableEntry = classTable.containsName(id.getValue());
+
+                            if(memberVariableEntry == null){
+                                OutputWriter.semanticErrWriting("ERROR: Use of undefined member variable " + id.getValue() + " from class " + typeBuffer + ", calling from " + localTable.name);
+                                node.setType("ERR@!");
+                                id.setType("ERR@!");
+                                return;
+                            } else {
+                                typeBuffer = memberVariableEntry.getType();
+                                id.setType(typeBuffer);
+                            }
                         }
                     }
                 } else {
