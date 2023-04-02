@@ -88,6 +88,9 @@ public class TempVarVisitor extends Visitor{
                 String owner = node.getChild().getValue();
                 CodeGenTable classTable = this.globalTable.containsName(owner).link;
                 localTable = classTable.containsFunction(funcName, node.getTableEntry().getType()).link;
+                int objectSize = findObjectSize(owner, globalTable);
+                localTable.addEntry(new CodeTabEntry("self", "classPointer", owner, objectSize, localTable.scopeSize));
+                localTable.scopeSize += objectSize;
             }
         } else if(node.checkContent("term")){
             // Check if there's mult op

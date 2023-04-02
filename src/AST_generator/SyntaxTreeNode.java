@@ -11,7 +11,7 @@ public class SyntaxTreeNode {
     private String type;
     private String content;
     private String value = null;
-    private int offset = 99999999;
+    private String offset = "99999999";
     private int id;
     private static int counter = 0;
     private SymTabEntry tableEntry = null;
@@ -70,7 +70,7 @@ public class SyntaxTreeNode {
         value = s;
     }
 
-    public void setOffset(int offset){
+    public void setOffset(String offset){
         this.offset = offset;
     }
 
@@ -110,7 +110,7 @@ public class SyntaxTreeNode {
         return value;
     }
 
-    public int getOffset(){
+    public String getOffset(){
         return this.offset;
     }
 
