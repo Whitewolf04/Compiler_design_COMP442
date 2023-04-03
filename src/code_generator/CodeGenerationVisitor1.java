@@ -176,7 +176,7 @@ public class CodeGenerationVisitor1 extends Visitor{
                         if(indiceOrExprIdnest.checkContent("indiceList")){
                             if(indiceOrExprIdnest.getChild().isEpsilon()){
                                 // class member variable call
-                                CodeTabEntry idIdnestEntry = findVariableIn(idIdnest.getValue(), findVariable(idEntry.type).link);
+                                CodeTabEntry idIdnestEntry = findVariableIn(idIdnest.getValue(), findVariableIn(idEntry.type, globalTable).link);
 
                                 // Get the offset of member variable
                                 OutputWriter.codeDeclGen("\taddi r1,r0,0");
