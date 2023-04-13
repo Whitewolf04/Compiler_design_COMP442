@@ -1,0 +1,9 @@
+/* sort the array */
+function main() =>  void
+{
+  localvar a : integer;
+
+  a = 2;
+
+  write(a);
+}

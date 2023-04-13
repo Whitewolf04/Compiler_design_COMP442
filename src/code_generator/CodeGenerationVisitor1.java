@@ -129,7 +129,7 @@ public class CodeGenerationVisitor1 extends Visitor{
                 // TODO: Handling for signed variable
                 SyntaxTreeNode factor = node.getChild().getRightSib();
                 node.setValue(factor.getValue());
-                node.setAddress(factor.getAddress() + "(r13)");
+                node.setAddress(factor.getAddress());
             } else {
                 SyntaxTreeNode id = node.getChild();
                 SyntaxTreeNode indiceOrExpr = id.getRightSib();
@@ -227,8 +227,10 @@ public class CodeGenerationVisitor1 extends Visitor{
         } else if(node.checkContent("funcDef")){
             CodeTabEntry link = findVariable("link");
 
-            OutputWriter.codeDeclGen("\tlw r15," + link.getOffset() + "(r13)");
-            OutputWriter.codeDeclGen("\tjr r15\t% Jump back to the calling function");
+            if(!main){
+                OutputWriter.codeDeclGen("\tlw r15," + link.getOffset() + "(r13)");
+                OutputWriter.codeDeclGen("\tjr r15\t% Jump back to the calling function");
+            }
 
             ListIterator<CodeTabEntry> i = localTable.getTable().listIterator();
             while(i.hasNext()){
@@ -271,7 +273,7 @@ public class CodeGenerationVisitor1 extends Visitor{
                 }
                 OutputWriter.codeDeclGen("\taddi r14, r0, topaddr\t% initialize the stack pointer");
                 OutputWriter.codeDeclGen("\taddi r13, r0, topaddr\t% initialize the frame pointer");
-                OutputWriter.codeDeclGen("\tsubi r14, r14, " + localTable.scopeSize + "\t% set the stack pointer to the top position of the stack");
+                OutputWriter.codeDeclGen("\tsubi r13, r13, " + localTable.scopeSize + "\t% set the stack pointer to the top position of the stack");
             }
             funcDeclWriter();
         } else if(node.checkContent("if")){
@@ -322,6 +324,7 @@ public class CodeGenerationVisitor1 extends Visitor{
         } else if(node.checkContent("prog")){
             ListIterator<CodeTabEntry> i = bufferStack.listIterator();
 
+            OutputWriter.codeDeclGen("\thlt");
             OutputWriter.codeDeclGen("\n% End of program, declaring variables");
             while(i.hasNext()){
                 CodeTabEntry cur = i.next();
@@ -460,8 +463,11 @@ public class CodeGenerationVisitor1 extends Visitor{
 
     private void funcDeclWriter(){
         // Save the link to this function
-        CodeTabEntry link = findVariable("link");
-        OutputWriter.codeDeclGen("\tsw " + link.getOffset() + "(r13),r15\t% Put link onto stack frame");
+        if(!main){
+            CodeTabEntry link = findVariable("link");
+            OutputWriter.codeDeclGen("\tsw " + link.getOffset() + "(r13),r15\t% Put link onto stack frame");
+        }
+        
 
         CodeTabEntry self = findVariable("self");
         if(self != null){
@@ -532,7 +538,7 @@ public class CodeGenerationVisitor1 extends Visitor{
 
         // Set the result for the next calculation
         RHS.setValue(resultTempVar.name);
-        RHS.setAddress(Integer.toString(resultTempVar.getOffset()));;
+        RHS.setAddress(Integer.toString(resultTempVar.getOffset()) + "(r13)");;
     }
 
     private void assignWriter(String originValue, String originAddress, SyntaxTreeNode target){
@@ -543,7 +549,7 @@ public class CodeGenerationVisitor1 extends Visitor{
 
     private void writeIntWriter(SyntaxTreeNode expr){
         OutputWriter.codeDeclGen("% Printing " + expr.getValue() + " to console");
-        OutputWriter.codeDeclGen("\tlw r10," + expr.getAddress());
+        OutputWriter.codeDeclGen("\tlw r1," + expr.getAddress());
         OutputWriter.codeDeclGen("\tjl r15,putint");
     }
 

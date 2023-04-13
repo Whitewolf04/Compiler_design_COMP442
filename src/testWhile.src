@@ -1,12 +1,12 @@
 function main() => void {
     localvar x: integer;
     localvar y: integer;
-    localvar z: integer;
 
     x = 1;
     y = 2;
-    z = x + y * 3 / 2 + x * 5;
-
     
-    write(z);
+    while(x < 10){
+        x = x * 2;
+    };
+    write(x);
 }
