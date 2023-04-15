@@ -12,6 +12,7 @@ public class SyntaxTreeNode {
     private String content;
     private String value = null;
     private String address = "99999999";
+    int lineCount = -1;
     private int id;
     private static int counter = 0;
     private SymTabEntry tableEntry = null;
@@ -150,5 +151,9 @@ public class SyntaxTreeNode {
             return true;
         }
         return false;
+    }
+
+    public int getLineCount(){
+        return this.lineCount;
     }
 }

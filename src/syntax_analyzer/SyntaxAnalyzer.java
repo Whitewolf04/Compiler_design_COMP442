@@ -68,7 +68,7 @@ public class SyntaxAnalyzer {
                     curFactory = (Factory) stackTop;
                 }
 
-                curFactory.make(terminalContent);
+                curFactory.make(terminalContent, ProgramQueue.getLineCount());
                 GrammarStack.pop();
             }
 
@@ -79,7 +79,7 @@ public class SyntaxAnalyzer {
         }
 
         SubTreeFactory prog = new SubTreeFactory("prog", Factory.nodeStack.size());
-        prog.make(null);
+        prog.make(null, -2);
         System.out.println(Factory.printNodeStack());
 
         if(!stackTop.compareToString("$") || error){

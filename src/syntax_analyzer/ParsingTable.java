@@ -95,13 +95,13 @@ public final class ParsingTable {
         addOp.tableEntry.put("minus", new Stack<GrammarToken>(){{push(Terminal.minus); push(new NodeFactory("minus")); push(new SubTreeFactory("addOp", 1));}});
         addOp.tableEntry.put("or", new Stack<GrammarToken>(){{push(Terminal.orW); push(new NodeFactory("or")); push(new SubTreeFactory("addOp", 1));}});
 
-        arithExpr.tableEntry.put("id", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
-        arithExpr.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
-        arithExpr.tableEntry.put("minus", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
-        arithExpr.tableEntry.put("plus", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
-        arithExpr.tableEntry.put("not", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
-        arithExpr.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
-        arithExpr.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON"));}});
+        arithExpr.tableEntry.put("id", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON", "addOp", true));}});
+        arithExpr.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON", "addOp", true));}});
+        arithExpr.tableEntry.put("minus", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON", "addOp", true));}});
+        arithExpr.tableEntry.put("plus", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON", "addOp", true));}});
+        arithExpr.tableEntry.put("not", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON", "addOp", true));}});
+        arithExpr.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON", "addOp", true));}});
+        arithExpr.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(term); push(rightRecArithExpr); push(new SubTreeFactory("termList", "term", "EPSILON", "addOp", true));}});
 
         arrayOrObject.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(Terminal.lpar); push(aParams); push(Terminal.rpar); push(new SubTreeFactory("arrayOrObject", 1));}});
         arrayOrObject.tableEntry.put("semi", new Stack<GrammarToken>(){{push(reptArraySize); push(new SubTreeFactory("arraySizeList", "intLit", "EPSILON")); push(new SubTreeFactory("arrayOrObject", 1));}});
@@ -407,13 +407,13 @@ public final class ParsingTable {
         statementIdnest3.tableEntry.put("dot", new Stack<GrammarToken>(){{push(Terminal.dot); push(new NodeFactory("dot")); push(Terminal.id); push(new NodeFactory("id")); push(statementIdnest);}});
         statementIdnest3.tableEntry.put("assign", new Stack<GrammarToken>(){{push(assignOp); push(expr);}});
         
-        term.tableEntry.put("id", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
-        term.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
-        term.tableEntry.put("minus", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
-        term.tableEntry.put("plus", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
-        term.tableEntry.put("not", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
-        term.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
-        term.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON"));}});
+        term.tableEntry.put("id", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON", "multOp", true));}});
+        term.tableEntry.put("lpar", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON", "multOp", true));}});
+        term.tableEntry.put("minus", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON", "multOp", true));}});
+        term.tableEntry.put("plus", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON", "multOp", true));}});
+        term.tableEntry.put("not", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON", "multOp", true));}});
+        term.tableEntry.put("floatLit", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON", "multOp", true));}});
+        term.tableEntry.put("intLit", new Stack<GrammarToken>(){{push(factor); push(rightRecTerm); push(new SubTreeFactory("term", "factor", "EPSILON", "multOp", true));}});
 
         type.tableEntry.put("integer", new Stack<GrammarToken>(){{push(Terminal.integerW); push(new NodeFactory("integer")); push(new SubTreeFactory("type", 1));}});
         type.tableEntry.put("float", new Stack<GrammarToken>(){{push(Terminal.floatW); push(new NodeFactory("float")); push(new SubTreeFactory("type", 1));}});

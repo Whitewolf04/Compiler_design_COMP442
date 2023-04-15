@@ -76,10 +76,13 @@ public class TempVarVisitor extends Visitor{
             localTable.addEntry(new CodeTabEntry("link", "link", "integer", 4, localTable.scopeSize));
             localTable.scopeSize += 4;
         } else if(node.checkContent("funcHead")){
+            // Get function name
             String funcName = node.getTableEntry().getName();
             if(funcName.indexOf(':') != -1){
                 funcName = funcName.substring(funcName.lastIndexOf(':')+1, funcName.length());
             }
+
+            // Set self variable for member functions
             if(node.getChildNum() == 3){
                 // Global function scope
                 localTable = this.globalTable.containsName(node.getChild().getValue()).link;
@@ -92,6 +95,9 @@ public class TempVarVisitor extends Visitor{
                 localTable.addEntry(new CodeTabEntry("self", "classPointer", owner, objectSize, localTable.scopeSize));
                 localTable.scopeSize += objectSize;
             }
+
+            // Create moon function name
+            localTable.moonName = createMoonFuncName(node, funcName);
         } else if(node.checkContent("term")){
             // Check if there's mult op
             if(node.getChildNum() > 2){
@@ -159,5 +165,35 @@ public class TempVarVisitor extends Visitor{
         }
 
         return temp.size;
+    }
+
+    private String createMoonFuncName(SyntaxTreeNode funcHeadNode, String funcName){
+        String finalName = "";
+        SyntaxTreeNode fParamsList = null;
+        if(funcHeadNode.getChildNum() == 5){
+            // Member function (not constructor)
+            String className = funcHeadNode.getChild().getValue();
+            fParamsList = funcHeadNode.getChild().getRightSib().getRightSib().getRightSib();
+            finalName += className + "_" + funcName;
+        } else if(funcHeadNode.getChildNum() == 4){
+            // Member constructor
+            String className = funcHeadNode.getChild().getValue();
+            fParamsList = funcHeadNode.getChild().getRightSib().getRightSib().getRightSib();
+            finalName += className + "_constructor";
+        } else if(funcHeadNode.getChildNum() == 3){
+            // Global function
+            fParamsList = funcHeadNode.getChild().getRightSib();
+            finalName += funcName;
+        } else {
+            return null;
+        }
+
+        SyntaxTreeNode fParams = fParamsList.getChild();
+        while(fParams != null && !fParams.isEpsilon()){
+            finalName += "_" + fParams.getChild().getRightSib().getChild().getValue();
+            fParams = fParams.getRightSib();
+        }
+
+        return finalName;
     }
 }

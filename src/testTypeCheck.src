@@ -1,0 +1,10 @@
+function man() => void
+{
+    localvar x: integer;
+    localvar y: float;
+    localvar z: integer;
+
+    if(x == y) then {
+        z = 1;
+    } else {};
+}

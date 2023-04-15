@@ -9,7 +9,7 @@ import table_generator.SymbolTableGenerator;
 public class main {
     public static void main(String[] args) {
         ProgramQueue.initProgramQueue();
-        LexAnalyzer.analyze("testWhile.src");
+        LexAnalyzer.analyze("testTypeCheck.src");
 
         SyntaxAnalyzer.analyze();
         OutputWriter.openTreeWriteStream();

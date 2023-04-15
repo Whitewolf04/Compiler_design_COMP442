@@ -15,7 +15,7 @@ public class NodeFactory extends Factory{
         this.type = type;
     }
 
-    public void make(String value){
+    public void make(String value, int lineCount){
         SyntaxTreeNode newNode = new SyntaxTreeNode(content);
         if(type != null){
             newNode.setType(type);
@@ -23,6 +23,12 @@ public class NodeFactory extends Factory{
         if(value != null){
             newNode.setValue(value);
         }
+        if(content.equals("integer")){
+            newNode.setValue("integer");
+        } else if(content.equals("float")){
+            newNode.setValue("float");
+        }
+        newNode.lineCount = lineCount;
         Factory.nodeStack.add(newNode);
     }
 

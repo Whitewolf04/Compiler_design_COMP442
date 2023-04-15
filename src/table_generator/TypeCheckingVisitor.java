@@ -110,38 +110,19 @@ public class TypeCheckingVisitor extends Visitor {
                     }
                 }
             }
-        } else if(node.checkContent("localVarDecl")){
-            // TODO: Check for constructor or global function call params
-            // SyntaxTreeNode cur = node.getChild().getRightSib();
-            // if(cur.getChild().checkContent("id") && cur.getRightSib().getChild().checkContent("expr")){
-            //     SyntaxTreeNode expr = cur.getRightSib().getChild();
-            //     String variable = cur.getChild().getValue();
-
-            //     // Get param types to match with func declaration
-            //     String paramTypes = "";
-            //     while(expr != null && !expr.isEpsilon()){
-            //         paramTypes += expr.getType() + ",";
-            //         expr = expr.getRightSib();
-            //     }
-            //     if(!paramTypes.isEmpty()){
-            //         paramTypes = paramTypes.substring(0, paramTypes.length()-1);
-            //     }
-
-            //     SymTabEntry varDecl = this.globalTable.containsName(variable);
-            //     if(varDecl == null){
-            //         OutputWriter.semanticErrWriting("ERROR: Undeclared class/function");
-            //     }
-            // }
         } else if(node.checkContent("relExpr")){
-            // SyntaxTreeNode lhs = node.getChild();
-            // SyntaxTreeNode rhs = lhs.getRightSib().getRightSib(); // Skip through the relOp node
+            SyntaxTreeNode lhs = node.getChild();
+            SyntaxTreeNode rhs = lhs.getRightSib().getRightSib(); // Skip through the relOp node
+            String lhsType = lhs.getType();
+            String rhsType = rhs.getType();
 
-            // if(!lhs.getType().equals(rhs.getType())){
-            //     OutputWriter.semanticErrWriting("ERROR: Type mismatch when comparing between " + lhs + " and " + rhs + ", relExpr error!");
-            //     node.setType("ERR@!");
-            // } else {
-            //     node.setType("boolean");
-            // }
+            if(lhsType.equals("ERR@!") || rhsType.equals("ERR@!")){
+                OutputWriter.semanticErrWriting("WARNING: Cannot compare because either side has type error! Line " + node.getLineCount());
+            } else if(!lhsType.equals("integer") || !rhsType.equals("integer") || !lhsType.equals("float") || !rhsType.equals("float")){
+                OutputWriter.semanticErrWriting("ERROR: Cannot compare non-primitive types, line " + node.getLineCount());
+            } else if(!lhs.getType().equals(rhs.getType())){
+                OutputWriter.semanticErrWriting("ERROR: Type mismatch when comparing on line " + node.getLineCount());
+            }
         } else if(node.checkContent("term")){
             SyntaxTreeNode cur = node.getChild();
             if(cur.isEpsilon()){

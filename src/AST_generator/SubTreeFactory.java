@@ -23,6 +23,14 @@ public class SubTreeFactory extends Factory{
         this.selectiveNodePop = selective;
     }
 
+    public SubTreeFactory(String name, String start, String nodeToPop, String nodeToPop2, boolean selective){
+        content = name;
+        this.startingNode = start;
+        this.nodeToPop = nodeToPop;
+        this.nodeToPop2 = nodeToPop2;
+        this.selectiveNodePop = selective;
+    }
+
     public SubTreeFactory(String name, String start, String nodeToPop){
         content = name;
         startingNode = start;
@@ -37,12 +45,14 @@ public class SubTreeFactory extends Factory{
         this.nodeToPop2 = nodeToPop2;
     }
 
-    public void make(String value){
+    public void make(String value, int lineCount){
         SyntaxTreeNode newNode = new SyntaxTreeNode(content);
         if(numPop > -1 && startingNode == null){
             newNode.setChild(stackTraverseWithNumPop(newNode, null, numPop));
         } else if(nodeToPop != null && nodeToPop2 == null && selectiveNodePop){
-            newNode.setChild(stackTraverseWithStartNode(newNode, null));
+            newNode.setChild(stackTraverseSelectiveWithNode(newNode, null));
+        } else if(nodeToPop != null && nodeToPop2 != null && selectiveNodePop){
+            newNode.setChild(stackTraverseSelectiveWithTwoNodes(newNode, null));
         } else if(nodeToPop != null && nodeToPop2 == null) {
             stackTraverseWithNode(newNode);
         } else if(nodeToPop != null && nodeToPop2 != null && !exclude){
@@ -52,6 +62,7 @@ public class SubTreeFactory extends Factory{
         } else {
             System.out.println("SubTreeFactory error! Cannot make!");
         }
+        newNode.lineCount = lineCount;
         Factory.nodeStack.add(newNode);
     }
 
@@ -69,14 +80,30 @@ public class SubTreeFactory extends Factory{
         }
     }
 
-    private SyntaxTreeNode stackTraverseWithStartNode(SyntaxTreeNode parent, SyntaxTreeNode rightSib){
+    private SyntaxTreeNode stackTraverseSelectiveWithNode(SyntaxTreeNode parent, SyntaxTreeNode rightSib){
         SyntaxTreeNode currentNode = Factory.nodeStack.peekLast();
 
         if(currentNode.toString().equals(nodeToPop.toString()) || currentNode.toString().equals(startingNode.toString())){
             Factory.nodeStack.pollLast();
             currentNode.setParent(parent);
             currentNode.setRightSib(rightSib);
-            SyntaxTreeNode leftmostSib = stackTraverseWithStartNode(parent, currentNode);
+            SyntaxTreeNode leftmostSib = stackTraverseSelectiveWithNode(parent, currentNode);
+            currentNode.setLeftmostSib(leftmostSib);
+            return leftmostSib;
+        } else {
+            // WARNING: The leftmost child will point to itself on the leftmostSib pointer
+            return rightSib;
+        }
+    }
+
+    private SyntaxTreeNode stackTraverseSelectiveWithTwoNodes(SyntaxTreeNode parent, SyntaxTreeNode rightSib){
+        SyntaxTreeNode currentNode = Factory.nodeStack.peekLast();
+
+        if(currentNode.toString().equals(nodeToPop.toString()) || currentNode.toString().equals(startingNode.toString()) || currentNode.toString().equals(nodeToPop2.toString())){
+            Factory.nodeStack.pollLast();
+            currentNode.setParent(parent);
+            currentNode.setRightSib(rightSib);
+            SyntaxTreeNode leftmostSib = stackTraverseSelectiveWithTwoNodes(parent, currentNode);
             currentNode.setLeftmostSib(leftmostSib);
             return leftmostSib;
         } else {

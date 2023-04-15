@@ -1,0 +1,28 @@
+class POLYNOMIAL {
+    public attribute a: integer;
+    public attribute b: integer;
+    public constructor: (A: integer, B: integer);
+    public function evaluate: (x: integer) => integer;
+};
+
+function POLYNOMIAL::constructor(A: integer, B: integer)
+{
+    self.a = A;
+    self.b = B;
+}
+
+function POLYNOMIAL::evaluate(x: integer) => integer
+{
+    a = a + x;
+    b = b + x;
+    return(a+b);
+}
+
+function main() => void 
+{
+    localvar y: POLYNOMIAL(1, 2);
+    localvar result: integer;
+    
+    result = y.evaluate(10);
+    write(result);
+}

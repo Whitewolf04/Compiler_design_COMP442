@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 public class CodeGenTable {
     private LinkedList<CodeTabEntry> table;
     public String name;
+    public String moonName;
     int scopeSize;
     CodeGenTable outerTable = null;
     LinkedList<CodeTabEntry> litval;

@@ -80,13 +80,15 @@ function main() => void
   localvar test: count(2);
 
   counter = 1;	
+  write(f2.a);
 
   while(counter <= 10)
   {
-    write(counter);
-    write(f1.evaluate(counter));
-    write(f2.evaluate(counter));
-    write(f1.a);
+    //write(counter);
+    //write(f1.evaluate(counter));
+    //write(f2.evaluate(counter));
+    //write(f1.a);
+    counter = counter + 1;
   };
 }
 

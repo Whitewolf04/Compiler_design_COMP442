@@ -9,7 +9,7 @@ import syntax_analyzer.GrammarToken;
 public abstract class Factory extends GrammarToken{
     public static LinkedList<SyntaxTreeNode> nodeStack = new LinkedList<SyntaxTreeNode>();
 
-    abstract public void make(String value);
+    abstract public void make(String value, int lineCount);
 
     static public String printNodeStack(){
         Iterator<SyntaxTreeNode> i = nodeStack.descendingIterator();

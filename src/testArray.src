@@ -1,0 +1,12 @@
+function main() => void {
+    localvar arr: integer[7];
+
+    arr[0] = 23;
+    arr[1] = 15;
+
+    write(arr[0]);
+
+    if(arr[0] > arr[1]) then{
+        write(arr[1]);
+    } else {};
+}
