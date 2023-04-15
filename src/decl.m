@@ -4,8 +4,8 @@
 
 % Start of function man
 man	nop
-	subi r13,r13,24	% set the stack pointer to the top position of the stack
-	sw -20(r13),r15	% Put link onto stack frame
+	subi r13,r13,20	% set the stack pointer to the top position of the stack
+	sw -16(r13),r15	% Put link onto stack frame
 % If statement
 s0IF	addi r0,r0,0
 % Comparision between x and y
@@ -16,18 +16,3 @@ s0IF	addi r0,r0,0
 	bnz r11,s0THEN
 	j s0ELSE
 s0THEN	align
-% Storing 1 into t0
-	addi r1, r0, 0
-	addi r1, r0, 1
-	sw -16(r13), r1
-% Assigning t0 to z
-	lw r1,-16(r13)
-	sw -12(r13),r1
-	j s0ENDIF
-s0ELSE	addi r0,r0,0
-s0ENDIF	addi r0,r0,0
-	lw r15,-20(r13)
-	jr r15	% Jump back to the calling function
-	hlt
-
-% End of program, declaring variables

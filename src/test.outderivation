@@ -439,89 +439,215 @@ then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead
 statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-id NodeFactory:id statementIdnest SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+read NodeFactory:read lpar variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-NodeFactory:id statementIdnest SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+NodeFactory:read lpar variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-statementIdnest SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+lpar variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-assignOp expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-assign NodeFactory:assign expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+id NodeFactory:id variable2 rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-NodeFactory:assign expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+NodeFactory:id variable2 rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+variable2 rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-arithExpr expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+EPSILON NodeFactory:EPSILON SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+NodeFactory:EPSILON SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-intLit NodeFactory:intLit SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+EPSILON id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-NodeFactory:intLit SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-intLit assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+varIdnest reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-factor assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+dot NodeFactory:dot id NodeFactory:id varIdnest2 reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-EPSILON NodeFactory:EPSILON SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-factor assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+NodeFactory:dot id NodeFactory:id varIdnest2 reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-NodeFactory:EPSILON SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-factor assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+id NodeFactory:id varIdnest2 reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON factor assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+NodeFactory:id varIdnest2 reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-rightRecArithExpr SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-term assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+varIdnest2 reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-EPSILON NodeFactory:EPSILON SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-term assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+lpar aParams rpar varIdnest reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-NodeFactory:EPSILON SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-term assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+aParams rpar varIdnest reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-SubTreeFactory:termList expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON term assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+EPSILON NodeFactory:EPSILON SubTreeFactory:exprList rpar varIdnest reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-expr2 SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-termList assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+NodeFactory:EPSILON SubTreeFactory:exprList rpar varIdnest reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-EPSILON NodeFactory:EPSILON SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-termList assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+SubTreeFactory:exprList rpar varIdnest reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+EPSILON id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-NodeFactory:EPSILON SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-termList assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+rpar varIdnest reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-SubTreeFactory:expr SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-EPSILON termList assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+varIdnest reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
-SubTreeFactory:assignOrFuncCall semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-expr assign id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+dot NodeFactory:dot id NodeFactory:id varIdnest2 reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+NodeFactory:dot id NodeFactory:id varIdnest2 reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+id NodeFactory:id varIdnest2 reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+NodeFactory:id varIdnest2 reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+varIdnest2 reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+lsqbr arithExpr rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+arithExpr rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+id NodeFactory:id factor2 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+NodeFactory:id factor2 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+factor2 reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+reptIdnest1 SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+EPSILON NodeFactory:EPSILON SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+NodeFactory:EPSILON SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+id id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+SubTreeFactory:indiceList reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+EPSILON id id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+reptVariableOrFunctionCall SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+indiceList id id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+EPSILON NodeFactory:EPSILON SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+indiceList id id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+NodeFactory:EPSILON SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+indiceList id id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+SubTreeFactory:idnestList SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+EPSILON indiceList id id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+SubTreeFactory:factor rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+idnestList indiceList id id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+rightRecTerm SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+factor id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+EPSILON NodeFactory:EPSILON SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+factor id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+NodeFactory:EPSILON SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+factor id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+SubTreeFactory:term rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+EPSILON factor id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+rightRecArithExpr SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+term id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+EPSILON NodeFactory:EPSILON SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+term id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+NodeFactory:EPSILON SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+term id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+SubTreeFactory:termList rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+EPSILON term id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+rsqbr SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+termList id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+SubTreeFactory:indice reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+termList id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+reptIdnest1 SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+indice id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+EPSILON NodeFactory:EPSILON SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+indice id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+NodeFactory:EPSILON SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+indice id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+SubTreeFactory:indiceList reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+EPSILON indice id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+reptVariable SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+indiceList id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+EPSILON NodeFactory:EPSILON SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+indiceList id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+NodeFactory:EPSILON SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+indiceList id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+SubTreeFactory:varIdnest SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+EPSILON indiceList id dot exprList id dot indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+SubTreeFactory:variable rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+varIdnest indiceList id read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+
+rpar semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
+variable read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
 semi SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-assignOrFuncCall id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+variable read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
 SubTreeFactory:statement reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
-assignOrFuncCall id then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
+variable read then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 
 
 reptStatBlock1 SubTreeFactory:statementList rcurbr SubTreeFactory:statBlock else NodeFactory:else statBlock NodeFactory:endIf semi SubTreeFactory:statement SubTreeFactory:localVarOrStat reptLocalVarOrStat rcurbr SubTreeFactory:funcBody SubTreeFactory:funcDef reptProg0 $ 
 statement then relExpr if localVarOrStat localVarOrStat localVarOrStat funcHead 

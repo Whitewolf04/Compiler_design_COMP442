@@ -5,6 +5,6 @@ function man() => void
     localvar z: integer;
 
     if(x == y) then {
-        z = 1;
+        read(a.id().id[id]);
     } else {};
 }

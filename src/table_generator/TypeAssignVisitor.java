@@ -84,52 +84,9 @@ public class TypeAssignVisitor extends Visitor{
 
                 if(!idnestList.getChild().isEpsilon()){
                     node.setType(idnestList.getType());
-                } else if(!indiceOrExpr.getChild().isEpsilon()){
-                    if(indiceOrExpr.checkContent("indiceList")){
-                        node.setType(indiceHandling(id, indiceOrExpr));
-                    } else {
-                        SymTabEntry functionOrClass = findVariable(id.getValue());
-                        if(functionOrClass == null){
-                            OutputWriter.semanticErrWriting("ERROR: Use of undeclared variable: " + id.getValue() + " on line " + id.getLineCount());
-                            node.setType("ERR@!");
-                            return;
-                        } else if(functionOrClass.getKind().equals("variable") || functionOrClass.getKind().equals("parameter")){
-                            OutputWriter.semanticErrWriting("ERROR: Unable to function call on variable: " + id.getValue() + " on line " + id.getLineCount());
-                            node.setType("ERR@!");
-                            return;
-                        } else if(functionOrClass.getKind().equals("class")){
-                            node.setType(id.getType());
-                        } else {
-                            // Origin is a function call, has to be global function
-                            // Get all param types
-                            String paramTypes = "";
-                            SyntaxTreeNode param = id.getRightSib().getChild();
-                            while(param != null && !param.isEpsilon()){
-                                SyntaxTreeNode leafNode = param.getChild();
-                                while(leafNode.getChild() != null){
-                                    leafNode = leafNode.getChild();
-                                }
-                                paramTypes += leafNode.getType() + ",";
-
-                                param = param.getRightSib();
-                            }
-                            if(!paramTypes.isEmpty()){
-                                paramTypes = paramTypes.substring(0, paramTypes.length()-1);
-                            }
-
-                            // Find the right function
-                            functionOrClass = this.globalTable.containsFunction(id.getValue(), paramTypes);
-                            if(functionOrClass == null){
-                                OutputWriter.semanticErrWriting("ERROR: There is no global function: " + id.getValue() + " that has these parameters: " + paramTypes + ", line " + id.getLineCount());
-                                node.setType("ERR@!");
-                                return;
-                            } else {
-                                node.setType(functionOrClass.getReturnType());
-                            }
-                        }
-                    }
                 } else {
-                    node.setType(id.getType());
+                    String typeBuffer = idnestResolution(id, indiceOrExpr, null);
+                    node.setType(typeBuffer);
                 }
             }
         } else if(node.checkContent("funcHead")){
@@ -166,7 +123,6 @@ public class TypeAssignVisitor extends Visitor{
                 } else if(variable.getKind().equals("variable") || variable.getKind().equals("parameter")){
                     node.setType(variable.getType());
                 }
-                // System.out.println("Variable " + varName + " in " + localTable.name + " has been set to type " + node.getType());
             }
         } else if(node.checkContent("idnestList")){
             // Idnest resolution
@@ -209,6 +165,44 @@ public class TypeAssignVisitor extends Visitor{
 
                 if(typeBuffer.equals("ERR@!")){
                     id.setType("ERR@!");
+                }
+            }
+        } else if(node.checkContent("variable")){
+            SyntaxTreeNode id = node.getChild();
+            SyntaxTreeNode indiceOrExpr = id.getRightSib();
+            SyntaxTreeNode varIdnest = indiceOrExpr.getRightSib();
+            String typeBuffer = idnestResolution(id, indiceOrExpr, null);
+
+            // Loop through idnest element
+            SyntaxTreeNode idnestNode = varIdnest.getChild();
+            SyntaxTreeNode idBuffer = null;
+            while(idnestNode != null && !idnestNode.isEpsilon()){
+                if(idnestNode.checkContent("dot")){
+                    // Reset idBuffer when move to the next idnest element
+                    idBuffer = null;
+                } else if (idnestNode.checkContent("exprList") || idnestNode.checkContent("indiceList")){
+                    typeBuffer = idnestResolution(idBuffer, idnestNode, typeBuffer);
+                } else {
+                    // Check for mem-var call
+                    if(idnestNode.getRightSib().checkContent("dot") || idnestNode.getRightSib().checkContent("EPSILON")){
+                        SymTabEntry idEntry = findVariable(idnestNode.getValue());
+
+                        if(idEntry == null){
+                            OutputWriter.semanticErrWriting("ERROR: Use of undefined variable " + idnestNode.getValue() + " on line " + idnestNode.getLineCount());
+                            typeBuffer = "ERR@!";
+                        } else if(idEntry.getKind().equals("function") || idEntry.getKind().equals("class")){
+                            OutputWriter.semanticErrWriting("ERROR: Illegal use of variable " + idnestNode.getValue() + " on line " + idnestNode.getLineCount());
+                            typeBuffer = "ERR@!";
+                        } else {
+                            typeBuffer = idEntry.getType();
+                        }
+                        idnestNode.setType(typeBuffer);
+                        
+                        // Reset idBuffer
+                        idBuffer = null;
+                    } else {
+                        idBuffer = idnestNode;
+                    }
                 }
             }
         }

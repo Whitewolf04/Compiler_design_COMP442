@@ -118,7 +118,7 @@ public class TypeCheckingVisitor extends Visitor {
 
             if(lhsType.equals("ERR@!") || rhsType.equals("ERR@!")){
                 OutputWriter.semanticErrWriting("WARNING: Cannot compare because either side has type error! Line " + node.getLineCount());
-            } else if(!lhsType.equals("integer") || !rhsType.equals("integer") || !lhsType.equals("float") || !rhsType.equals("float")){
+            } else if((!lhsType.equals("integer") && !lhsType.equals("float")) || (!rhsType.equals("integer") && !rhsType.equals("float"))){
                 OutputWriter.semanticErrWriting("ERROR: Cannot compare non-primitive types, line " + node.getLineCount());
             } else if(!lhs.getType().equals(rhs.getType())){
                 OutputWriter.semanticErrWriting("ERROR: Type mismatch when comparing on line " + node.getLineCount());

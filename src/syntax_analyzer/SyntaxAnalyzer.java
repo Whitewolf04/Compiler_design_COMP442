@@ -72,9 +72,9 @@ public class SyntaxAnalyzer {
                 GrammarStack.pop();
             }
 
-            System.out.println(GrammarStack.printStack());
-            System.out.println(Factory.printNodeStack());
-            System.out.println();
+            // System.out.println(GrammarStack.printStack());
+            // System.out.println(Factory.printNodeStack());
+            // System.out.println();
             OutputWriter.syntaxOutWriting();
         }
 

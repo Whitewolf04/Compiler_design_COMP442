@@ -320,7 +320,7 @@ public final class ParsingTable {
         reptStatBlock1.tableEntry.put("rcurbr", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
 
         reptVariable.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
-        reptVariable.tableEntry.put("id", new Stack<GrammarToken>(){{push(varIdnest); push(reptVariable);}});
+        reptVariable.tableEntry.put("dot", new Stack<GrammarToken>(){{push(varIdnest); push(reptVariable);}});
 
         reptVariableOrFunctionCall.tableEntry.put("rpar", new Stack<GrammarToken>(){{push(Terminal.EPSILON); push(new NodeFactory("EPSILON"));}});
         reptVariableOrFunctionCall.tableEntry.put("dot", new Stack<GrammarToken>(){{push(idnest); push(reptVariableOrFunctionCall);}});

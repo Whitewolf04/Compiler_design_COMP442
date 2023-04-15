@@ -4,6 +4,6 @@
 [localvar, localvar, 4] [id, y, 4] [colon, :, 4] [float, float, 4] [semicol, ;, 4] 
 [localvar, localvar, 5] [id, z, 5] [colon, :, 5] [integer, integer, 5] [semicol, ;, 5] 
 [if, if, 7] [openpar, (, 7] [id, x, 7] [equal, ==, 7] [id, y, 7] [closepar, ), 7] [then, then, 7] [opencubr, {, 7] 
-[id, z, 8] [assign, =, 8] [intnum, 1, 8] [semicol, ;, 8] 
+[read, read, 8] [openpar, (, 8] [id, a, 8] [dot, ., 8] [id, id, 8] [openpar, (, 8] [closepar, ), 8] [dot, ., 8] [id, id, 8] [opensqbr, [, 8] [id, id, 8] [closesqbr, ], 8] [closepar, ), 8] [semicol, ;, 8] 
 [closecubr, }, 9] [else, else, 9] [opencubr, {, 9] [closecubr, }, 9] [semicol, ;, 9] 
 [closecubr, }, 10] 
