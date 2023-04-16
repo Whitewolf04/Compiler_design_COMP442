@@ -3,4 +3,5 @@ ERROR: Use of undefined variable! Variable name: id on line 8
 ERROR: Use of undefined variable! Variable name: id on line 8
 ERROR: Use of undefined variable! Variable name: id on line 8
 ERROR: Use of undeclared variable id on line 8
+ERROR: Use of undeclared variable a on line 8
 ERROR: Type mismatch when comparing on line 7

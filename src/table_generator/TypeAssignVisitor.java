@@ -151,6 +151,7 @@ public class TypeAssignVisitor extends Visitor{
                 SyntaxTreeNode indiceOrExpr = id.getRightSib();
 
                 typeBuffer = idnestResolution(id, indiceOrExpr, typeBuffer);
+                
                 // Move to the next idnest
                 idnest = idnest.getRightSib();
             }
@@ -204,6 +205,8 @@ public class TypeAssignVisitor extends Visitor{
                         idBuffer = idnestNode;
                     }
                 }
+
+                idnestNode = idnestNode.getRightSib();
             }
         }
     }
