@@ -177,23 +177,36 @@ public class SymbolTable {
     }
 
     public String printTable(){
-        String output = "+---------------------------------------------------------------------------------------------------------------+\n";
-        output += String.format("| %-109s |%n", this.name);
-        output += "+---------------------------------------------------------------------------------------------------------------+\n";
+        String output = "+----------------------------------------------------------------------------------------------------------------------------+\n";
+        output += String.format("| %-122s |%n", this.name);
+        output += "+----------------------------------------------------------------------------------------------------------------------------+\n";
 
         ListIterator<SymTabEntry> i = table.listIterator();
         while(i.hasNext()){
             SymTabEntry cur = i.next();
             SymbolTable link = cur.getLink();
             if(link == null){
-                output += String.format("| %-15s | %-15s | %-40s | %-30s |%n", cur.getName(), cur.getKind(), cur.getType(), "");
+                output += String.format("| %-10s | %-15s | %-15s | %-40s | %-30s |%n", cur.getVisibility(), cur.getName(), cur.getKind(), cur.getType(), "");
             } else {
-                output += String.format("| %-15s | %-15s | %-40s | %-30s |%n", cur.getName(), cur.getKind(), cur.getType(), cur.getLink().name);
+                output += String.format("| %-10s | %-15s | %-15s | %-40s | %-30s |%n", cur.getVisibility(), cur.getName(), cur.getKind(), cur.getType(), cur.getLink().name);
             }
-            output += "+---------------------------------------------------------------------------------------------------------------+\n";
+            output += "+----------------------------------------------------------------------------------------------------------------------------+\n";
         }
 
         return output;
+    }
+
+    public boolean inClass(SymbolTable classTable){
+        // Must be a member function
+        if(this.name.indexOf("::") == -1){
+            return false;
+        }
+
+        String className = this.name.substring(0, this.name.indexOf("::"));
+        if(className.equals(classTable.name)){
+            return true;
+        }
+        return false;
     }
 
 }

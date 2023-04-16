@@ -1,0 +1,3 @@
+ERROR: Use of undeclared function LINEAR with param types (integer,float) on line 61
+ERROR: Function evaluate with param types (integer) not found in class LINEAR, line 70
+ERROR: Function evaluate with param types (integer) not found in class QUADRATIC, line 71

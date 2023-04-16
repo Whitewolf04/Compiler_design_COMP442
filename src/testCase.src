@@ -12,7 +12,7 @@ class LINEAR isa POLYNOMIAL, RANDOM {
   private attribute a: integer;
   private attribute b: integer;
   public  constructor: (A: integer, B: integer);
-  public  function evaluate: (x: integer) => integer;
+  private  function evaluate: (x: integer) => integer;
 };
 
 class QUADRATIC isa POLYNOMIAL {

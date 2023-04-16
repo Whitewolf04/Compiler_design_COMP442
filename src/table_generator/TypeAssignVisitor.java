@@ -378,6 +378,10 @@ public class TypeAssignVisitor extends Visitor{
                     OutputWriter.semanticErrWriting("ERROR: Use of undeclared function " + id.getValue() + " with param types (" + paramTypes + ") on line " + id.getLineCount());
                     id.setType("ERR@!");
                     return "ERR@!";
+                } else if(!funcEntry.isPublic()){
+                    OutputWriter.semanticErrWriting("ERROR: Use of private function " + id.getValue() + " with param types (" + paramTypes + ") on line " + id.getLineCount());
+                    id.setType("ERR@!");
+                    return "ERR@!";
                 } else {
                     funcType = funcEntry.getReturnType();
                     id.setType(funcType);
@@ -409,6 +413,10 @@ public class TypeAssignVisitor extends Visitor{
                 OutputWriter.semanticErrWriting("ERROR: Variable " + id.getValue() + " not found in class " + classTable.name + ", line " + id.getLineCount());
                 id.setType("ERR@!");
                 return "ERR@!";
+            } else if(!idEntry.isPublic() && !localTable.inClass(classTable)){
+                OutputWriter.semanticErrWriting("ERROR: Variable " + id.getValue() + " is private in class " + classTable.name + ", line " + id.getLineCount());
+                id.setType("ERR@!");
+                return "ERR@!";
             } else {
                 idType = idEntry.getType();
                 id.setType(idType);
@@ -429,6 +437,10 @@ public class TypeAssignVisitor extends Visitor{
 
             if(funcEntry == null){
                 OutputWriter.semanticErrWriting("ERROR: Function " + id.getValue() + " with param types (" + paramTypes + ") not found in class " + classTable.name + ", line " + id.getLineCount());
+                id.setType("ERR@!");
+                return "ERR@!";
+            } else if(!funcEntry.isPublic() && localTable.inClass(classTable)){
+                OutputWriter.semanticErrWriting("ERROR: Function " + id.getValue() + " with param types (" + paramTypes + ") is private in class " + classTable.name + ", line " + id.getLineCount());
                 id.setType("ERR@!");
                 return "ERR@!";
             } else {

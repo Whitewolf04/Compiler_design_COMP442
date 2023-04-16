@@ -306,7 +306,7 @@ public class TableCreationVisitor extends Visitor{
         } else if(node.checkContent("memberDecl")){
             // Get visibility
             SyntaxTreeNode cur = node.getChild();
-            boolean visibility = cur.getTableEntry().getVisibility();
+            boolean visibility = cur.getTableEntry().isPublic();
 
             // get member declare
             cur = cur.getRightSib();
