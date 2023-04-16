@@ -78,7 +78,7 @@ function QUADRATIC::evaluate(x: float) => float
     return (result);
   }
   
-function QUADRATIC::constructor(B: float, C: float)
+function QUADRATIC::constructor(A: float, B: float, C: float)
   {
     localvar new_function: QUADRATIC ;
     new_function.a = A + B * 3;                                            // 10.1
@@ -87,7 +87,7 @@ function QUADRATIC::constructor(B: float, C: float)
     return (1);                                                            // 10.3
   }
   
-function QUADRATIC::build2(A: float, B: float, C: float) => QUADRATIC      // 6.1
+/*function QUADRATIC::build2(A: float, B: float, C: float) => QUADRATIC      // 6.1
   {
     localvar new_function: QUADRATIC;
     new_function.a = A;
@@ -95,6 +95,7 @@ function QUADRATIC::build2(A: float, B: float, C: float) => QUADRATIC      // 6.
     new_function.c = C;
     return (new_function);
   }
+  */
   
 function f(i: integer) => void {}                                                    
 function f(i: integer) => void {}                                          // 8.2
@@ -111,7 +112,7 @@ function main() => void
   localvar f1: LINEAR;
   localvar f2: QUADRATIC;
   localvar counter: integer;
-  localvar counter: float;                                                 // 8.4
+  //localvar counter: float;                                                 // 8.4
   localvar i: integer[2][3];
   localvar j: integer[1][2][3];
   f1 = f1.build(2, 3.5);

@@ -60,6 +60,10 @@ public class SymTabEntry {
         this.link = link;
     }
 
+    public void setKind(String kind){
+        this.kind = kind;
+    }
+
     public void setType(String type){
         this.type = type;
     }

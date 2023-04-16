@@ -22,7 +22,42 @@ public class TypeCheckingVisitor extends Visitor {
     }
     
     public void visit(SyntaxTreeNode node){
-        if(node.checkContent("classDecl")){
+        if(node.checkContent("assignOrFuncCall")){
+            SyntaxTreeNode origin = node.getLeftmostSib();
+            SyntaxTreeNode idnestCall = node.getChild();
+
+            if(idnestCall.checkContent("assign")){
+                SyntaxTreeNode expr = idnestCall.getRightSib();
+                if(origin.getType().equals("ERR@!") || expr.getType().equals("ERR@!")){
+                    // Skip through error (Not raise error twice)
+                    return;
+                } else if(!origin.getType().equals(expr.getType())){
+                    OutputWriter.semanticErrWriting("ERROR: Incompatible type assignment on line " + idnestCall.getLineCount());
+                }
+            } else {
+                // Loop until the last idnest element right before assign
+                while(idnestCall.getRightSib() != null){
+                    if(idnestCall.getRightSib().checkContent("assign")){
+                        break;
+                    } else {
+                        idnestCall = idnestCall.getRightSib();
+                    }
+                }
+
+                // Skip through function call
+                if(idnestCall.getRightSib() == null){
+                    return;
+                }
+
+                SyntaxTreeNode expr = idnestCall.getRightSib().getRightSib();
+                if(idnestCall.getType().equals("ERR@!") || expr.getType().equals("ERR@!")){
+                    // Skip through error (Not raise error twice)
+                    return;
+                } else if(!idnestCall.getType().equals(expr.getType())){
+                    OutputWriter.semanticErrWriting("ERROR: Incompatible type assignment on line " + expr.getLineCount());
+                }
+            }
+        } else if(node.checkContent("classDecl")){
             // Check for circular inheritance
             SyntaxTreeNode cur = node.getChild();
             String className = cur.getValue();
@@ -51,7 +86,7 @@ public class TypeCheckingVisitor extends Visitor {
             } else {
                 SyntaxTreeNode termList2 = expr2.getChild().getRightSib();
                 if(!termList.getType().equals(termList2.getType())){
-                    OutputWriter.semanticErrWriting("ERROR: Uncompatible type for comparison! Calling from " + localTable.name);
+                    OutputWriter.semanticErrWriting("ERROR: Uncompatible type for comparison on line " + termList2.getLineCount());
                 }
             }
         } else if(node.checkContent("funcHead")){
@@ -141,7 +176,7 @@ public class TypeCheckingVisitor extends Visitor {
                             return;
                         }
                         if(!cur.getType().equals(type)){
-                            OutputWriter.semanticErrWriting("ERROR: Incompatible type for multiply/division! Calling from " + localTable.name);
+                            OutputWriter.semanticErrWriting("ERROR: Incompatible type for multiply/division on line " + cur.getLineCount());
                             node.setType("ERR@!");
                             return;
                         } else {
@@ -170,7 +205,7 @@ public class TypeCheckingVisitor extends Visitor {
                             return;
                         }
                         if(!cur.getType().equals(type)){
-                            OutputWriter.semanticErrWriting("ERROR: Incompatible type for add/subtract! Calling from " + localTable.name);
+                            OutputWriter.semanticErrWriting("ERROR: Incompatible type for add/subtract on line " + cur.getLineCount());
                             node.setType("ERR@!");
                             return;
                         } else {

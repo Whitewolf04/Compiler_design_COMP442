@@ -74,12 +74,12 @@ function count(x: integer) => integer
 // ====== main ====== //
 function main() => void
 {
-  localvar f1: LINEAR(2, 3);
+  localvar f1: LINEAR(-2, 3);
   localvar f2: QUADRATIC(-2, 1, 0);
   localvar counter: integer;
   localvar test: count(2);
 
-  counter = 1;	
+  counter = -1;	
   write(f2.a);
 
   while(counter <= 10)

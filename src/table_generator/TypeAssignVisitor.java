@@ -63,6 +63,11 @@ public class TypeAssignVisitor extends Visitor{
                         }
                     }
 
+                    // Set type on the last node
+                    if(cur.getRightSib() != null && cur.getRightSib().checkContent("assign")){
+                        cur.setType(typeBuffer);
+                    }
+
                     // Move on to the next node
                     cur = cur.getRightSib();
                 }
@@ -101,7 +106,12 @@ public class TypeAssignVisitor extends Visitor{
                 // Member function scope
                 String owner = node.getChild().getValue();
                 SymbolTable classTable = this.globalTable.containsName(owner).getLink();
-                localTable = classTable.containsFunction(funcName, node.getTableEntry().getType()).getLink();
+                SymTabEntry funcEntry = classTable.containsFunction(funcName, node.getTableEntry().getType());
+
+                if(funcEntry == null){
+                    OutputWriter.semanticErrWriting("ERROR: Function " + funcName + " with type " + node.getTableEntry().getType() + " undeclared in class " + classTable.name + ", line " + node.getLineCount());
+                }
+                localTable = funcEntry.getLink();
             }
         } else if(node.checkContent("id")){
             // Avoid assigning type for id in declaration phase or in idnest function call
@@ -156,13 +166,28 @@ public class TypeAssignVisitor extends Visitor{
                 idnest = idnest.getRightSib();
             }
             node.setType(typeBuffer);
+        } else if(node.checkContent("indice")){
+            SyntaxTreeNode leafNode = node.getChild();
+
+            // Traverse down to factor
+            while(leafNode != null && !leafNode.checkContent("factor")){
+                leafNode = leafNode.getChild();
+            }
+
+            // Check if this indice is of the right type
+            if(!leafNode.getType().equals("integer")){
+                OutputWriter.semanticErrWriting("ERROR: Illegal type for indexing array on line " + node.getLineCount());
+            }
         } else if (node.checkContent("localVarDecl")){
             SyntaxTreeNode id = node.getChild();
             SyntaxTreeNode type = id.getRightSib();
-            SyntaxTreeNode indiceOrExpr = type.getRightSib();
+            SyntaxTreeNode indiceOrExpr = type.getRightSib().getChild();
 
-            if(indiceOrExpr.checkContent("exprList")){
-                String typeBuffer = idnestResolution(type, indiceOrExpr, null);
+            if(type.getChild().checkContent("id") && indiceOrExpr.checkContent("arraySizeList") && indiceOrExpr.getChild().isEpsilon()){
+                // Raise error for object declaration with no constructor call
+                OutputWriter.semanticErrWriting("ERROR: Object " + id.getValue() + " was declared without constructor call from class " + type.getChild().getValue() + ", line " + id.getLineCount());
+            } else if(indiceOrExpr.checkContent("exprList")){
+                String typeBuffer = idnestResolution(type.getChild(), indiceOrExpr, null);
 
                 if(typeBuffer.equals("ERR@!")){
                     id.setType("ERR@!");
@@ -339,8 +364,18 @@ public class TypeAssignVisitor extends Visitor{
                     funcEntry = findVariableIn(id.getValue(), paramTypes, curTable);
                 }
 
+                // Check if this function is a constructor
                 if(funcEntry == null){
-                    OutputWriter.semanticErrWriting("ERROR: Use of undeclared function " + id.getValue() + " on line " + id.getLineCount());
+                    SymTabEntry classEntry = findVariableIn(id.getValue(), null, globalTable);
+                    if(classEntry != null && classEntry.getKind().equals("class")){
+                        SymbolTable classTable = classEntry.getLink();
+
+                        funcEntry = findVariableIn("constructor", paramTypes, classTable);
+                    }
+                }
+
+                if(funcEntry == null){
+                    OutputWriter.semanticErrWriting("ERROR: Use of undeclared function " + id.getValue() + " with param types (" + paramTypes + ") on line " + id.getLineCount());
                     id.setType("ERR@!");
                     return "ERR@!";
                 } else {
@@ -393,7 +428,7 @@ public class TypeAssignVisitor extends Visitor{
             String idType = null;
 
             if(funcEntry == null){
-                OutputWriter.semanticErrWriting("ERROR: Function " + id.getValue() + " not found in class " + classTable.name + ", line " + id.getLineCount());
+                OutputWriter.semanticErrWriting("ERROR: Function " + id.getValue() + " with param types (" + paramTypes + ") not found in class " + classTable.name + ", line " + id.getLineCount());
                 id.setType("ERR@!");
                 return "ERR@!";
             } else {
@@ -410,7 +445,7 @@ public class TypeAssignVisitor extends Visitor{
         String paramTypes = "";
         while(param != null && !param.isEpsilon()){
             SyntaxTreeNode leafNode = param.getChild();
-            while(leafNode.getChild() != null){
+            while(leafNode.getChild() != null && !leafNode.checkContent("factor")){
                 leafNode = leafNode.getChild();
             }
             paramTypes += leafNode.getType() + ",";

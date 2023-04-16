@@ -63,7 +63,7 @@ public class TableCreationVisitor extends Visitor{
                     if(duplicate != null){
                         duplicate.setLink(cur.getTableEntry().getLink());
                         duplicate.getLink().outerTable = classTable;
-                        OutputWriter.semanticErrWriting("WARNING: Override for function " + cur.getTableEntry().getName() + " in class " + name);
+                        OutputWriter.semanticErrWriting("WARNING: Override of function " + cur.getTableEntry().getName() + " in class " + name);
                     } else {
                         cur.getTableEntry().getLink().outerTable = classTable;
                         classTable.addEntry(cur.getTableEntry());
@@ -72,7 +72,7 @@ public class TableCreationVisitor extends Visitor{
                     SymTabEntry duplicate = classTable.containsName(cur.getTableEntry().getName());
                     if(duplicate != null){
                         duplicate.setType(cur.getTableEntry().getType());
-                        OutputWriter.semanticErrWriting("WARNING: Override for attribute " + cur.getTableEntry().getName() + " in class " + name);
+                        OutputWriter.semanticErrWriting("WARNING: Override of attribute " + cur.getTableEntry().getName() + " in class " + name);
                     } else {
                         classTable.addEntry(cur.getTableEntry());
                     }
@@ -139,12 +139,19 @@ public class TableCreationVisitor extends Visitor{
             // Traverse funcBody node
             SyntaxTreeNode cur = funcHead.getRightSib().getChild();
             while(cur != null && !cur.isEpsilon()){
-                // Skip through statement
                 if(cur.getTableEntry() == null){
-                    cur = cur.getRightSib();
-                    continue;
+                    // Skip through statement
+                } else {
+                    // Check for any duplicate declaration
+                    SymTabEntry dupEntry = table.containsName(cur.getTableEntry().getName());
+                    if(dupEntry != null){
+                        OutputWriter.semanticErrWriting("WARNING: New declaration of " + cur.getTableEntry().getName() + " with type " + cur.getTableEntry().getType() + " will replace " + dupEntry.getName() + " of type " + dupEntry.getType() + " in function " + table.name);
+                        dupEntry.setType(cur.getTableEntry().getType());
+                        dupEntry.setKind(cur.getTableEntry().getKind());
+                    } else {
+                        table.addEntry(cur.getTableEntry());
+                    }
                 }
-                table.addEntry(cur.getTableEntry());
                 cur = cur.getRightSib();
             }
         } else if(node.checkContent("funcHead")){
@@ -232,7 +239,7 @@ public class TableCreationVisitor extends Visitor{
                 SymTabEntry ownerEntry = this.table.containsName(cur.getChild().getValue());
                 // Error handling
                 if(ownerEntry == null){
-                    OutputWriter.semanticErrWriting("ERROR: This class/function hasn't been declared, so variable " + name + " cannot be created!");
+                    OutputWriter.semanticErrWriting("ERROR: Class " + cur.getChild().getValue() + " hasn't been declared, so variable " + name + " cannot be created, line " + cur.getLineCount());
                     node.setTableEntry(new SymTabEntry(name, "variable", "ERR@!"));
                     return;
                 }

@@ -119,8 +119,14 @@ public class CodeGenerationVisitor1 extends Visitor{
                 node.setValue(tempvar.name);
                 node.setAddress(Integer.toString(tempvar.getOffset()) + "(r13)");
             } else if(childNum == 2){
-                // TODO: Handling for signed variable
-                SyntaxTreeNode factor = node.getChild().getRightSib();
+                SyntaxTreeNode sign = node.getChild();
+                SyntaxTreeNode factor = sign.getRightSib();
+
+                if(sign.checkContent("minus")){
+                    negativeSignedIntWriter(factor);
+                }
+
+                // Set the current node to the previous node's address
                 node.setValue(factor.getValue());
                 node.setAddress(factor.getAddress());
             } else {
@@ -263,8 +269,6 @@ public class CodeGenerationVisitor1 extends Visitor{
                 } else {
                     OutputWriter.codeDeclGen("\tsubi r13,r13," + localTable.scopeSize + "\t% set the stack pointer to the top position of the stack");
                 }
-                // OutputWriter.codeDeclGen("\taddi r14,r0,topaddr\t% initialize the stack pointer");
-                // OutputWriter.codeDeclGen("\taddi r13,r0,topaddr\t% initialize the frame pointer");
             }
             funcDeclWriter();
         } else if(node.checkContent("if")){
@@ -376,11 +380,11 @@ public class CodeGenerationVisitor1 extends Visitor{
             } else if(statementType.checkContent("read")){
                 SyntaxTreeNode variable = statementType.getRightSib();
 
-                if(variable.getType() == null || variable.getType().equals("ERR@!")){
-                    // Skip through unknown or error types
-                    return;
-                } else {
+                if(variable.getType().equals("integer")){
                     readIntWriter(variable);
+                } else {
+                    // Skip through non-integer type variables
+                    return;
                 }
             }
         } else if(node.checkContent("term")){
@@ -536,6 +540,13 @@ public class CodeGenerationVisitor1 extends Visitor{
         RHS.setAddress(Integer.toString(resultTempVar.getOffset()) + "(r13)");;
     }
 
+    private void negativeSignedIntWriter(SyntaxTreeNode factor){
+        OutputWriter.codeDeclGen("% Changing the sign of " + factor.getValue());
+        OutputWriter.codeDeclGen("\tlw r1," + bufferUnpacker(factor.getAddress()));
+        OutputWriter.codeDeclGen("\tmuli r1,r1,-1");
+        OutputWriter.codeDeclGen("\tsw " + bufferUnpacker(factor.getAddress()) + ",r1");
+    }
+
     private void assignWriter(String originValue, String originAddress, SyntaxTreeNode target){
         OutputWriter.codeDeclGen("% Assigning " + target.getValue() + " to " + originValue);
         OutputWriter.codeDeclGen("\tlw r1," + bufferUnpacker(target.getAddress()));
@@ -546,7 +557,6 @@ public class CodeGenerationVisitor1 extends Visitor{
         OutputWriter.codeDeclGen("% Printing " + expr.getValue() + " to console");
         OutputWriter.codeDeclGen("\tlw r1," + bufferUnpacker(expr.getAddress()));
         OutputWriter.codeDeclGen("\tjl r15,putint");
-        // OutputWriter.codeDeclGen("\tputc ");
     }
 
     private void writeFloatWriter(SyntaxTreeNode expr){
@@ -573,6 +583,10 @@ public class CodeGenerationVisitor1 extends Visitor{
         } else {
             OutputWriter.codeDeclGen("\tclei r11,r3,0");
         }
+    }
+
+    private void arrayIndiceWriter2(SyntaxTreeNode indiceList, CodeTabEntry id){
+
     }
 
     private void arrayIndiceWriter(SyntaxTreeNode indiceList, CodeTabEntry id, boolean memvar){
@@ -622,6 +636,10 @@ public class CodeGenerationVisitor1 extends Visitor{
         OutputWriter.codeDeclGen("\tsw 0(r7),r9");
     }
 
+    /*
+     * Description: Member function call, write to Moon code
+     * Input: List of parameters (exprList), function table entry (funcEntry), calling object table entry (objectEntry)
+     */
     private void memFuncCallWriter(SyntaxTreeNode exprList, CodeTabEntry funcEntry, CodeTabEntry objectEntry){
         OutputWriter.codeDeclGen("% Calling member function " + funcEntry.link.name);
         int funcSize = funcEntry.link.scopeSize;
@@ -629,7 +647,30 @@ public class CodeGenerationVisitor1 extends Visitor{
         SyntaxTreeNode expr = exprList.getChild();
         int counter = 1;
         while(expr != null && !expr.isEpsilon()){
-            OutputWriter.codeDeclGen("\tlw r" + counter++ + "," + bufferUnpacker(expr.getAddress()) + "\t% Load parameter " + expr.getValue());
+            // Check if parameter is an array
+            if(arrayIdentifier(expr.getType())){
+                CodeTabEntry arrayEntry = findVariableIn(expr.getValue(), localTable);
+                String arrayAddress = null;
+
+                if(arrayEntry == null){
+                    // Array is a member variable
+                    arrayAddress = memVarCallWriter("self", expr.getValue());
+                    OutputWriter.codeDeclGen("\tlw r" + counter++ + "," + bufferUnpacker(arrayAddress) + "\t% Load parameter array " + expr.getValue());
+                } else if(arrayEntry.kind.equals("parameter")){
+                    // Array is a parameter
+                    arrayAddress = expr.getAddress();
+                    OutputWriter.codeDeclGen("\tlw r" + counter++ + "," + bufferUnpacker(arrayAddress) + "\t% Load parameter array " + expr.getValue());
+                } else {
+                    // Array is a local variable
+                    String offset = expr.getAddress().substring(0, expr.getAddress().indexOf('('));
+                    String register = "r" + counter++;
+                    OutputWriter.codeDeclGen("% Loading array address onto " + register + " as a paramter");
+                    OutputWriter.codeDeclGen("\taddi " + register + ",r0," + offset);
+                    OutputWriter.codeDeclGen("\tadd " + register + "," + register + ",r13");
+                }
+            } else {
+                OutputWriter.codeDeclGen("\tlw r" + counter++ + "," + bufferUnpacker(expr.getAddress()) + "\t% Load parameter " + expr.getValue());
+            }
             expr = expr.getRightSib();
         }
         OutputWriter.codeDeclGen("\taddi r12,r13," + objectEntry.offset*(-1) + "\t% Load object address onto r12");
@@ -642,16 +683,43 @@ public class CodeGenerationVisitor1 extends Visitor{
 
         // Go back to current function
         OutputWriter.codeDeclGen("\taddi r13,r13," + funcSize);
-        OutputWriter.codeDeclGen("\taddi r14,r14," + funcSize);
+        // OutputWriter.codeDeclGen("\taddi r14,r14," + funcSize);
     }
 
+    /*
+     * Description: Global function call, write to moon code
+     * Input: Parameter list node (exprList), function table entry (idEntry)
+     */
     private void globalFuncCallWriter(SyntaxTreeNode exprList, CodeTabEntry idEntry){
         int funcSize = idEntry.link.scopeSize;
                 
         SyntaxTreeNode expr = exprList.getChild();
         int counter = 1;
         while(expr != null && !expr.isEpsilon()){
-            OutputWriter.codeDeclGen("\tlw r" + counter++ + "," + bufferUnpacker(expr.getAddress()) + "\t% Load parameter " + expr.getValue());
+            // Check if parameter is an array
+            if(arrayIdentifier(expr.getType())){
+                CodeTabEntry arrayEntry = findVariableIn(expr.getValue(), localTable);
+                String arrayAddress = null;
+
+                if(arrayEntry == null){
+                    // Array is a member variable
+                    arrayAddress = memVarCallWriter("self", expr.getValue());
+                    OutputWriter.codeDeclGen("\tlw r" + counter++ + "," + bufferUnpacker(arrayAddress) + "\t% Load parameter array " + expr.getValue());
+                } else if(arrayEntry.kind.equals("parameter")){
+                    // Array is a parameter
+                    arrayAddress = expr.getAddress();
+                    OutputWriter.codeDeclGen("\tlw r" + counter++ + "," + bufferUnpacker(arrayAddress) + "\t% Load parameter array " + expr.getValue());
+                } else {
+                    // Array is a local variable
+                    String offset = expr.getAddress().substring(0, expr.getAddress().indexOf('('));
+                    String register = "r" + counter++;
+                    OutputWriter.codeDeclGen("% Loading array address onto " + register + " as a paramter");
+                    OutputWriter.codeDeclGen("\taddi " + register + ",r0," + offset);
+                    OutputWriter.codeDeclGen("\tadd " + register + "," + register + ",r13");
+                }
+            } else {
+                OutputWriter.codeDeclGen("\tlw r" + counter++ + "," + bufferUnpacker(expr.getAddress()) + "\t% Load parameter " + expr.getValue());
+            }
             expr = expr.getRightSib();
         }
         OutputWriter.codeDeclGen("\tjl r15," + idEntry.link.moonName);
@@ -670,7 +738,7 @@ public class CodeGenerationVisitor1 extends Visitor{
     // Return: Global address for the member variable
     // Prerequisite: Load the offset of member variable in object onto r1
     private String memVarCallWriter(String objectID, String varName){
-        String outputAddress = null;
+        // String outputAddress = null;
         if(objectID.equals("self")){
             // Accessing from self variable
             CodeTabEntry self = findVariableIn("self", localTable);
@@ -678,7 +746,7 @@ public class CodeGenerationVisitor1 extends Visitor{
             OutputWriter.codeDeclGen("\tadd r1,r1,r2\t% Get address of member variable " + varName);
 
             // Store the member variable offset into a buffer
-            CodeTabEntry buffer = getBuffer("objectOffsetBuf");
+            CodeTabEntry buffer = getBuffer("memVarBuf");
             OutputWriter.codeDeclGen("\taddi r3,r0," + buffer.name + "\t% Load buffer address");
             OutputWriter.codeDeclGen("\tsw 0(r3),r1\t% Store mem-var address in buffer");
         } else {
@@ -692,11 +760,11 @@ public class CodeGenerationVisitor1 extends Visitor{
             OutputWriter.codeDeclGen("\taddi r3,r0," + buffer.name + "\t% Get the buffer address");
             OutputWriter.codeDeclGen("\tsw 0(r3),r2\t% Store mem-var address in buffer");
         }
-        OutputWriter.codeDeclGen("% Get member variable");
-        OutputWriter.codeDeclGen("\tlw r3,0(r3)\t% Get member variable address");
-        outputAddress = "0(r3)";
+        // OutputWriter.codeDeclGen("% Get member variable");
+        // OutputWriter.codeDeclGen("\tlw r3,0(r3)\t% Get member variable address");
+        // outputAddress = "0(r3)";
 
-        return outputAddress;
+        return "memVarBuf";
     }
 
     private String bufferUnpacker(String address){
@@ -865,6 +933,16 @@ public class CodeGenerationVisitor1 extends Visitor{
             return 8;
         } else {
             return -1;
+        }
+    }
+
+    private boolean arrayIdentifier(String type){
+        Pattern pattern = Pattern.compile("\\A.*(\\[.*\\])+\\Z");
+        Matcher matcher = pattern.matcher(type);
+        if(matcher.find()){
+            return true;
+        } else {
+            return false;
         }
     }
 }
