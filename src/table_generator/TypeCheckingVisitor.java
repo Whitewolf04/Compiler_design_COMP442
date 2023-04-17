@@ -1,6 +1,7 @@
 package table_generator;
 
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -216,6 +217,19 @@ public class TypeCheckingVisitor extends Visitor {
                 node.setType(type);
                 System.out.println("A termList has been set to type " + type);
             }
+        } else if(node.checkContent("statement")){
+            // Type check for return statement
+            SyntaxTreeNode statementType = node.getChild();
+            if(statementType.checkContent("return")){
+                SyntaxTreeNode expr = statementType.getRightSib();
+                String returnType = getReturnTypeOfFunc(localTable.name);
+
+                if(returnType == null){
+                    OutputWriter.semanticErrWriting("ERROR: Return type mismatch for function " + localTable.name + " on line " + expr.getLineCount());
+                } else if(!expr.getType().equals(returnType)){
+                    OutputWriter.semanticErrWriting("ERROR: Return type mismatch for function " + localTable.name + " on line " + expr.getLineCount());
+                }
+            }
         }
     }
 
@@ -241,5 +255,64 @@ public class TypeCheckingVisitor extends Visitor {
         } else {
             return false;
         }
+    }
+
+    /*
+     * Description: Get the return types of a function through it's symbol table
+     * Input: Function name
+     * Output: Return type of the function. Return null if function not found or there was some error
+     */
+    private String getReturnTypeOfFunc(String funcName){
+        String paramTypes = getParamTypesFromTable(localTable);
+
+        if(funcName.indexOf("::") == -1){
+            // Global function
+            SymTabEntry funcEntry = globalTable.containsParams(funcName, paramTypes);
+
+            // Return null if function not found
+            if(funcEntry == null){
+                return null;
+            } else {
+                return funcEntry.getReturnType();
+            }
+        } else {
+            // Member function
+            String className = funcName.substring(0, funcName.indexOf("::"));
+            funcName = funcName.substring(funcName.indexOf("::")+2, funcName.length());
+            SymTabEntry classTable = globalTable.containsName(className);
+
+            // Return null if there's already an error
+            if(classTable == null || !classTable.getKind().equals("class")){
+                return null;
+            }
+
+            // Get the function entry
+            SymTabEntry funcEntry = classTable.getLink().containsParams(funcName, paramTypes);
+
+            if(funcEntry == null){
+                return null;
+            } else {
+                return funcEntry.getReturnType();
+            }
+        }
+    }
+
+    private String getParamTypesFromTable(SymbolTable table){
+        LinkedList<SymTabEntry> tableEntries = table.getTable();
+        ListIterator<SymTabEntry> i = tableEntries.listIterator();
+        String paramTypes = "";
+
+        while(i.hasNext()){
+            SymTabEntry cur = i.next();
+
+            if(cur.getKind().equals("parameter")){
+                paramTypes += cur.getType() + ",";
+            }
+        }
+        if(!paramTypes.isEmpty()){
+            paramTypes = paramTypes.substring(0, paramTypes.length()-1);
+        }
+
+        return paramTypes;
     }
 }

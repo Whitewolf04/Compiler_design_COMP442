@@ -55,7 +55,8 @@ function LINEAR::constructor(A: float, B: float)
     localvar new_function: LINEAR;
     new_function.a = A;
     new_function.b = B;
-    return (new_function);
+    //return (new_function);
+    return();
   }
   
 function LINEAR::evaluate(x: float) => float 
