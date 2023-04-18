@@ -32,9 +32,8 @@ function printArray(arr: integer[7], size: integer) => void
   n = size;
   i = 0; 
   while (i<n) { 
-    //write(i);
     write(arr[i]);
-    i = i+1;
+    i = i + 1;
   };
 } 
 
@@ -49,16 +48,16 @@ function main() => void
   arr[4] = 22;
   arr[5] = 11;
   arr[6] = 90;
-  write(arr[0]);
-  write(arr[1]);
-  write(arr[2]);
-  write(arr[3]);
-  write(arr[4]);
-  write(arr[5]);
-  write(arr[6]);
+  //write(arr[0]);
+  //write(arr[1]);
+  //write(arr[2]);
+  //write(arr[3]);
+  //write(arr[4]);
+  //write(arr[5]);
+  //write(arr[6]);
   printArray(arr, 7); 
-  //bubbleSort(arr, 7);
-  //printArray(arr, 7); 
+  bubbleSort(arr, 7);
+  printArray(arr, 7); 
 }
 
 /*

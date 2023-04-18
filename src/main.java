@@ -10,16 +10,16 @@ import table_generator.SymbolTableGenerator;
 
 public class main {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Enter input file name: ");
-        String fileName = sc.next();
-        System.out.print("\nEnter output file name: ");
-        String outputFileName = sc.next();
-        System.out.print("\n\n");
-        sc.close();
+        // Scanner sc = new Scanner(System.in);
+        // System.out.print("Enter input file name: ");
+        // String fileName = sc.next();
+        // System.out.print("\nEnter output file name: ");
+        // String outputFileName = sc.next();
+        // System.out.print("\n\n");
+        // sc.close();
 
         ProgramQueue.initProgramQueue();
-        LexAnalyzer.analyze(fileName);
+        LexAnalyzer.analyze("example-bubblesort.src");
 
         SyntaxAnalyzer.analyze();
         OutputWriter.openTreeWriteStream();
@@ -32,6 +32,6 @@ public class main {
         OutputWriter.closeSemanticOutStream();
         OutputWriter.closeSemanticOutStream();
 
-        CodeGenerator.generate(outputFileName);
+        CodeGenerator.generate("out.m");
     }
 }

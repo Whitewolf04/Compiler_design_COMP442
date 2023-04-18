@@ -54,15 +54,14 @@ public class CodeGenerationVisitor1 extends Visitor{
                 assignWriter(origin.getValue(), originOffset, expr);
             } else if(cur.checkContent("indiceList") && cur.getRightSib().checkContent("assign")){
                 SyntaxTreeNode expr = cur.getRightSib().getRightSib();
-                arrayIndiceWriter(cur, originEntry, (originOffset.equals("objectOffsetBuf") ? true : false));
+                arrayIndiceWriter2(cur, originEntry, (originOffset.equals("objectOffsetBuf") ? true : false), (originEntry.kind.equals("parameter") ? true : false));
 
                 // Assign this array element to the new value
                 OutputWriter.codeDeclGen("% Storing " + expr.getValue() + " into " + originEntry.name);
                 OutputWriter.codeDeclGen("\taddi r7,r0,arrayOffsetBuf\t% Load buffer address onto r7");
-                OutputWriter.codeDeclGen("\tlw r1,0(r7)\t% Get offset stored in buffer");
-                OutputWriter.codeDeclGen("\tadd r3,r13,r1\t% Get offset of the element on program stack");
+                OutputWriter.codeDeclGen("\tlw r1,0(r7)\t\t% Get address stored in buffer");
                 OutputWriter.codeDeclGen("\tlw r2," + expr.getAddress());
-                OutputWriter.codeDeclGen("\tsw 0(r3),r2");
+                OutputWriter.codeDeclGen("\tsw 0(r1),r2");
                 
             } else if(cur.checkContent("exprList") && cur.getRightSib().isEpsilon()) {
                 // Must be a global function
@@ -158,15 +157,14 @@ public class CodeGenerationVisitor1 extends Visitor{
                     if(idnestList.getChild().isEpsilon()){
                         if(indiceOrExpr.checkContent("indiceList")){
                             // Handling for array
-                            arrayIndiceWriter(indiceOrExpr, idEntry, (idOffset.equals("objectOffsetBuf") ? true : false));
+                            arrayIndiceWriter2(indiceOrExpr, idEntry, (idOffset.equals("objectOffsetBuf") ? true : false), (idEntry.kind.equals("parameter") ? true : false));
                             
                             // Store the offset in a temp variable
                             CodeTabEntry tempArrVar = localTable.tempArrVar.pop();
                             OutputWriter.codeDeclGen("% Store the array offset in a temp variable " + tempArrVar.name);
                             OutputWriter.codeDeclGen("\taddi r7,r0,arrayOffsetBuf\t% Load buffer address onto r7");
-                            OutputWriter.codeDeclGen("\tlw r1,0(r7)\t% Get offset stored in buffer");
-                            OutputWriter.codeDeclGen("\tadd r2,r13,r1\t% Get global offset");
-                            OutputWriter.codeDeclGen("\tlw r3,0(r2)\t% Load the element onto r3");
+                            OutputWriter.codeDeclGen("\tlw r1,0(r7)\t\t% Get offset stored in buffer");
+                            OutputWriter.codeDeclGen("\tlw r3,0(r1)\t% Load the element onto r3");
                             OutputWriter.codeDeclGen("\tsw " + tempArrVar.getOffset() + "(r13),r3\t% Store element into tempvar");
                             node.setValue(tempArrVar.name);
                             node.setAddress(tempArrVar.getOffset() + "(r13)");
@@ -585,8 +583,55 @@ public class CodeGenerationVisitor1 extends Visitor{
         }
     }
 
-    private void arrayIndiceWriter2(SyntaxTreeNode indiceList, CodeTabEntry id){
+    private void arrayIndiceWriter2(SyntaxTreeNode indiceList, CodeTabEntry id, boolean memvar, boolean param){
+        // Get type size
+        int size = arrayTypeSize(id.type);
+        if(size == -1){
+            return;
+        }
 
+        // Get all indices
+        Stack<Integer> indexUnpack = indiceHandling(id.type);
+        if(indexUnpack == null){
+            return;
+        }
+        
+        // Go through each indice
+        SyntaxTreeNode indice = indiceList.getChild();
+        if(indice.isEpsilon()){
+            return;
+        }
+
+        // Store the base address offset into register 9
+        OutputWriter.codeDeclGen("% Get base address offset of array " + id.name);
+        if(memvar){
+            OutputWriter.codeDeclGen("\taddi r1,r0,objectOffsetBuf\t% Load buffer's address onto r1");
+            OutputWriter.codeDeclGen("\tlw r1,0(r1)");
+            OutputWriter.codeDeclGen("\tadd r9,r0,r1");
+        } else if(param){
+            OutputWriter.codeDeclGen("\tlw r1," + id.getOffset() + "(r13)\t\t% Load array address onto r1");
+            OutputWriter.codeDeclGen("\tadd r9,r0,r1");
+        } else {
+            OutputWriter.codeDeclGen("\tadd r9,r0,r13");
+            OutputWriter.codeDeclGen("\taddi r9,r9," + id.getOffset());
+        }
+
+        // Offset the base address
+        OutputWriter.codeDeclGen("% Offsetting array " + id.name);
+        while(indice != null && !indice.isEpsilon()){
+            OutputWriter.codeDeclGen("\tlw r1," + bufferUnpacker(indice.getChild().getAddress()) + "\t\t% Loading index " + indice.getChild().getValue());
+            OutputWriter.codeDeclGen(("\tmuli r2,r1," + indexUnpack.pop() + "\t\t% Multiply with number of columns"));
+            OutputWriter.codeDeclGen("\tmuli r2,r2," + size + "\t\t% Multiply with array type");
+            OutputWriter.codeDeclGen("\tmuli r2,r2,-1\t\t% Convert back to negative offset");
+            OutputWriter.codeDeclGen("\tadd r9,r9,r2");
+
+            indice = indice.getRightSib();
+        }
+
+        // Store the offset into a buffer
+        CodeTabEntry buffer = getBuffer("arrayOffsetBuf");
+        OutputWriter.codeDeclGen("\taddi r7,r0," + buffer.name + "\t\t% Load memory address of " + buffer.name + " onto r7");
+        OutputWriter.codeDeclGen("\tsw 0(r7),r9");
     }
 
     private void arrayIndiceWriter(SyntaxTreeNode indiceList, CodeTabEntry id, boolean memvar){
@@ -770,7 +815,7 @@ public class CodeGenerationVisitor1 extends Visitor{
     private String bufferUnpacker(String address){
         if(address.contains("Buf")){
             OutputWriter.codeDeclGen("% Get value from " + address);
-            OutputWriter.codeDeclGen("\taddi r7,r0," + address + "\t% Load buffer address onto r7");
+            OutputWriter.codeDeclGen("\taddi r7,r0," + address + "\t\t% Load buffer address onto r7");
             return "0(r7)";
         } else {
             return address;
