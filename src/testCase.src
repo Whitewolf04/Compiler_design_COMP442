@@ -5,7 +5,8 @@ class POLYNOMIAL {
 class RANDOM isa POLYNOMIAL {
   public function test: () => void;
   private attribute a: integer;
-  private attribute a: integer;
+  //private attribute a: integer;
+  //public attribute b: QUADRATIC[];
 };
 
 class LINEAR isa POLYNOMIAL, RANDOM {
@@ -19,9 +20,17 @@ class QUADRATIC isa POLYNOMIAL {
   private attribute a: integer;
   private attribute b: integer;
   private attribute c: integer;
+  private attribute d: RANDOM[];
   public  constructor: (A: integer, B: integer, C: integer);
   public  constructor: (A: integer);
   public  function evaluate: (x: integer) => integer;
+};
+
+// Multiple class declaration error test
+class QUADRATIC isa POLYNOMIAL {
+  private attribute a: integer;
+  private attribute b: integer;
+  public constructor: (A: integer, B: integer, C: integer);
 };
 
 // ====== member function implementations ====== //  
@@ -33,6 +42,7 @@ function POLYNOMIAL::evaluate(x: integer) => integer
 function QUADRATIC::evaluate(x: integer) => integer
 {
   localvar result: integer;
+  localvar a: float;                                // Over-shadowed member variable test
   //Using Horner's method
   result = a;
   result = result * x + b;
@@ -72,7 +82,7 @@ function count(x: integer) => integer
 }
 
 // ====== main ====== //
-function main() => void
+function prog() => void
 {
   localvar f1: LINEAR(-2, 3);
   localvar f2: QUADRATIC(-2, 1, 0);
@@ -90,5 +100,10 @@ function main() => void
     //write(f1.a);
     counter = counter + 1;
   };
+}
+
+function prog() => void
+{
+  localvar f3: LINEAR(1, 2);
 }
 

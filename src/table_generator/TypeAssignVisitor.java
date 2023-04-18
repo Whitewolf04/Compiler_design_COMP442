@@ -27,7 +27,19 @@ public class TypeAssignVisitor extends Visitor{
     }
 
     public void visit(SyntaxTreeNode node){
-        if(node.checkContent("assignOrFuncCall")){
+        if(node.checkContent("arraySizeList")){
+            SyntaxTreeNode arraySize = node.getChild();
+            SyntaxTreeNode id = node.getLeftmostSib();
+
+            // Check if arrays were declared with specific size before memory allocation
+            while(arraySize != null && !arraySize.isEpsilon()){
+                if(arraySize.getValue() == null){
+                    OutputWriter.semanticErrWriting("ERROR: Array " + id.getValue() + " was declared without specific array size, line " + id.getLineCount());
+                }
+                
+                arraySize = arraySize.getRightSib();
+            }
+        } else if(node.checkContent("assignOrFuncCall")){
             // Idnest resolution
             SyntaxTreeNode cur = node.getChild();
             if(!cur.checkContent("assign")){

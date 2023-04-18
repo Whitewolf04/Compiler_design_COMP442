@@ -1,0 +1,9 @@
+WARNING: Override of attribute a in class LINEAR
+ERROR: Class QUADRATIC on line 30 has already been declared before, so this declardation will be skipped!
+WARNING: Overshadowing of member variable a in function evaluate, line 47
+ERROR: Duplicate declaration of global function prog!
+ERROR: Main function was not declared!
+ERROR: Array d was declared without specific array size, line 23
+ERROR: Variable a is private in class QUADRATIC, line 93
+ERROR: Use of undefined variable! Variable name: f3 on line 107
+ERROR: Incompatible type assignment on line 47

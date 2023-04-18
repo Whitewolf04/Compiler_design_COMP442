@@ -1,5 +1,6 @@
 package table_generator;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.regex.Matcher;
@@ -7,16 +8,19 @@ import java.util.regex.Pattern;
 
 public class SymbolTable {
     private LinkedList<SymTabEntry> table;
+    private ArrayList<SymbolTable> inheritanceList;
     public SymbolTable outerTable;
     public String name;
 
     public SymbolTable(){
         table = new LinkedList<SymTabEntry>();
+        inheritanceList = new ArrayList<SymbolTable>();
     }
 
     public SymbolTable(String name){
         table = new LinkedList<SymTabEntry>();
         this.name = name;
+        inheritanceList = new ArrayList<SymbolTable>();
     }
 
     public LinkedList<SymTabEntry> getTable(){
@@ -25,6 +29,10 @@ public class SymbolTable {
 
     public void addEntry(SymTabEntry entry){
         table.add(entry);
+    }
+
+    public void addToInheritanceList(SymbolTable classTable){
+        inheritanceList.add(classTable);
     }
 
     public SymTabEntry containsFunction(String name, String type){
@@ -159,14 +167,14 @@ public class SymbolTable {
                 if(duplicate != null){
                     duplicate.setLink(cur.getLink());
                 } else {
-                    other.addEntry(cur);
+                    other.addEntry(new SymTabEntry(cur));
                 }
             } else if(cur.getKind().compareTo("variable")==0){
                 SymTabEntry duplicate = other.containsName(cur.getName());
                 if(duplicate != null){
                     duplicate.setType(cur.getType());
                 } else {
-                    other.addEntry(cur);
+                    other.addEntry(new SymTabEntry(cur));
                 }
             }
         }
@@ -177,9 +185,16 @@ public class SymbolTable {
     }
 
     public String printTable(){
+        // Print output
         String output = "+----------------------------------------------------------------------------------------------------------------------------+\n";
         output += String.format("| %-122s |%n", this.name);
         output += "+----------------------------------------------------------------------------------------------------------------------------+\n";
+
+        for(int i = 0; i < inheritanceList.size(); i++){
+            SymbolTable parent = inheritanceList.get(i);
+            output += String.format("| %-10s | %-15s | %-15s | %-40s | %-30s |%n", "public", parent.name, "parent class", getClassType(parent), parent.name);
+            output += "+----------------------------------------------------------------------------------------------------------------------------+\n";
+        }
 
         ListIterator<SymTabEntry> i = table.listIterator();
         while(i.hasNext()){
@@ -207,6 +222,18 @@ public class SymbolTable {
             return true;
         }
         return false;
+    }
+
+    private static String getClassType(SymbolTable classTable){
+        String type = classTable.name + ":";
+
+        for (int i = 0; i < classTable.inheritanceList.size(); i++) {
+            type += classTable.inheritanceList.get(i).name;
+            type += ",";
+        }
+        type = type.substring(0, type.length()-1);
+
+        return type;
     }
 
 }

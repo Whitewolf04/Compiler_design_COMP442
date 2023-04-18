@@ -16,6 +16,7 @@ import lexical_analyzer.OutputWriter;
  */
 public class TableCreationVisitor extends Visitor{
     SymbolTable table;
+    boolean mainDeclared = false;
 
     public TableCreationVisitor(){
         // Global table for the program
@@ -29,6 +30,12 @@ public class TableCreationVisitor extends Visitor{
             // Get ID
             String name = cur.getValue();
             SymbolTable classTable = new SymbolTable(name);
+
+            // Check if class has already been declared
+            if(this.table.containsName(name) != null){
+                OutputWriter.semanticErrWriting("ERROR: Class " + name + " on line " + cur.getLineCount() + " has already been declared before, so this declardation will be skipped!");
+                return;
+            }
 
             // Get inherit list
             cur = cur.getRightSib();
@@ -46,6 +53,7 @@ public class TableCreationVisitor extends Visitor{
                 // Add to inheritance list 
                 type += parent.getValue() + ",";
                 SymbolTable parentTable = parentEntry.getLink();
+                classTable.addToInheritanceList(parentTable);
                 parentTable.copyMemberToTable(classTable);
                 parent = parent.getRightSib();
             }
@@ -103,6 +111,7 @@ public class TableCreationVisitor extends Visitor{
             return;
         } else if(node.checkContent("funcDef")){
             SymbolTable table = null;
+            SymbolTable ownerTable = null;
             SyntaxTreeNode funcHead = node.getChild();
             Pattern pattern = Pattern.compile("\\A(.*?)::(.*?)\\Z");
             Matcher matcher = pattern.matcher(funcHead.getTableEntry().getName());
@@ -116,7 +125,7 @@ public class TableCreationVisitor extends Visitor{
                     OutputWriter.semanticErrWriting("ERROR: Class " + ownerName + " has not been declared, so its function " + funcName + " cannot be defined!");
                     return;
                 }
-                SymbolTable ownerTable = ownerEntry.getLink();
+                ownerTable = ownerEntry.getLink();
                 SymTabEntry funcEntry = ownerTable.containsFunction(funcName, funcHead.getTableEntry().getType());
                 if(funcEntry == null){
                     OutputWriter.semanticErrWriting("ERROR: Function " + funcName + " has not been declared in class " + ownerName + ", so it cannot be defined!");
@@ -142,13 +151,17 @@ public class TableCreationVisitor extends Visitor{
                 if(cur.getTableEntry() == null){
                     // Skip through statement
                 } else {
-                    // Check for any duplicate declaration
+                    // Check for any duplicate declaration locally
                     SymTabEntry dupEntry = table.containsName(cur.getTableEntry().getName());
                     if(dupEntry != null){
                         OutputWriter.semanticErrWriting("WARNING: New declaration of " + cur.getTableEntry().getName() + " with type " + cur.getTableEntry().getType() + " will replace " + dupEntry.getName() + " of type " + dupEntry.getType() + " in function " + table.name);
                         dupEntry.setType(cur.getTableEntry().getType());
                         dupEntry.setKind(cur.getTableEntry().getKind());
                     } else {
+                        if(ownerTable != null && ownerTable.containsName(cur.getTableEntry().getName()) != null){
+                            OutputWriter.semanticErrWriting("WARNING: Overshadowing of member variable " + cur.getTableEntry().getName() + " in function " + funcName + ", line " + cur.getLineCount());
+                        }
+
                         table.addEntry(cur.getTableEntry());
                     }
                 }
@@ -161,6 +174,10 @@ public class TableCreationVisitor extends Visitor{
             SymbolTable table = null;
             if(node.getChildNum() == 3){
                 // Global function
+                // Check for duplicate global function declaration
+                if(this.table.containsName(name) != null){
+                    OutputWriter.semanticErrWriting("ERROR: Duplicate declaration of global function " + name + "!");
+                }
             } else if(node.getChildNum() == 4){
                 // Constructor
                 cur = cur.getRightSib().getRightSib(); // Skip through sr to constructor node
@@ -191,6 +208,11 @@ public class TableCreationVisitor extends Visitor{
                 cur = cur.getRightSib();
                 type = cur.getTableEntry().getType() + ":" + paramTypes;
                 type = type.substring(0, type.length()-1);
+            }
+
+            // Check if this function is main
+            if(name.equals("main")){
+                mainDeclared = true;
             }
             
             node.setTableEntry(new SymTabEntry(name, "function", type, table));
@@ -357,6 +379,10 @@ public class TableCreationVisitor extends Visitor{
             }
 
             node.setTableEntry(new SymTabEntry(name, "variable", type));
+        } else if(node.checkContent("prog")){
+            if(!mainDeclared){
+                OutputWriter.semanticErrWriting("ERROR: Main function was not declared!");
+            }
         } else if(node.checkContent("returnType")){
             SyntaxTreeNode cur = node.getChild();
             String type = null;
@@ -372,6 +398,11 @@ public class TableCreationVisitor extends Visitor{
             String type = null;
             if(cur.checkContent("id")){
                 type = cur.getValue();
+
+                // Check if this class has been declared prior to this
+                if(this.table.containsName(type) == null){
+                    OutputWriter.semanticErrWriting("ERROR: Class " + type + " has not been declared before, line " + node.getLineCount());
+                }
             } else {
                 type = cur.toString();
             }
