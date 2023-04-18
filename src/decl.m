@@ -248,8 +248,8 @@ count_integer	nop
 
 
 % Start of function prog
-prog	nop
-	subi r13,r13,95	% set the stack pointer to the top position of the stack
+prog_integer	nop
+	subi r13,r13,99	% set the stack pointer to the top position of the stack
 	sw -79(r13),r15	% Put link onto stack frame
 % Storing 2 into t9
 	addi r1, r0, 0
@@ -332,8 +332,8 @@ s0ENDWHILE	addi r0,r0,0
 
 
 % Start of function prog
-prog	nop
-	subi r13,r13,95	% set the stack pointer to the top position of the stack
+prog_integer	nop
+	subi r13,r13,99	% set the stack pointer to the top position of the stack
 	sw -79(r13),r15	% Put link onto stack frame
 % Storing 1 into t22
 	addi r1, r0, 0
@@ -343,6 +343,14 @@ prog	nop
 	addi r1, r0, 0
 	addi r1, r0, 2
 	sw -87(r13), r1
+	lw r15,-79(r13)
+	jr r15	% Jump back to the calling function
+
+
+% Start of function prog
+prog_integer	nop
+	subi r13,r13,99	% set the stack pointer to the top position of the stack
+	sw -79(r13),r15	% Put link onto stack frame
 	lw r15,-79(r13)
 	jr r15	% Jump back to the calling function
 	hlt
@@ -357,6 +365,10 @@ t5	res 4
 memVarBuf	res 4
 t7	res 4
 t8	res 4
+t10	res 4
+t13	res 4
+t18	res 4
+t21	res 4
 t10	res 4
 t13	res 4
 t18	res 4

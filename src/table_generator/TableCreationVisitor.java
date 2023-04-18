@@ -130,6 +130,8 @@ public class TableCreationVisitor extends Visitor{
                 if(funcEntry == null){
                     OutputWriter.semanticErrWriting("ERROR: Function " + funcName + " has not been declared in class " + ownerName + ", so it cannot be defined!");
                     return;
+                } else if(ownerTable.containsName(funcName) != null){
+                    OutputWriter.semanticErrWriting("WARNING: Function " + funcName + " is being overloaded on line " + funcHead.getLineCount());
                 }
                 table = funcEntry.getLink();
                 table.name = funcHead.getTableEntry().getName();
@@ -172,12 +174,10 @@ public class TableCreationVisitor extends Visitor{
             SyntaxTreeNode cur = node.getChild();
             String name = cur.getValue();
             SymbolTable table = null;
+            boolean isGlobal = false;
             if(node.getChildNum() == 3){
                 // Global function
-                // Check for duplicate global function declaration
-                if(this.table.containsName(name) != null){
-                    OutputWriter.semanticErrWriting("ERROR: Duplicate declaration of global function " + name + "!");
-                }
+                isGlobal = true;
             } else if(node.getChildNum() == 4){
                 // Constructor
                 cur = cur.getRightSib().getRightSib(); // Skip through sr to constructor node
@@ -199,7 +199,7 @@ public class TableCreationVisitor extends Visitor{
                 fParams = fParams.getRightSib();
             }
 
-            // Swith to returnType
+            // Switch to returnType
             String type = null;
             if(node.getChildNum() == 4){
                 type = "void:" + paramTypes;
@@ -213,6 +213,17 @@ public class TableCreationVisitor extends Visitor{
             // Check if this function is main
             if(name.equals("main")){
                 mainDeclared = true;
+            }
+
+            // Check for global function overloading/overriding
+            if(isGlobal){
+                if(this.table.containsParams(name, paramTypes) != null){
+                    // Multiple declaration of a free function
+                    OutputWriter.semanticErrWriting("ERROR: Function " + name + " has been declared before, line " + node.getLineCount());
+                } else if(this.table.containsName(name) != null){
+                    // Overloading a free function
+                    OutputWriter.semanticErrWriting("WARNING: Function " + name + " is being overloaded on line " + node.getLineCount());
+                }
             }
             
             node.setTableEntry(new SymTabEntry(name, "function", type, table));

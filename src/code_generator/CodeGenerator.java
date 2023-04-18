@@ -11,7 +11,7 @@ import table_generator.Visitor;
 public class CodeGenerator {
     public static CodeGenTable globalTable;
 
-    public static void createTable(){
+    public static void generate(String outputFileName){
         TableConversionVisitor tableConverter = new TableConversionVisitor(SymbolTableGenerator.globalTable);
         tableConverter.convertSymbolTable();
         globalTable = tableConverter.codeTable;
@@ -21,7 +21,7 @@ public class CodeGenerator {
 
         printCodeGenTable(tableConverter.codeTable);
 
-        OutputWriter.openCodeDeclGen();
+        OutputWriter.openCodeDeclGen(outputFileName);
         CodeGenerationVisitor1 codeGen1 = new CodeGenerationVisitor1(globalTable);
         treeTraversal(Factory.nodeStack.peek(), codeGen1);
         OutputWriter.closeCodeDeclGenStream();

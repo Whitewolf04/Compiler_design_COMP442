@@ -107,3 +107,8 @@ function prog() => void
   localvar f3: LINEAR(1, 2);
 }
 
+function prog(x: integer) => void 
+{
+  localvar a: float;
+}
+
