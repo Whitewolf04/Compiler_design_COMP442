@@ -245,6 +245,8 @@ public class TypeAssignVisitor extends Visitor{
 
                 idnestNode = idnestNode.getRightSib();
             }
+
+            node.setType(typeBuffer);
         }
     }
 

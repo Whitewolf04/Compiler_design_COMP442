@@ -30,7 +30,7 @@ function QUADRATIC::evaluate(x: integer) => integer
   //Using Horner's method
   result = a;
   result = result * x + b;
-  result = result * not x + c;
+  result = result * x + c;
   return (result);
 }
 
@@ -61,15 +61,19 @@ function main() => void
   localvar f1: LINEAR(2, 3);
   localvar f2: QUADRATIC(-2, 1, 0);
   localvar counter: integer;
+  localvar result: integer;
 
   counter = 1;	
 
   while(counter <= 10)
   {
     //write(counter);
-    f1.a = f1.evaluate(counter);
-    write(f1.a);
+    //result = f2.evaluate(counter);
+    //write(result);
     //write(f2.a);
+    read(result);
+    result = f1.evaluate(result);
+    write(result);
     counter = counter + 1;
   };
 }

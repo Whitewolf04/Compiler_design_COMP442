@@ -381,7 +381,14 @@ public class CodeGenerationVisitor1 extends Visitor{
                 SyntaxTreeNode variable = statementType.getRightSib();
 
                 if(variable.getType().equals("integer")){
-                    readIntWriter(variable);
+                    // WARNING: Can only handle variable as a local variable for now
+                    // Get address of variable
+                    SyntaxTreeNode id = variable.getChild();
+                    CodeTabEntry idEntry = findVariableIn(id.getValue(), localTable);
+                    id.setAddress(idEntry.getOffset() + "(r13)");
+
+                    // Write to moon code
+                    readIntWriter(id);
                 } else {
                     // Skip through non-integer type variables
                     return;
@@ -946,8 +953,7 @@ public class CodeGenerationVisitor1 extends Visitor{
     private void readIntWriter(SyntaxTreeNode variable){
         OutputWriter.codeDeclGen("% Reading in an integer");
         OutputWriter.codeDeclGen("\tjl r15,getint");
-        OutputWriter.codeDeclGen("\tjl r15,strint");
-        OutputWriter.codeDeclGen("\tsw " + bufferUnpacker(variable.getAddress()) + ",r11\t% Store the integer into the variable");
+        OutputWriter.codeDeclGen("\tsw " + bufferUnpacker(variable.getAddress()) + ",r1\t% Store the integer into the variable");
     }
 
     /*
