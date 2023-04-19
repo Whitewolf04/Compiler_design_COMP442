@@ -557,6 +557,8 @@ public class CodeGenerationVisitor1 extends Visitor{
         OutputWriter.codeDeclGen("% Printing " + expr.getValue() + " to console");
         OutputWriter.codeDeclGen("\tlw r1," + bufferUnpacker(expr.getAddress()));
         OutputWriter.codeDeclGen("\tjl r15,putint");
+        OutputWriter.codeDeclGen("\taddi r12,r0,32");
+        OutputWriter.codeDeclGen("\tputc r12");
     }
 
     private void writeFloatWriter(SyntaxTreeNode expr){
