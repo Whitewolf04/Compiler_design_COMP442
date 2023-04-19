@@ -77,7 +77,9 @@ public class CodeGenerationVisitor1 extends Visitor{
                 // Get the offset of member variable
                 OutputWriter.codeDeclGen("\taddi r1,r0," + idEntry.getOffset() + "\t% Get offset of member variable " + idEntry.name + " in object");
                 
-                String tempAddress = memVarCallWriter(origin.getValue(), varName);
+                String tempAddress = memVarAssignWriter(origin.getValue(), varName);
+                tempAddress = bufferUnpacker(tempAddress);
+                OutputWriter.codeDeclGen("\tlw r7,0(r7)\t% Load mem-var into r7");
 
                 assignWriter(origin.getValue() + "." + varName, tempAddress, expr);
             } else {
@@ -548,7 +550,7 @@ public class CodeGenerationVisitor1 extends Visitor{
     private void assignWriter(String originValue, String originAddress, SyntaxTreeNode target){
         OutputWriter.codeDeclGen("% Assigning " + target.getValue() + " to " + originValue);
         OutputWriter.codeDeclGen("\tlw r1," + bufferUnpacker(target.getAddress()));
-        OutputWriter.codeDeclGen("\tsw " + originAddress + ",r1");
+        OutputWriter.codeDeclGen("\tsw " + bufferUnpacker(originAddress) + ",r1");
     }
 
     private void writeIntWriter(SyntaxTreeNode expr){
@@ -780,7 +782,7 @@ public class CodeGenerationVisitor1 extends Visitor{
     }
 
     // WARNING: Only for local object or self member variable access
-    // Return: Global address for the member variable
+    // Return: Member variable value stored in buffer
     // Prerequisite: Load the offset of member variable in object onto r1
     private String memVarCallWriter(String objectID, String varName){
         // String outputAddress = null;
@@ -789,21 +791,23 @@ public class CodeGenerationVisitor1 extends Visitor{
             CodeTabEntry self = findVariableIn("self", localTable);
             OutputWriter.codeDeclGen("\tlw r2," + self.getOffset() + "(r13)\t% Get object address");
             OutputWriter.codeDeclGen("\tadd r1,r1,r2\t% Get address of member variable " + varName);
+            OutputWriter.codeDeclGen("\tlw r1,0(r1)\t% Load mem-var onto r1");
 
             // Store the member variable offset into a buffer
             CodeTabEntry buffer = getBuffer("memVarBuf");
             OutputWriter.codeDeclGen("\taddi r3,r0," + buffer.name + "\t% Load buffer address");
-            OutputWriter.codeDeclGen("\tsw 0(r3),r1\t% Store mem-var address in buffer");
+            OutputWriter.codeDeclGen("\tsw 0(r3),r1\t% Store mem-var in buffer");
         } else {
             // Calling from an object
             CodeTabEntry objectEntry = findVariableIn(objectID, localTable);
-            OutputWriter.codeDeclGen("\taddi r2,r0," + objectEntry.getOffset() + "\t% Get the object address");
+            OutputWriter.codeDeclGen("\taddi r2,r13," + objectEntry.getOffset() + "\t% Get the object address");
             OutputWriter.codeDeclGen("\tadd r2,r2,r1\t% Get the member variable address");
+            OutputWriter.codeDeclGen("\tlw r2,0(r2)\t% Load mem-var onto r2");
 
             // Store the member variable into a buffer
             CodeTabEntry buffer = getBuffer("memVarBuf");
             OutputWriter.codeDeclGen("\taddi r3,r0," + buffer.name + "\t% Get the buffer address");
-            OutputWriter.codeDeclGen("\tsw 0(r3),r2\t% Store mem-var address in buffer");
+            OutputWriter.codeDeclGen("\tsw 0(r3),r2\t% Store mem-var in buffer");
         }
         // OutputWriter.codeDeclGen("% Get member variable");
         // OutputWriter.codeDeclGen("\tlw r3,0(r3)\t% Get member variable address");
@@ -812,11 +816,54 @@ public class CodeGenerationVisitor1 extends Visitor{
         return "memVarBuf";
     }
 
+    // WARNING: Only for local object or self member variable access
+    // Return: Global address for the member variable
+    // Prerequisite: Load the offset of member variable in object onto r1
+    private String memVarAssignWriter(String objectID, String varName){
+        // String outputAddress = null;
+        if(objectID.equals("self")){
+            // Accessing from self variable
+            CodeTabEntry self = findVariableIn("self", localTable);
+            OutputWriter.codeDeclGen("\tlw r2," + self.getOffset() + "(r13)\t% Get object address");
+            OutputWriter.codeDeclGen("\tadd r1,r1,r2\t% Get address of member variable " + varName);
+
+            // Store the member variable offset into a buffer
+            CodeTabEntry buffer = getBuffer("memVarAddressBuf");
+            OutputWriter.codeDeclGen("\taddi r3,r0," + buffer.name + "\t% Load buffer address");
+            OutputWriter.codeDeclGen("\tsw 0(r3),r1\t% Store mem-var address in buffer");
+        } else {
+            // Calling from an object
+            CodeTabEntry objectEntry = findVariableIn(objectID, localTable);
+            OutputWriter.codeDeclGen("\taddi r2,r13," + objectEntry.getOffset() + "\t% Get the object address");
+            OutputWriter.codeDeclGen("\tadd r2,r2,r1\t% Get the member variable address");
+
+            // Store the member variable into a buffer
+            CodeTabEntry buffer = getBuffer("memVarAddressBuf");
+            OutputWriter.codeDeclGen("\taddi r3,r0," + buffer.name + "\t% Get the buffer address");
+            OutputWriter.codeDeclGen("\tsw 0(r3),r2\t% Store mem-var address in buffer");
+        }
+        // OutputWriter.codeDeclGen("% Get member variable");
+        // OutputWriter.codeDeclGen("\tlw r3,0(r3)\t% Get member variable address");
+        // outputAddress = "0(r3)";
+
+        return "memVarAddressBuf";
+    }
+
     private String bufferUnpacker(String address){
         if(address.contains("Buf")){
             OutputWriter.codeDeclGen("% Get value from " + address);
-            OutputWriter.codeDeclGen("\taddi r7,r0," + address + "\t\t% Load buffer address onto r7");
-            return "0(r7)";
+            String register = null;
+            if(address.contains("Offset")){
+                register = "r9";
+            } else if(address.contains("Return")){
+                register = "r8";
+            } else if(address.contains("Address")){
+                register = "r7";
+            } else {
+                register = "r6";
+            }
+            OutputWriter.codeDeclGen("\taddi " + register + ",r0," + address + "\t\t% Load buffer address onto " + register);
+            return ("0(" + register + ")");
         } else {
             return address;
         }

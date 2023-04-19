@@ -21,7 +21,7 @@ public class TableConversionVisitor {
     }
 
     private CodeGenTable convert(SymbolTable table, CodeGenTable upperTable, String isFunction){
-        int tempSizeCounter = 0;
+        int tempSizeCounter = 4;
         ListIterator<SymTabEntry> i = table.getTable().listIterator();
         CodeGenTable outputTable = new CodeGenTable();
         outputTable.outerTable = upperTable;

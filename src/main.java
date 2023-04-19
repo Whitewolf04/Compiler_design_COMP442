@@ -19,7 +19,7 @@ public class main {
         // sc.close();
 
         ProgramQueue.initProgramQueue();
-        LexAnalyzer.analyze("example-bubblesort.src");
+        LexAnalyzer.analyze("testObject.src");
 
         SyntaxAnalyzer.analyze();
         OutputWriter.openTreeWriteStream();

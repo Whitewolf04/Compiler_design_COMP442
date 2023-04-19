@@ -84,6 +84,9 @@ public final class OutputWriter {
             
             codeDeclWriter.write("% Convention:\n");
             codeDeclWriter.write("%\tr13 is used for stack pointer\n");
+            codeDeclWriter.write("%\tr9 is used for offset\n");
+            codeDeclWriter.write("%\tr8 is used for return value\n");
+            codeDeclWriter.write("%\tr7 is used for address buffer\n");
 
         } catch(IOException e){
             System.out.println("Error opening semantic error file to write");

@@ -1,0 +1,6 @@
+WARNING: Function evaluate is being overloaded on line 23
+WARNING: Function evaluate is being overloaded on line 28
+WARNING: Function constructor is being overloaded on line 38
+WARNING: Function constructor is being overloaded on line 45
+WARNING: Function evaluate is being overloaded on line 51
+ERROR: Use of undefined variable a on line 70
