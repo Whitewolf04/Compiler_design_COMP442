@@ -32,7 +32,7 @@ public final class OutputWriter {
     public static void openLexWriteStream(){
         try{
             lexErrWriter = new BufferedWriter(new FileWriter("out.errors"));
-            lexOutWriter = new BufferedWriter(new FileWriter("test.outlextokens"));
+            lexOutWriter = new BufferedWriter(new FileWriter("output.outlextokens"));
         } catch (IOException e){
             System.out.println("Error opening file to write!");
         }
@@ -44,7 +44,7 @@ public final class OutputWriter {
     public static void openSyntaxWriteStream(){
         try{
             syntaxErrWriter = new BufferedWriter(new FileWriter("out.errors", true));
-            syntaxOutWriter = new BufferedWriter(new FileWriter("test.outderivation"));
+            syntaxOutWriter = new BufferedWriter(new FileWriter("output.outderivation"));
         } catch(IOException e){
             System.out.println("Error opening syntax file to write");
         }
@@ -60,7 +60,7 @@ public final class OutputWriter {
 
     public static void openSemanticOutWriting(){
         try{
-            semanticOutWriter = new BufferedWriter(new FileWriter("test.outsymboltables"));
+            semanticOutWriter = new BufferedWriter(new FileWriter("output.outsymboltables"));
         } catch(IOException e){
             System.out.println("Error opening out symbol table file to write");
         }

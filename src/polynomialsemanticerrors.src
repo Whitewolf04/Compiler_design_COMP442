@@ -5,7 +5,7 @@ class POLYNOMIAL {
 };
 class POLYNOMIALS {                                                      // 8.1
 	public function evaluate: (x: float) => float;                        
-        public function evaluate: (x: integer) => integer;                // 9.2
+  public function evaluate: (x: integer) => integer;                    // 9.2
 };
 class LINEAR isa POLYNOMIAL {
 	private attribute a: float;
@@ -26,8 +26,8 @@ class QUADRATIC isa POLYNOMIAL {
 };
 
 class newClass isa LINEAR {
-	private attribute a: float;                                         // 8.5
-	private attribute b: integer;                                       // 8.5
+	private attribute a: float;                                         // 8.6
+	private attribute b: integer;                                       // 8.6
 }; 
 
 class C isa E {
@@ -46,15 +46,15 @@ class E isa D {                                                         // 14.1
 // ====== member function implementations ====== //
 function POLYNOMIAL::evaluate(x: float) => float
   {
-    return (0);
+    return (0);                                                         // 10.3
   }
 
 
 function LINEAR::constructor(A: float, B: float)
   {
     localvar new_function: LINEAR;
-    new_function.a = A;
-    new_function.b = B;
+    new_function.a = A;                                                   
+    new_function.b = B;                             
     //return (new_function);
   }
   
@@ -69,12 +69,13 @@ function LINEAR::evaluate(x: float) => float
 function QUADRATIC::evaluate(x: float) => float
   {
     localvar result: float;
+    localvar a: integer;                                                  // 8.7
     //Using Horner's method
     result = a;
     result = result * x + b;
     result = result * x + c;
-	result = self.a;
-	result = a.self;                                                       // 15.2
+	  result = self.a;
+	  result = a.self;                                                       // 15.2
     return (result);
   }
   
@@ -105,24 +106,25 @@ function f3(p1: integer[2][3]) => integer {}
 
 
 // ====== main ====== //
-function main() => void
+function prog() => void                                                     // 15.2
 {
   localvar a: a;                                                           // 11.5
   localvar c: C;
   localvar f1: LINEAR;
   localvar f2: QUADRATIC;
-  localvar counter: integer;
-  //localvar counter: float;                                                 // 8.4
+  localvar counter: float;
+  localvar counter: integer;                                                 // 8.4
   localvar i: integer[2][3];
   localvar j: integer[1][2][3];
-  write(f1.a);
+  write(counter.f);                                                        // 15.1
+  write(f1.a);                                                              // 8.5
   write(f2.b);
   f1 = f1.build(2, 3.5);
   f2 = f2.build(-2.0, 1.0, 0.0);
   c.b = 1;                                                                 // 11.2
   counter = c.f();                                                         // 11.3
   undefined();                                                             // 11.4
-  counter = a;                                                             // 11.1
+  counter = k;                                                             // 11.1
   f(1,1,1);                                                                // 12.1
   f(1.2,1);                                                                // 12.2	
   i[2] = 1;                                                                // 13.1

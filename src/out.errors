@@ -3,3 +3,7 @@ WARNING: Function evaluate is being overloaded on line 28
 WARNING: Function constructor is being overloaded on line 38
 WARNING: Function constructor is being overloaded on line 45
 WARNING: Function evaluate is being overloaded on line 51
+ERROR: Use of undeclared function LINEAR with param types (integer,float) on line 61
+ERROR: Function evaluate with param types (integer) not found in class LINEAR, line 70
+ERROR: Function evaluate with param types (integer) not found in class QUADRATIC, line 71
+ERROR: Return type mismatch for function POLYNOMIAL::evaluate on line 24
