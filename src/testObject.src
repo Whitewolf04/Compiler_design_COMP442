@@ -11,7 +11,7 @@ class LINEAR isa POLYNOMIAL {
 };
 
 class QUADRATIC isa POLYNOMIAL {
-  public attribute a: integer;
+  public attribute a: integer[7];
   public attribute b: integer;
   public attribute c: integer;
   public  constructor: (A: integer, B: integer, C: integer);
@@ -36,7 +36,7 @@ function QUADRATIC::evaluate(x: integer) => integer
 
 function QUADRATIC::constructor(A: integer, B: integer, C: integer)
 {
-  self.a = A;
+  self.a[1] = A;
   self.b = B;
   self.c = C;
 }
@@ -71,9 +71,9 @@ function main() => void
     //result = f2.evaluate(counter);
     //write(result);
     //write(f2.a);
-    read(result);
-    result = f1.evaluate(result);
-    write(result);
+    //read(result);
+    //result = f1.evaluate(result);
+    write(f1.a[1]);
     counter = counter + 1;
   };
 }

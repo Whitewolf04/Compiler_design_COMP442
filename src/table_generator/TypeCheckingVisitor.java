@@ -186,7 +186,6 @@ public class TypeCheckingVisitor extends Visitor {
                     }
                 }
                 node.setType(type);
-                System.out.println("A term has been set to type " + type);
             }
         } else if(node.checkContent("termList")){
             SyntaxTreeNode cur = node.getChild();
@@ -215,7 +214,6 @@ public class TypeCheckingVisitor extends Visitor {
                     }
                 }
                 node.setType(type);
-                System.out.println("A termList has been set to type " + type);
             }
         } else if(node.checkContent("statement")){
             // Type check for return statement

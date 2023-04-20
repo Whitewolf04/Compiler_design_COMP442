@@ -71,7 +71,7 @@ function QUADRATIC::evaluate(x: float) => float
     localvar result: float;
     localvar a: integer;                                                  // 8.7
     //Using Horner's method
-    result = a;
+    result = k;
     result = result * x + b;
     result = result * x + c;
 	  result = self.a;
