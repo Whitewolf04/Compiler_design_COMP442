@@ -5,8 +5,8 @@ A compiler that can transform human-readable code into assembly code (specifical
 To run the compiler:
 1. Change directory into the _src_ directory
 2. Run the _main.java_ code and enter the source code file (_.src_) that you want to run (the source code file must also be in the _src_ folder)
-3. If all syntax are correct, a _decl.m_ file should be outputted, which contains the assembly code for Moon machine
-4. To run the assembly code, use command: ```moon decl.m```
+3. If all syntax are correct, a _out.m_ file should be outputted, which contains the assembly code for Moon machine
+4. To run the assembly code, use command: ```moon out.m```
 
 
 The code syntax is as follows:
